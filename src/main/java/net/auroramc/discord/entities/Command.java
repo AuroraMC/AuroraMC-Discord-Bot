@@ -5,6 +5,7 @@
 package net.auroramc.discord.entities;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public abstract class Command {
         this.subcommands = new HashMap<>();
         this.permission = permission;
     }
-    public abstract void execute(Member member, String aliasUsed, List<String> args);
+    public abstract void execute(Message message, Member member, String aliasUsed, List<String> args);
 
     protected void registerSubcommand(String subcommand, List<String> aliases, Command command) {
         subcommands.put(subcommand.toLowerCase(), command);

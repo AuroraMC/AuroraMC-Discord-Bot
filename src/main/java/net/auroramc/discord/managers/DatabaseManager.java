@@ -6,13 +6,20 @@ package net.auroramc.discord.managers;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.entities.BotSettings;
+import net.auroramc.discord.entities.Rank;
+import net.auroramc.discord.entities.SubRank;
 import net.auroramc.discord.util.MySQLConnectionPool;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Duration;
+import java.util.*;
 
 public class DatabaseManager {
 
@@ -74,6 +81,145 @@ public class DatabaseManager {
         }
     }
 
+    public Map<Long, Map<Rank, Long>> getRankMappings() {
+        try (Connection connection = mysql.getConnection()) {
+            Map<Long, Map<Rank, Long>> mappings = new HashMap<>();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_rank_mappings");
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                if (mappings.containsKey(set.getLong(1))) {
+                    mappings.get(set.getLong(1)).put(Rank.getByID(set.getInt(2)), set.getLong(3));
+                } else {
+                    mappings.put(set.getLong(1), new HashMap<>());
+                    mappings.get(set.getLong(1)).put(Rank.getByID(set.getInt(2)), set.getLong(3));
+                }
+            }
+            return mappings;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    public Map<Long, Map<SubRank, Long>> getSubRankMappings() {
+        try (Connection connection = mysql.getConnection()) {
+            Map<Long, Map<SubRank, Long>> mappings = new HashMap<>();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_subrank_mappings");
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                if (mappings.containsKey(set.getLong(1))) {
+                    mappings.get(set.getLong(1)).put(SubRank.getByID(set.getInt(2)), set.getLong(3));
+                } else {
+                    mappings.put(set.getLong(1), new HashMap<>());
+                    mappings.get(set.getLong(1)).put(SubRank.getByID(set.getInt(2)), set.getLong(3));
+                }
+            }
+            return mappings;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void addChannelMappings(long guildId, long server, long link) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO dc_channel_mappings(guild_id, server_logs, link_logs) VALUES (?,?,?)");
+            statement.setLong(1, guildId);
+            statement.setLong(2, server);
+            statement.setLong(3, link);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addRankMappings(long guildId, Map<Rank, Long> rankMappings, Map<SubRank, Long> subrankMappings) {
+        try (Connection connection = mysql.getConnection()) {
+            for (Map.Entry<Rank, Long> entry : rankMappings.entrySet()) {
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO dc_rank_mappings(guild_id, rank_id, role_id) VALUES (?,?,?)");
+                statement.setLong(1, guildId);
+                statement.setInt(2, entry.getKey().getId());
+                statement.setLong(3, entry.getValue());
+                statement.execute();
+            }
+
+            for (Map.Entry<SubRank, Long> entry : subrankMappings.entrySet()) {
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO dc_subrank_mappings(guild_id, subrank_id, role_id) VALUES (?,?,?)");
+                statement.setLong(1, guildId);
+                statement.setInt(2, entry.getKey().getId());
+                statement.setLong(3, entry.getValue());
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getUserFromCode(String code) {
+        try (Jedis connection = jedis.getResource()) {
+            if (connection.exists("discord.link." + code)) {
+                return connection.get("discord.link." + code);
+            }
+            return null;
+        }
+    }
+
+    public void addLink(UUID uuid, long discordId) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO dc_links(amc_id, discord_id) VALUES ((SELECT id FROM auroramc_players WHERE uuid = ?),?)");
+            statement.setString(1, uuid.toString());
+            statement.setLong(2, discordId);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Rank getRank(UUID uuid) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT rank FROM `ranks` WHERE amc_id = (SELECT id FROM auroramc_players WHERE uuid = ?)");
+            statement.setString(1, uuid.toString());
+
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                return Rank.getByID(set.getInt(1));
+            } else {
+                //NEW USER
+                return Rank.getByID(0);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<SubRank> getSubRanks(UUID uuid) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT subranks FROM `ranks` WHERE amc_id = (SELECT id FROM auroramc_players WHERE uuid = ?)");
+            statement.setString(1, uuid.toString());
+
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                if (set.getString(1) == null) {
+                    return new ArrayList<>();
+                }
+                String[] ranks = set.getString(1).split(",");
+                Arrays.sort(ranks);
+                ArrayList<SubRank> subRanks = new ArrayList<>();
+                for (String rank : ranks) {
+                    subRanks.add(SubRank.getByID(Integer.parseInt(rank)));
+                }
+                return subRanks;
+            } else {
+                //NEW USER
+                return new ArrayList<>();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }
