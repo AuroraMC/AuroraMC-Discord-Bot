@@ -5,12 +5,19 @@
 package net.auroramc.discord;
 
 import jline.console.ConsoleReader;
+import net.auroramc.discord.commands.CommandLink;
+import net.auroramc.discord.entities.BotSettings;
+import net.auroramc.discord.entities.Command;
+import net.auroramc.discord.managers.CommandManager;
+import net.auroramc.discord.managers.DatabaseManager;
 import net.md_5.bungee.log.DiscordBotLogger;
 import net.md_5.bungee.log.LoggingOutputStream;
 import org.fusesource.jansi.AnsiConsole;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -19,6 +26,9 @@ public class DiscordBot {
 
     private static ConsoleReader consoleReader;
     private static Logger logger;
+    private static DatabaseManager databaseManager;
+    private static BotSettings settings;
+
 
     public static void main(String[] args) {
         System.setProperty( "library.jansi.version", "BungeeCord" );
@@ -46,17 +56,32 @@ public class DiscordBot {
         String mysqlDb = prefs.get("mysqlDb", null);
         String mysqlUsername = prefs.get("mysqlUsername", null);
         String mysqlPassword = prefs.get("mysqlPassword", null);
-        String mysqlServerUsername = prefs.get("mysqlServerUsername", null);
-        String mysqlServerPassword = prefs.get("mysqlServerPassword", null);
         String redisHost = prefs.get("redisHost", null);
         String redisAuth = prefs.get("redisAuth", null);
         String botToken = prefs.get("botToken", null);
 
+        logger.info("Loading Database...");
 
+        databaseManager = new DatabaseManager(mysqlHost, mysqlPort, mysqlDb, mysqlUsername, mysqlPassword, redisHost, redisAuth);
+        logger.info("Loading Bot Settings...");
+        settings = databaseManager.getSettings();
+
+        logger.info("Loading Commands...");
+        //Register commands
+        CommandManager.registerCommand(new CommandLink());
     }
+
 
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    public static DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
+    public static BotSettings getSettings() {
+        return settings;
     }
 }
