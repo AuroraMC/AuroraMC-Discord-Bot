@@ -8,12 +8,20 @@ import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandLink;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.Command;
+import net.auroramc.discord.listeners.ReadyEventListener;
+import net.auroramc.discord.listeners.message.MessageListener;
 import net.auroramc.discord.managers.CommandManager;
 import net.auroramc.discord.managers.DatabaseManager;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.md_5.bungee.log.DiscordBotLogger;
 import net.md_5.bungee.log.LoggingOutputStream;
 import org.fusesource.jansi.AnsiConsole;
 
+import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -28,9 +36,10 @@ public class DiscordBot {
     private static Logger logger;
     private static DatabaseManager databaseManager;
     private static BotSettings settings;
+    private static JDA jda;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws LoginException {
         System.setProperty( "library.jansi.version", "BungeeCord" );
 
         AnsiConsole.systemInstall();
@@ -68,7 +77,27 @@ public class DiscordBot {
 
         logger.info("Loading Commands...");
         //Register commands
-        CommandManager.registerCommand(new CommandLink());
+
+        logger.info("Logging in...");
+        jda = JDABuilder.create(botToken, GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.GUILD_BANS,
+                        GatewayIntent.GUILD_EMOJIS,
+                        GatewayIntent.GUILD_WEBHOOKS,
+                        GatewayIntent.GUILD_INVITES,
+                        GatewayIntent.GUILD_VOICE_STATES,
+                        GatewayIntent.GUILD_PRESENCES,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        GatewayIntent.GUILD_MESSAGE_TYPING,
+                        GatewayIntent.DIRECT_MESSAGES,
+                        GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+                        GatewayIntent.DIRECT_MESSAGE_TYPING)
+                .setActivity(Activity.playing("auroramc.net"))
+                .setStatus(OnlineStatus.ONLINE)
+                .addEventListeners(new ReadyEventListener())
+                .build();
+
+        jda.addEventListener(new MessageListener());
     }
 
 
