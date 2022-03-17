@@ -85,6 +85,9 @@ public class GuildManager {
         DiscordBot.getDatabaseManager().addSetupServer(guild.getIdLong());
 
         if (guild.getIdLong() != DiscordBot.getSettings().getMasterDiscord()) {
+            allowedRanks.put(guild.getIdLong(), new ArrayList<>());
+            allowedRanks.get(guild.getIdLong()).add(Rank.OWNER);
+            allowedRanks.get(guild.getIdLong()).add(Rank.ADMIN);
             DiscordBot.getDatabaseManager().addAllowedRank(guild.getIdLong(), Rank.OWNER.getId());
             DiscordBot.getDatabaseManager().addAllowedRank(guild.getIdLong(), Rank.ADMIN.getId());
         }

@@ -159,26 +159,27 @@ public class LinkManager {
                 DiscordBot.getDatabaseManager().addInviteLink(guild.getIdLong(), user.getIdLong(), invite.getCode());
             }
 
-
-            message.getChannel().sendMessageEmbeds(new EmbedBuilder()
-                    .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
-                    .setTitle("Account linked!")
-                    .setDescription("__**You've been invited!**__\n" +
-                            "Because of your ranks, you have access to some additional\n" +
-                            "Discord servers for your duties! The invite links are listed below:\n" +
-                            " \n" +
-                            sb.toString() +
-                            " \n" +
-                            "These invites are individual to you, and you should not share them with\n" +
-                            "anyone, including your mentor/admin.\n" +
-                            " \n" +
-                            "These Discord invites are only for intended recipients only. Discord\n" +
-                            "invite links and their intended recipient are logged. Any attempt to\n" +
-                            "join from any other account will result in that account being permanently\n" +
-                            "banned from that server and _you_ receive an automatic reprimand.\n" +
-                            "**~AuroraMC Leadership Team**")
-                    .setColor(new Color(0, 170,170))
-                    .build()).queue();
+            if (sb.length() >= 0) {
+                message.getChannel().sendMessageEmbeds(new EmbedBuilder()
+                        .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                        .setTitle("Account linked!")
+                        .setDescription("__**You've been invited!**__\n" +
+                                "Because of your ranks, you have access to some additional\n" +
+                                "Discord servers for your duties! The invite links are listed below:\n" +
+                                " \n" +
+                                sb.toString() +
+                                " \n" +
+                                "These invites are individual to you, and you should not share them with\n" +
+                                "anyone, including your mentor/admin.\n" +
+                                " \n" +
+                                "These Discord invites are only for intended recipients only. Discord\n" +
+                                "invite links and their intended recipient are logged. Any attempt to\n" +
+                                "join from any other account will result in that account being permanently\n" +
+                                "banned from that server and _you_ receive an automatic reprimand.\n" +
+                                "**~AuroraMC Leadership Team**")
+                        .setColor(new Color(0, 170,170))
+                        .build()).queue();
+            }
         }
     }
 
