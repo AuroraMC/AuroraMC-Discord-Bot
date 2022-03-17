@@ -14,7 +14,7 @@ import java.util.List;
 
 public enum Rank {
 
-    PLAYER(0, "Player", null, null, null, new Color(255, 255, 255)),
+    PLAYER(0, "Player", "Player", null, Collections.singletonList(Permission.PLAYER), new Color(255, 255, 255)),
     ELITE(1, "Elite", "Elite",  Collections.singletonList(PLAYER), Collections.singletonList(Permission.ELITE), new Color(85, 255, 255)),
     MASTER(2, "Master", "Master", Collections.singletonList(ELITE), Collections.singletonList(Permission.MASTER), new Color(255, 85, 255)),
     YOUTUBE(5, "YouTube", "YouTube", Collections.singletonList(MASTER), Arrays.asList(Permission.DISGUISE, Permission.SOCIAL, Permission.CUSTOM_DISGUISE), new Color(255, 170, 0)),
