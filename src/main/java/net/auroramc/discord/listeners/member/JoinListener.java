@@ -73,29 +73,33 @@ public class JoinListener extends ListenerAdapter {
                         .setColor(new Color(0, 170,170))
                         .build()).queue();
             }
+
         } else {
             List<Invite> invites = e.getGuild().retrieveInvites().complete();
             List<String> codes = DiscordBot.getDatabaseManager().getCodes(e.getGuild().getIdLong());
             outer:
             for (String code : codes) {
+                boolean found = false;
                 for (Invite invite : invites) {
                     if (invite.getCode().equals(code)) {
-                        continue outer;
+                        found = true;
+                        break;
                     }
                 }
-
-                //Was not found. This is the invite.
-                long userId = DiscordBot.getDatabaseManager().getRecipient(e.getGuild().getIdLong(), code);
-                if (userId == e.getUser().getIdLong()) {
-                    //This was used the person it should have been, deal with onJoin.
-                    LinkManager.onJoin(e.getGuild(), e.getUser(), uuid);
-                } else {
-                    //This was used by someone it shouldn't have been.
-                    e.getGuild().ban(e.getUser(), 0, "Joined through illegal invite link.").queue();
-                    LinkManager.onInviteFail(userId, e.getUser(), code, e.getGuild());
+                if (found) {
+                    //Was not found. This is the invite.
+                    long userId = DiscordBot.getDatabaseManager().getRecipient(e.getGuild().getIdLong(), code);
+                    if (userId == e.getUser().getIdLong()) {
+                        //This was used the person it should have been, deal with onJoin.
+                        LinkManager.onJoin(e.getGuild(), e.getUser(), uuid);
+                    } else {
+                        //This was used by someone it shouldn't have been.
+                        e.getGuild().ban(e.getUser(), 0, "Joined through illegal invite link.").queue();
+                        LinkManager.onInviteFail(userId, e.getUser(), code, e.getGuild());
+                    }
+                    DiscordBot.getDatabaseManager().removeInviteLink(e.getGuild().getIdLong(), code);
+                    return;
                 }
-                DiscordBot.getDatabaseManager().removeInviteLink(e.getGuild().getIdLong(), code);
-                return;
             }
         }
     }
