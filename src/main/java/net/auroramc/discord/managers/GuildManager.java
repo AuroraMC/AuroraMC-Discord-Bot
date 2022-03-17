@@ -15,16 +15,32 @@ import java.util.*;
 
 public class GuildManager {
 
+    private static final List<Long> setupServers;
+    private static final Map<Long, Long> mainChannelMappings;
     private static final Map<Long, Long> serverLogMappings;
     private static final Map<Long, Long> linkLogMappings;
     private static final Map<Long, Map<Rank, Long>> rankMappings;
     private static final Map<Long, Map<SubRank, Long>> subrankMappings;
+    private static final Map<Long, List<Rank>> allowedRanks;
+    private static final Map<Long, List<SubRank>> allowedSubRanks;
 
     static {
+        setupServers = DiscordBot.getDatabaseManager().getRegisteredGuilds();
         serverLogMappings = new HashMap<>();
         linkLogMappings = new HashMap<>();
+        mainChannelMappings = new HashMap<>();
         rankMappings = DiscordBot.getDatabaseManager().getRankMappings();
         subrankMappings = DiscordBot.getDatabaseManager().getSubRankMappings();
+        allowedRanks = new HashMap<>();
+        allowedSubRanks = new HashMap<>();
+
+        for (long id : setupServers) {
+            allowedRanks.put(id, DiscordBot.getDatabaseManager().getAllowedRanks(id));
+            allowedSubRanks.put(id, DiscordBot.getDatabaseManager().getAllowedSubRanks(id));
+            serverLogMappings.put(id, DiscordBot.getDatabaseManager().getLoggingChannel(id));
+            linkLogMappings.put(id, DiscordBot.getDatabaseManager().getLinkingChannel(id));
+            mainChannelMappings.put(id, DiscordBot.getDatabaseManager().getMainChannel(id));
+        }
     }
 
     public static void onGuildSetup(Guild guild, long serverLog, long linkLog) {
@@ -61,6 +77,7 @@ public class GuildManager {
         }
 
         addMappings(guild, rankMappings, subrankMappings);
+        DiscordBot.getDatabaseManager().addSetupServer(guild.getIdLong());
     }
 
     public static long getServerLogId(long guildId) {
@@ -84,5 +101,21 @@ public class GuildManager {
 
     public static Map<SubRank, Long> getSubrankMappings(long guildId) {
         return subrankMappings.get(guildId);
+    }
+
+    public static List<Rank> getAllowedRanks(long guildId) {
+        return allowedRanks.get(guildId);
+    }
+
+    public static List<SubRank> getAllowedSubRanks(long guildId) {
+        return allowedSubRanks.get(guildId);
+    }
+
+    public static List<Long> getSetupServers() {
+        return setupServers;
+    }
+
+    public static long getMainChannel(long guildId) {
+        return mainChannelMappings.get(guildId);
     }
 }

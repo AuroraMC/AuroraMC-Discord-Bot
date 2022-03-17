@@ -177,7 +177,7 @@ public class DatabaseManager {
 
     public Rank getRank(UUID uuid) {
         try (Connection connection = mysql.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT rank FROM `ranks` WHERE amc_id = (SELECT id FROM auroramc_players WHERE uuid = ?)");
+            PreparedStatement statement = connection.prepareStatement("SELECT `rank` FROM `ranks` WHERE amc_id = (SELECT id FROM auroramc_players WHERE uuid = ?)");
             statement.setString(1, uuid.toString());
 
             ResultSet set = statement.executeQuery();
@@ -218,6 +218,153 @@ public class DatabaseManager {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Rank> getAllowedRanks(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            Set<String> rankStrings = connection.smembers("discord.ranks." + guildId);
+            List<Rank> ranks = new ArrayList<>();
+            for (String rankString : rankStrings) {
+                ranks.add(Rank.getByID(Integer.parseInt(rankString)));
+            }
+            return ranks;
+        }
+    }
+
+    public List<Long> getRegisteredGuilds() {
+        try (Jedis connection = jedis.getResource()) {
+            Set<String> rankStrings = connection.smembers("discord.guilds");
+            List<Long> ranks = new ArrayList<>();
+            for (String rankString : rankStrings) {
+                ranks.add(Long.parseLong(rankString));
+            }
+            return ranks;
+        }
+    }
+
+    public void addSetupServer(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.sadd("discord.guilds", guildId + "");
+        }
+    }
+
+    public void removeSetupServer(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.srem("discord.guilds", guildId + "");
+            connection.del("discord.ranks." + guildId);
+            connection.del("discord.subranks." + guildId);
+        }
+    }
+
+    public void addAllowedRank(long guildId, int rankId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.sadd("discord.ranks." + guildId, rankId + "");
+        }
+    }
+
+    public void removeAllowedRank(long guildId, int rankId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.srem("discord.ranks." + guildId, rankId + "");
+        }
+    }
+
+    public void addAllowedSubRank(long guildId, int subrankId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.sadd("discord.subranks." + guildId, subrankId + "");
+        }
+    }
+
+    public void removeAllowedSubRank(long guildId, int subrankId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.srem("discord.subranks." + guildId, subrankId + "");
+        }
+    }
+
+    public List<SubRank> getAllowedSubRanks(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            Set<String> rankStrings = connection.smembers("discord.subranks." + guildId);
+            List<SubRank> ranks = new ArrayList<>();
+            for (String rankString : rankStrings) {
+                ranks.add(SubRank.getByID(Integer.parseInt(rankString)));
+            }
+            return ranks;
+        }
+    }
+
+    public Long getLoggingChannel(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            return Long.parseLong(connection.hget("discord.loggingChannel", guildId + ""));
+        }
+    }
+
+    public Long getLinkingChannel(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            return Long.parseLong(connection.hget("discord.linkingChannel", guildId + ""));
+        }
+    }
+
+    public void setLoggingChannel(long guildId, long channelId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.hset("discord.loggingChannel", guildId + "", channelId + "");
+        }
+    }
+
+    public void setLinkingChannel(long guildId, long channelId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.hset("discord.linkingChannel", guildId + "", channelId + "");
+        }
+    }
+
+    public Long getMainChannel(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            return Long.parseLong(connection.hget("discord.mainChannel", guildId + ""));
+        }
+    }
+
+    public void setMainChannel(long guildId, long channelId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.hset("discord.mainChannel", guildId + "", channelId + "");
+        }
+    }
+
+    public void addInviteLink(long guildId, long userId, String code) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.hset("discord.inviteLinks." + guildId, code, userId + "");
+        }
+    }
+
+    public void removeInviteLink(long guildId, String code) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.hdel("discord.inviteLinks." + guildId, code);
+        }
+    }
+
+    public List<String> getCodes(long guildId) {
+        try (Jedis connection = jedis.getResource()) {
+            return new ArrayList<>(connection.hkeys("discord.inviteLinks." + guildId));
+        }
+    }
+
+    public long getRecipient(long guildId, String code) {
+        try (Jedis connection = jedis.getResource()) {
+            return Long.parseLong(connection.hget("discord.inviteLinks." + guildId, code));
+        }
+    }
+
+    public UUID getDiscord(long id) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT `uuid` FROM auroramc_players WHERE id = (SELECT amc_id FROM dc_links WHERE discord_id = ?)");
+            statement.setLong(1, id);
+
+            ResultSet set = statement.executeQuery();
+
+            if (set.next()) {
+                return UUID.fromString(set.getString(1));
+            }
+            return null;
+        } catch (SQLException ignored) {
             return null;
         }
     }

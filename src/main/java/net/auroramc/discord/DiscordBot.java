@@ -9,6 +9,7 @@ import net.auroramc.discord.commands.CommandLink;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.Command;
 import net.auroramc.discord.listeners.ReadyEventListener;
+import net.auroramc.discord.listeners.member.JoinListener;
 import net.auroramc.discord.listeners.message.MessageListener;
 import net.auroramc.discord.managers.CommandManager;
 import net.auroramc.discord.managers.DatabaseManager;
@@ -98,6 +99,7 @@ public class DiscordBot {
                 .build();
 
         jda.addEventListener(new MessageListener());
+        jda.addEventListener(new JoinListener());
     }
 
 
