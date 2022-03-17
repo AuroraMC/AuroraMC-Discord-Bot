@@ -53,7 +53,7 @@ public class CommandLink {
                                                     "**~AuroraMC Leadership Team**")
                                             .setColor(new Color(0, 170,170))
                                             .build()).queue();
-                                    LinkManager.processOtherInvites(user, message);
+                                    LinkManager.processOtherInvites(user, message, uuid);
                                 } else {
                                     message.reply("You provided an invalid code, please try again!").queue();
                                 }
