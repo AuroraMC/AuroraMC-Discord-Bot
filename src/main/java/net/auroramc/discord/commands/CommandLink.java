@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +57,7 @@ public class CommandLink {
                                     //Now link is done, hand over to the link manager to deal with it.
                                     LinkManager.onLink(user, uuid);
                                     message.replyEmbeds(new EmbedBuilder()
-                                            .setAuthor("The AuroraMC Network Leadership Team", "auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                                            .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                                             .setTitle("Account linked!")
                                             .setDescription("__**Your account has been successfully linked!**__\n" +
                                                     "Your rank has been automatically applied to your account!\n" +

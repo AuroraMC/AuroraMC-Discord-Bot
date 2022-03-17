@@ -117,8 +117,28 @@ public class GuildManager {
         return allowedRanks.get(guildId);
     }
 
+    public static void addAllowedRank(long guildId, Rank rank) {
+        allowedRanks.get(guildId).add(rank);
+        DiscordBot.getDatabaseManager().addAllowedRank(guildId, rank.getId());
+    }
+
+    public static void removeAllowedRank(long guildId, Rank rank) {
+        allowedRanks.get(guildId).remove(rank);
+        DiscordBot.getDatabaseManager().removeAllowedRank(guildId, rank.getId());
+    }
+
     public static List<SubRank> getAllowedSubRanks(long guildId) {
         return allowedSubRanks.get(guildId);
+    }
+
+    public static void addAllowedSubRank(long guildId, SubRank rank) {
+        allowedSubRanks.get(guildId).add(rank);
+        DiscordBot.getDatabaseManager().addAllowedSubRank(guildId, rank.getId());
+    }
+
+    public static void removeAllowedSubRank(long guildId, SubRank rank) {
+        allowedSubRanks.get(guildId).remove(rank);
+        DiscordBot.getDatabaseManager().removeAllowedSubRank(guildId, rank.getId());
     }
 
     public static List<Long> getSetupServers() {

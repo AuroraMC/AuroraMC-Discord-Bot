@@ -27,6 +27,10 @@ public class LinkManager {
         assert role != null;
         guild.removeRoleFromMember(user.getId(), role).queue();
 
+        role = guild.getRoleById(886329856873332768L);
+        assert role != null;
+        guild.addRoleToMember(user.getId(), role).queue();
+
         Rank rank = DiscordBot.getDatabaseManager().getRank(uuid);
         List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(uuid);
 
@@ -120,7 +124,24 @@ public class LinkManager {
             for (long id : allowedGuilds) {
                 Guild guild = user.getJDA().getGuildById(id);
                 assert guild != null;
-                if (guild.isMember(user) || id == DiscordBot.getSettings().getMasterDiscord()) {
+                if (id == DiscordBot.getSettings().getMasterDiscord()) {
+                    continue;
+                }
+                if (guild.isMember(user)) {
+                    Member member = guild.getMember(user);
+                    assert member != null;
+                    Role rankRole = guild.getRoleById(GuildManager.getRankMappings(guild.getIdLong()).get(rank));
+                    assert rankRole != null;
+                    if (!member.getRoles().contains(rankRole)) {
+                        guild.addRoleToMember(member, rankRole).queue();
+                    }
+                    for (SubRank subRank : subranks) {
+                        Role subrankRole = guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(subRank));
+                        assert subrankRole != null;
+                        if (!member.getRoles().contains(subrankRole)) {
+                            guild.addRoleToMember(member, subrankRole).queue();
+                        }
+                    }
                     continue;
                 }
                 TextChannel channel = guild.getTextChannelById(GuildManager.getMainChannel(id));
@@ -140,7 +161,7 @@ public class LinkManager {
 
 
             message.getChannel().sendMessageEmbeds(new EmbedBuilder()
-                    .setAuthor("The AuroraMC Network Leadership Team", "auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                    .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                     .setTitle("Account linked!")
                     .setDescription("__**You've been invited!**__\n" +
                             "Because of your ranks, you have access to some additional\n" +
@@ -181,7 +202,24 @@ public class LinkManager {
             for (long id : allowedGuilds) {
                 Guild guild = user.getJDA().getGuildById(id);
                 assert guild != null;
+                if (id == DiscordBot.getSettings().getMasterDiscord()) {
+                    continue;
+                }
                 if (guild.isMember(user)) {
+                    Member member = guild.getMember(user);
+                    assert member != null;
+                    Role rankRole = guild.getRoleById(GuildManager.getRankMappings(guild.getIdLong()).get(rank));
+                    assert rankRole != null;
+                    if (!member.getRoles().contains(rankRole)) {
+                        guild.addRoleToMember(member, rankRole).queue();
+                    }
+                    for (SubRank subRank : subranks) {
+                        Role subrankRole = guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(subRank));
+                        assert subrankRole != null;
+                        if (!member.getRoles().contains(subrankRole)) {
+                            guild.addRoleToMember(member, subrankRole).queue();
+                        }
+                    }
                     continue;
                 }
                 TextChannel channel = guild.getTextChannelById(GuildManager.getMainChannel(id));
@@ -201,7 +239,7 @@ public class LinkManager {
 
 
             privateChannel.sendMessageEmbeds(new EmbedBuilder()
-                    .setAuthor("The AuroraMC Network Leadership Team", "auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                    .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                     .setTitle("Account linked!")
                     .setDescription("__**You've been invited!**__\n" +
                             "Because of your ranks, you have access to some additional\n" +
