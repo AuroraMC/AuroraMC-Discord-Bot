@@ -9,6 +9,7 @@ import net.auroramc.discord.managers.LinkManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -26,6 +27,9 @@ public class JoinListener extends ListenerAdapter {
         PrivateChannel channel = e.getUser().openPrivateChannel().complete();
         if (e.getGuild().getIdLong() == DiscordBot.getSettings().getMasterDiscord()) {
             if (uuid != null) {
+                Role role = e.getGuild().getRoleById(886329856873332768L);
+                assert role != null;
+                e.getGuild().addRoleToMember(e.getUser().getId(), role).queue();
                 LinkManager.onJoin(e.getGuild(), e.getUser(), uuid);
                 channel.sendMessageEmbeds(new EmbedBuilder()
                         .setAuthor("The AuroraMC Network Leadership Team", "auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
@@ -42,6 +46,9 @@ public class JoinListener extends ListenerAdapter {
                         .build()).queue();
                 LinkManager.processOtherInvites(e.getUser(), channel, uuid);
             } else {
+                Role role = e.getGuild().getRoleById(886329879002505217L);
+                assert role != null;
+                e.getGuild().addRoleToMember(e.getUser().getId(), role).queue();
                 channel.sendMessageEmbeds(new EmbedBuilder()
                         .setAuthor("The AuroraMC Network Leadership Team", "auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                         .setTitle("Welcome!")
