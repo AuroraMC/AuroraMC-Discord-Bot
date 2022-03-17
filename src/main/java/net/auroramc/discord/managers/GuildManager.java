@@ -43,11 +43,16 @@ public class GuildManager {
         }
     }
 
-    public static void onGuildSetup(Guild guild, long serverLog, long linkLog) {
+    public static void load() {}
+
+    public static void onGuildSetup(Guild guild, long mainChannel, long serverLog, long linkLog) {
         serverLogMappings.put(guild.getIdLong(), serverLog);
         linkLogMappings.put(guild.getIdLong(), linkLog);
+        mainChannelMappings.put(guild.getIdLong(), mainChannel);
 
-        DiscordBot.getDatabaseManager().addChannelMappings(guild.getIdLong(), serverLog, linkLog);
+        DiscordBot.getDatabaseManager().setLinkingChannel(guild.getIdLong(), linkLog);
+        DiscordBot.getDatabaseManager().setLoggingChannel(guild.getIdLong(), serverLog);
+        DiscordBot.getDatabaseManager().setMainChannel(guild.getIdLong(), mainChannel);
 
         List<Rank> ranks = new ArrayList<>(Arrays.asList(Rank.values()));
         Collections.reverse(ranks);
@@ -78,6 +83,11 @@ public class GuildManager {
 
         addMappings(guild, rankMappings, subrankMappings);
         DiscordBot.getDatabaseManager().addSetupServer(guild.getIdLong());
+
+        if (guild.getIdLong() != DiscordBot.getSettings().getMasterDiscord()) {
+            DiscordBot.getDatabaseManager().addAllowedRank(guild.getIdLong(), Rank.OWNER.getId());
+            DiscordBot.getDatabaseManager().addAllowedRank(guild.getIdLong(), Rank.ADMIN.getId());
+        }
     }
 
     public static long getServerLogId(long guildId) {

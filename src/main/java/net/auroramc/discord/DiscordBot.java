@@ -6,6 +6,7 @@ package net.auroramc.discord;
 
 import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandLink;
+import net.auroramc.discord.commands.setup.CommandSetup;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.Command;
 import net.auroramc.discord.listeners.ReadyEventListener;
@@ -13,6 +14,7 @@ import net.auroramc.discord.listeners.member.JoinListener;
 import net.auroramc.discord.listeners.message.MessageListener;
 import net.auroramc.discord.managers.CommandManager;
 import net.auroramc.discord.managers.DatabaseManager;
+import net.auroramc.discord.managers.GuildManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -33,13 +35,12 @@ import java.util.prefs.Preferences;
 
 public class DiscordBot {
 
-    private static ConsoleReader consoleReader;
     private static Logger logger;
     private static DatabaseManager databaseManager;
     private static BotSettings settings;
     private static JDA jda;
     private static boolean shutdown;
-    private static Object object;
+    private static final Object object;
 
     static {
         shutdown = false;
@@ -51,6 +52,7 @@ public class DiscordBot {
         System.setProperty( "library.jansi.version", "BungeeCord" );
 
         AnsiConsole.systemInstall();
+        ConsoleReader consoleReader;
         try {
             consoleReader = new ConsoleReader();
         } catch (IOException e) {
@@ -60,7 +62,7 @@ public class DiscordBot {
 
         consoleReader.setExpandEvents( false );
 
-        logger = new DiscordBotLogger( "Discord Bot", "discordbot.log", consoleReader );
+        logger = new DiscordBotLogger( "Discord Bot", "discordbot.log", consoleReader);
         System.setErr( new PrintStream( new LoggingOutputStream( logger, Level.SEVERE ), true ) );
         System.setOut( new PrintStream( new LoggingOutputStream( logger, Level.INFO ), true ) );
         Thread.currentThread().setName("Main Thread");
@@ -85,6 +87,7 @@ public class DiscordBot {
 
         logger.info("Loading Commands...");
         //Register commands
+        CommandManager.registerCommand(new CommandSetup());
 
         logger.info("Logging in...");
         jda = JDABuilder.create(botToken, GatewayIntent.GUILD_MEMBERS,
@@ -107,6 +110,7 @@ public class DiscordBot {
 
         jda.addEventListener(new MessageListener());
         jda.addEventListener(new JoinListener());
+        GuildManager.load();
         done();
     }
 
@@ -128,11 +132,14 @@ public class DiscordBot {
         shutdown();
     }
 
+    public static void interrupt() {
+        shutdown = true;
+        object.notifyAll();
+    }
+
     private static void shutdown() {
         jda.shutdownNow();
     }
-
-
 
     public static Logger getLogger() {
         return logger;

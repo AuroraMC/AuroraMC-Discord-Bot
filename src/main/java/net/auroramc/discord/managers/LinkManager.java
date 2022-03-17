@@ -120,7 +120,7 @@ public class LinkManager {
             for (long id : allowedGuilds) {
                 Guild guild = user.getJDA().getGuildById(id);
                 assert guild != null;
-                if (guild.isMember(user)) {
+                if (guild.isMember(user) || id == DiscordBot.getSettings().getMasterDiscord()) {
                     continue;
                 }
                 TextChannel channel = guild.getTextChannelById(GuildManager.getMainChannel(id));
