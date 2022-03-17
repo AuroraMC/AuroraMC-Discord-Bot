@@ -38,6 +38,13 @@ public class DiscordBot {
     private static DatabaseManager databaseManager;
     private static BotSettings settings;
     private static JDA jda;
+    private static boolean shutdown;
+    private static Object object;
+
+    static {
+        shutdown = false;
+        object = new Object();
+    }
 
 
     public static void main(String[] args) throws LoginException {
@@ -100,6 +107,29 @@ public class DiscordBot {
 
         jda.addEventListener(new MessageListener());
         jda.addEventListener(new JoinListener());
+        done();
+    }
+
+    private static void done() {
+        logger.info("Loading complete.");
+        String command;
+        try {
+            while (!shutdown) {
+                synchronized (object) {
+                    object.wait();
+                }
+            }
+        } catch (InterruptedException e) {
+            logger.log(Level.INFO, "Interrupt received, shutting down.", e);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "An error has occurred while trying to process commands. Shutting down. Stack trace: ", e);
+        }
+        logger.info("Shutting down...");
+        shutdown();
+    }
+
+    private static void shutdown() {
+        jda.shutdownNow();
     }
 
 
