@@ -58,7 +58,7 @@ public class DatabaseManager {
         try (Jedis connection = jedis.getResource()) {
             char commandPrefix = connection.hget("bot.settings", "commandPrefix").charAt(0);
             boolean commandsEnabled = Boolean.parseBoolean(connection.hget("bot.settings", "commandsEnabled"));
-            long masterDiscord = Long.getLong(connection.hget("bot.settings", "masterDiscord"));
+            long masterDiscord = Long.parseLong(connection.hget("bot.settings", "masterDiscord"));
             return new BotSettings(commandsEnabled, commandPrefix, masterDiscord);
         }
     }
@@ -118,18 +118,6 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public void addChannelMappings(long guildId, long server, long link) {
-        try (Connection connection = mysql.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO dc_channel_mappings(guild_id, server_logs, link_logs) VALUES (?,?,?)");
-            statement.setLong(1, guildId);
-            statement.setLong(2, server);
-            statement.setLong(3, link);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 

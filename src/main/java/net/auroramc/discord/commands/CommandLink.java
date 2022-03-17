@@ -10,14 +10,12 @@ import net.auroramc.discord.managers.DatabaseManager;
 import net.auroramc.discord.managers.GuildManager;
 import net.auroramc.discord.managers.LinkManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CommandLink {
@@ -29,8 +27,24 @@ public class CommandLink {
                     //Only run the command if they're in the main discord.
                     Member member = guild.getMember(user);
                     assert member != null;
-                    if (member.getRoles().size() == 1) {
-                        if (member.getRoles().get(0).getIdLong() == 886329879002505217L) {
+                    if (member.getRoles().size() > 0) {
+                        boolean unverified = false;
+                        boolean found = false;
+                        for (Role role : member.getRoles()) {
+                            if (role.getIdLong() == 886329879002505217L) {
+                                unverified = true;
+                                found = true;
+                                break;
+                            } else if (role.getIdLong() == 886329856873332768L) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(886329879002505217L))).queue();
+                            unverified = true;
+                        }
+                        if (unverified) {
                             //They have unlinked, now go through the linking process.
                             if (args.size() == 1) {
                                 String uuidstr = DiscordBot.getDatabaseManager().getUserFromCode(args.get(0));

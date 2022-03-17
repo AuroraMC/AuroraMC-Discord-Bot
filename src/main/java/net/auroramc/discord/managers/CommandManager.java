@@ -31,6 +31,18 @@ public class CommandManager {
         String commandLabel = args.remove(0).substring(1);
         Command command = commands.get(commandLabel.toLowerCase());
         if (command != null) {
+            if (command.getPermission() == null) {
+                //This is the setup command, check whether it is me.
+                if (user.getIdLong() == 105235320714326016L) {
+                    try {
+                        command.execute(message, user, commandLabel, args);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        message.reply("Something went wrong when trying to execute this command, please try again!").queue();
+                    }
+                }
+                return;
+            }
             if (GuildManager.getRankMappings(message.getGuild().getIdLong()) == null) {
                 return;
             }
