@@ -7,7 +7,7 @@ package net.auroramc.discord;
 import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandLink;
 import net.auroramc.discord.commands.admin.CommandGenerateLink;
-import net.auroramc.discord.commands.setup.CommandSetup;
+import net.auroramc.discord.commands.setup.*;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.Command;
 import net.auroramc.discord.listeners.ReadyEventListener;
@@ -90,6 +90,11 @@ public class DiscordBot {
         //Register commands
         CommandManager.registerCommand(new CommandSetup());
         CommandManager.registerCommand(new CommandGenerateLink());
+        CommandManager.registerCommand(new CommandAllowRank());
+        CommandManager.registerCommand(new CommandRemoveRank());
+        CommandManager.registerCommand(new CommandAllowSubRank());
+        CommandManager.registerCommand(new CommandRemoveSubRank());
+
 
         logger.info("Logging in...");
         jda = JDABuilder.create(botToken, GatewayIntent.GUILD_MEMBERS,
