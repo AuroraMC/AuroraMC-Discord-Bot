@@ -81,7 +81,7 @@ public class CommandReadMePost extends Command {
                 .addField("Revealing Personal Information", "Maliciously revealing personal information about anyone.", false)
                 .addField("Advertising", "Giving IPs or links in chat with the intention of recruiting players.", false)
                 .addField("Malicious Links", "Giving dangerous links in chat.", false)
-                .addField("Inappropriate Profile", "Having a severely inappropriate inappropriate about me, status, name or profile picture. _A 5 minute warning" +
+                .addField("Inappropriate Profile", "Having a severely inappropriate about me, status, name or profile picture. _A 5 minute warning " +
                         "will be given for this rule before a ban is issued_.", false)
                 .setColor(new Color(170, 0,0))
                 .build();
