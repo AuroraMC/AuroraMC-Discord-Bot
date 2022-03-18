@@ -37,7 +37,7 @@ public class JoinListener extends ListenerAdapter {
                         .setDescription("__**Welcome back to the AuroraMC Discord!**__\n" +
                                 "Because you have joined the Discord before and linked your account, your ranks have been automatically applied!\n" +
                                 " \n" +
-                                "For security reasons, you cannot unlink your own account.\n" +
+                                "For security reasons, you cannot unlink your own account. " +
                                 "If you wish to unlink your account, please contact support.\n" +
                                 " \n" +
                                 "We hope you enjoy your time in the AuroraMC Discord, and have fun!\n" +
