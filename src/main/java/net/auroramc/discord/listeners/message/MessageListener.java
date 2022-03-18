@@ -33,7 +33,7 @@ public class MessageListener extends ListenerAdapter {
             List<String> args = new ArrayList<>(Arrays.asList(e.getMessage().getContentStripped().split(" ")));
             args.remove(0);
             try {
-                link.execute(e.getMessage(), e.getAuthor(), "link", args);
+                link.execute(e.getMessage(), e.getAuthor(), args);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 e.getMessage().reply("Something went wrong when trying to execute this command, please try again!").queue();

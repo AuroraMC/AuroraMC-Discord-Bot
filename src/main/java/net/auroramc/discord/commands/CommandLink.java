@@ -5,24 +5,18 @@
 package net.auroramc.discord.commands;
 
 import net.auroramc.discord.DiscordBot;
-import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.managers.DatabaseManager;
-import net.auroramc.discord.managers.GuildManager;
 import net.auroramc.discord.managers.LinkManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class CommandLink {
 
-    public void execute(Message message, User user, String aliasUsed, List<String> args) {
+    public void execute(Message message, User user, List<String> args) {
         if (user.getMutualGuilds().size() > 0) {
             for (Guild guild : user.getMutualGuilds()) {
                 if (guild.getIdLong() == DiscordBot.getSettings().getMasterDiscord()) {
