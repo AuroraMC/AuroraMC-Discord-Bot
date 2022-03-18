@@ -7,6 +7,7 @@ package net.auroramc.discord;
 import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandLink;
 import net.auroramc.discord.commands.admin.CommandGenerateLink;
+import net.auroramc.discord.commands.admin.CommandPanel;
 import net.auroramc.discord.commands.setup.*;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.Command;
@@ -94,6 +95,7 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandRemoveRank());
         CommandManager.registerCommand(new CommandAllowSubRank());
         CommandManager.registerCommand(new CommandRemoveSubRank());
+        CommandManager.registerCommand(new CommandPanel());
 
 
         logger.info("Logging in...");
