@@ -47,6 +47,7 @@ public class LinkManager {
             role = guild.getRoleById(subrankMappings.get(subRank));
             assert role != null;
             guild.addRoleToMember(user.getId(), role).queue();
+            subranksAdded.add(subRank.getName());
         }
 
         TextChannel channel = guild.getTextChannelById(GuildManager.getLinkLogId(DiscordBot.getSettings().getMasterDiscord()));
@@ -54,6 +55,7 @@ public class LinkManager {
         channel.sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("User Link")
                 .setThumbnail(user.getAvatarUrl())
+                .setDescription(user.getAsTag())
                 .addField("Rank", rank.getName(), false)
                 .addField("SubRanks", (subranks.size() == 0?"None":String.join("\n", subranksAdded)), false)
                 .setTimestamp(Instant.now())
@@ -164,17 +166,17 @@ public class LinkManager {
                         .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                         .setTitle("Account linked!")
                         .setDescription("__**You've been invited!**__\n" +
-                                "Because of your ranks, you have access to some additional\n" +
+                                "Because of your ranks, you have access to some additional " +
                                 "Discord servers for your duties! The invite links are listed below:\n" +
                                 " \n" +
                                 sb.toString() +
                                 " \n" +
-                                "These invites are individual to you, and you should not share them with\n" +
+                                "These invites are individual to you, and you should not share them with " +
                                 "anyone, including your mentor/admin.\n" +
                                 " \n" +
-                                "These Discord invites are only for intended recipients only. Discord\n" +
-                                "invite links and their intended recipient are logged. Any attempt to\n" +
-                                "join from any other account will result in that account being permanently\n" +
+                                "These Discord invites are only for intended recipients only. Discord " +
+                                "invite links and their intended recipient are logged. Any attempt to " +
+                                "join from any other account will result in that account being permanently " +
                                 "banned from that server and _you_ receive an automatic reprimand.\n" +
                                 "**~AuroraMC Leadership Team**")
                         .setColor(new Color(0, 170,170))

@@ -61,7 +61,7 @@ public class CommandLink {
                                         .setDescription("__**Your account has been successfully linked!**__\n" +
                                                 "Your rank has been automatically applied to your account!\n" +
                                                 " \n" +
-                                                "For security reasons, you cannot unlink your own account.\n" +
+                                                "For security reasons, you cannot unlink your own account.x" +
                                                 "If you wish to unlink your account, please contact support.\n" +
                                                 " \n" +
                                                 "We hope you enjoy your time in the AuroraMC Discord, and have fun!\n" +
