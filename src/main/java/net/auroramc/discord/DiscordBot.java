@@ -5,13 +5,12 @@
 package net.auroramc.discord;
 
 import jline.console.ConsoleReader;
-import net.auroramc.discord.commands.CommandLink;
 import net.auroramc.discord.commands.admin.CommandGenerateLink;
 import net.auroramc.discord.commands.admin.CommandPanel;
 import net.auroramc.discord.commands.admin.CommandReadMePost;
 import net.auroramc.discord.commands.setup.*;
 import net.auroramc.discord.entities.BotSettings;
-import net.auroramc.discord.entities.Command;
+import net.auroramc.discord.entities.RankUpdateCheckRunnable;
 import net.auroramc.discord.listeners.ReadyEventListener;
 import net.auroramc.discord.listeners.member.JoinListener;
 import net.auroramc.discord.listeners.message.MessageListener;
@@ -30,8 +29,9 @@ import org.fusesource.jansi.AnsiConsole;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -45,9 +45,12 @@ public class DiscordBot {
     private static boolean shutdown;
     private static final Object object;
 
+    private static final ScheduledExecutorService scheduler;
+
     static {
         shutdown = false;
         object = new Object();
+        scheduler = Executors.newScheduledThreadPool(1);
     }
 
 
@@ -122,6 +125,7 @@ public class DiscordBot {
         jda.addEventListener(new MessageListener());
         jda.addEventListener(new JoinListener());
         GuildManager.load();
+        scheduler.scheduleAtFixedRate(new RankUpdateCheckRunnable(), 10, 10, TimeUnit.MINUTES);
         done();
     }
 
@@ -150,6 +154,7 @@ public class DiscordBot {
 
     private static void shutdown() {
         jda.shutdownNow();
+        scheduler.shutdownNow();
     }
 
     public static Logger getLogger() {
@@ -162,5 +167,9 @@ public class DiscordBot {
 
     public static BotSettings getSettings() {
         return settings;
+    }
+
+    public static JDA getJda() {
+        return jda;
     }
 }

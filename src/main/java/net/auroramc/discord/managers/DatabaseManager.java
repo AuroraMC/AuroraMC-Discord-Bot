@@ -7,6 +7,7 @@ package net.auroramc.discord.managers;
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.Rank;
+import net.auroramc.discord.entities.RankUpdate;
 import net.auroramc.discord.entities.SubRank;
 import net.auroramc.discord.util.MySQLConnectionPool;
 import net.dv8tion.jda.api.entities.ISnowflake;
@@ -361,6 +362,41 @@ public class DatabaseManager {
         try (Jedis connection = jedis.getResource()) {
             connection.set("panel.code." + uuid.toString(), code);
             connection.expire("panel.code." + uuid, 60);
+        }
+    }
+
+    public List<RankUpdate> getRankUpdates() {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM rank_changes");
+            ResultSet set = statement.executeQuery();
+
+            statement = connection.prepareStatement("DELETE FROM rank_changes");
+            statement.execute();
+
+            List<RankUpdate> updates = new ArrayList<>();
+
+            while (set.next()) {
+                long id = set.getLong(1);
+                Rank oldRank = Rank.getByID(set.getInt(2));
+                Rank newRank = null;
+                if (set.wasNull()) {
+                    oldRank = null;
+                } else {
+                    newRank = Rank.getByID(set.getInt(3));
+                }
+                SubRank addedSubrank = null;
+                SubRank removedSubrank = null;
+                String subrank = set.getString(4);
+                if (subrank.startsWith("+")) {
+                    addedSubrank = SubRank.getByID(Integer.parseInt(subrank.substring(1)));
+                } else {
+                    removedSubrank = SubRank.getByID(Integer.parseInt(subrank.substring(1)));
+                }
+                updates.add(new RankUpdate(id, oldRank, newRank, addedSubrank, removedSubrank));
+            }
+            return updates;
+        } catch (SQLException ignored) {
+            return null;
         }
     }
 
