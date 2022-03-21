@@ -80,6 +80,7 @@ public class LinkManager {
             role = guild.getRoleById(subrankMappings.get(subRank));
             assert role != null;
             guild.addRoleToMember(user.getId(), role).queue();
+            subranksAdded.add(subRank.getName());
         }
 
         TextChannel channel = guild.getTextChannelById(GuildManager.getLinkLogId(guild.getIdLong()));
