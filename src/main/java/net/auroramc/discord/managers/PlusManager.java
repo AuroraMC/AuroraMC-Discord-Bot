@@ -64,4 +64,25 @@ public class PlusManager {
         }
     }
 
+    public static void onCheck(Member member) {
+        UUID uuid = DiscordBot.getDatabaseManager().getDiscord(member.getIdLong());
+        long expire = DiscordBot.getDatabaseManager().getExpire(uuid);
+        if (expire == -1) {
+            Guild guild = DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord());
+            assert guild != null;
+            guild.removeRoleFromMember(member, Objects.requireNonNull(guild.getRoleById(955562965355085824L))).queue();
+            member.getUser().openPrivateChannel().complete().sendMessageEmbeds(new EmbedBuilder()
+                    .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                    .setTitle("Your Plus Subscription Expired!")
+                    .setDescription("Your Plus Subscription has ended and you no longer have the role in our Discord.\n" +
+                            " \n" +
+                            "If you decide to join Plus again, don't forge it gives you access to all sorts of cool features in the Discord, including exclusive commands and channels!\n" +
+                            " \n" +
+                            "Thanks for subscribing, and we hope you will again!\n" +
+                            "**~AuroraMC Leadership Team**")
+                    .setColor(new Color(255, 170, 0))
+                    .build()).queue();
+        }
+    }
+
 }
