@@ -6,6 +6,7 @@ package net.auroramc.discord.listeners.member;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.LinkManager;
+import net.auroramc.discord.managers.PlusManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.PrivateChannel;
@@ -45,6 +46,7 @@ public class JoinListener extends ListenerAdapter {
                         .setColor(new Color(0, 170,170))
                         .build()).queue();
                 LinkManager.processOtherInvites(e.getUser(), channel, uuid);
+                PlusManager.onJoin(e.getUser(), uuid);
             } else {
                 Role role = e.getGuild().getRoleById(886329879002505217L);
                 assert role != null;

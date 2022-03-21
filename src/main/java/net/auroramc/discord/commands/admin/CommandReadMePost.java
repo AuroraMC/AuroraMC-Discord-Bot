@@ -101,12 +101,23 @@ public class CommandReadMePost extends Command {
                         "**2)** Type /link. This will give you an 8 digit code. This code only lasts 60 seconds.\n" +
                         "**3)** In your DM's with this bot, type !link [8 Digit Code].\n" +
                         "**4)** Your account will be synced!\n" +
-                        "\n" +
-                        "Once your account is linked, your rank will automatically be applied.\n" +
-                        "We hope you enjoy your time in the AuroraMC Discord, and have fun!\n" +
-                        "~AuroraMC Leadership Team")
+                        " \n" +
+                        "Once your account is linked, your rank will automatically be applied.")
                 .setColor(new Color(0, 170,170))
                 .build();
-        message.getChannel().sendMessageEmbeds(welcome, light, medium, heavy, severe, extreme, linking).queue();
+        MessageEmbed plus = new EmbedBuilder()
+                .setTitle("A Note About Plus")
+                .setDescription("__**Plus Subscriptions**__\n" +
+                        "Once your account is linked, you are then able to sync your Plus subscription to your Discord!\n" +
+                        " \n" +
+                        "In order to do so, all you need to do is run `!plus` and the bot will sync your Plus subscription automatically! " +
+                        "You will need to do this every time your plus expires before it is renewed. If you renew before the subscription expires, " +
+                        "the bot will automatically take into account the new remaining time of your subscription.\n" +
+                        " \n" +
+                        "We hope you enjoy your time in the AuroraMC Discord, and have fun!\n" +
+                        "~AuroraMC Leadership Team")
+                .setColor(new Color(85, 255,255))
+                .build();
+        message.getChannel().sendMessageEmbeds(welcome, light, medium, heavy, severe, extreme, linking, plus).queue();
     }
 }

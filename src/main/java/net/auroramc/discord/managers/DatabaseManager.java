@@ -400,4 +400,44 @@ public class DatabaseManager {
         }
     }
 
+    public long getExpire(UUID player) {
+        try (Jedis connection = jedis.getResource()) {
+            if (connection.hexists(String.format("plus.%s", player), "expire")) {
+                return Long.parseLong(connection.hget(String.format("plus.%s", player), "expire"));
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    public int getDaysSubscribed(UUID player) {
+        try (Jedis connection = jedis.getResource()) {
+            if (connection.hexists(String.format("plus.%s", player), "daysSubscribed")) {
+                return Integer.parseInt(connection.hget(String.format("plus.%s", player), "daysSubscribed"));
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    public int getStreak(UUID player) {
+        try (Jedis connection = jedis.getResource()) {
+            if (connection.hexists(String.format("plus.%s", player), "streak")) {
+                return Integer.parseInt(connection.hget(String.format("plus.%s", player), "streak"));
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    public long getStreakStartTimestamp(UUID player) {
+        try (Jedis connection = jedis.getResource()) {
+            if (connection.hexists(String.format("plus.%s", player), "streakStart")) {
+                return Long.parseLong(connection.hget(String.format("plus.%s", player), "streakStart"));
+            } else {
+                return -1;
+            }
+        }
+    }
+
 }

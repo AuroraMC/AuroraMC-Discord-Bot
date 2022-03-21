@@ -4,8 +4,64 @@
 
 package net.auroramc.discord.managers;
 
+import net.auroramc.discord.DiscordBot;
+import net.auroramc.discord.entities.PlusSubscription;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+
+import java.awt.*;
+import java.util.Objects;
+import java.util.UUID;
+
 public class PlusManager {
 
+    public static void onJoin(User user, UUID uuid) {
+        long expire = DiscordBot.getDatabaseManager().getExpire(uuid);
+        if (expire != -1) {
+            Guild guild = DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord());
+            assert guild != null;
+            guild.addRoleToMember(Objects.requireNonNull(guild.getMember(user)), Objects.requireNonNull(guild.getRoleById(955562965355085824L))).queue();
+            user.openPrivateChannel().complete().sendMessageEmbeds(new EmbedBuilder()
+                    .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                    .setTitle("Plus Subscriber!")
+                    .setDescription("Because you are an AuroraMC Plus subscriber, you've been given a special role in the Discord!\n" +
+                            " \n" +
+                            "This gives you access to all sorts of cool features in the Discord, including exclusive commands and channels!\n" +
+                            " \n" +
+                            "Your perks expire: <t:" + (expire / 1000) + ":f>  (<t:" + (expire / 1000) + ":R>)\n" +
+                            " \n" +
+                            "Thanks for being a loyal subscriber!\n" +
+                            "**~AuroraMC Leadership Team**")
+                    .setColor(new Color(255, 170, 0))
+                    .build()).queue();
+        }
+    }
 
+    public static void onCommand(Member member, Message message, UUID uuid) {
+        long expire = DiscordBot.getDatabaseManager().getExpire(uuid);
+        if (expire != -1) {
+            Guild guild = DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord());
+            assert guild != null;
+            guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(955562965355085824L))).queue();
+            message.replyEmbeds(new EmbedBuilder()
+                    .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                    .setTitle("Plus Subscriber!")
+                    .setDescription("Because you are an AuroraMC Plus subscriber, you've been given a special role in the Discord!\n" +
+                            " \n" +
+                            "This gives you access to all sorts of cool features in the Discord, including exclusive commands and channels!\n" +
+                            " \n" +
+                            "Your perks expire: <t:" + (expire / 1000) + ":f>  (<t:" + (expire / 1000) + ":R>)\n" +
+                            " \n" +
+                            "Thanks for being a loyal subscriber!\n" +
+                            "**~AuroraMC Leadership Team**")
+                    .setColor(new Color(255, 170, 0))
+                    .build()).queue();
+        } else {
+            message.reply("You do not have an active Plus subscription. Please allow up to 24 hours for your store purchases to go through.").queue();
+        }
+    }
 
 }

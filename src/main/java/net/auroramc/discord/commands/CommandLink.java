@@ -6,6 +6,7 @@ package net.auroramc.discord.commands;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.LinkManager;
+import net.auroramc.discord.managers.PlusManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
@@ -63,6 +64,7 @@ public class CommandLink {
                                         .setColor(new Color(0, 170, 170))
                                         .build()).queue();
                                 LinkManager.processOtherInvites(user, message, uuid);
+                                PlusManager.onJoin(user, uuid);
                             } else {
                                 message.reply("You provided an invalid code, please try again!").queue();
                             }
