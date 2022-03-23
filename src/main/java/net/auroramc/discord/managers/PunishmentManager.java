@@ -65,6 +65,35 @@ public class PunishmentManager {
         }
     }
 
+    public static void punishUser(SelfUser user, Guild guild, long id, int weight, String reason) {
+        PunishmentLength punishmentLength = generateLength(id, weight);
+        long issued = System.currentTimeMillis();
+        long expire = ((punishmentLength.getMsValue() == -1d)?-1:issued + Math.round(punishmentLength.getMsValue()));
+        String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
+        DiscordBot.getDatabaseManager().punishUser(code, id, expire == -1d, issued, expire, reason, weight, user.getIdLong());
+
+        Member member = guild.retrieveMemberById(id).complete();
+        member.getUser().openPrivateChannel().queue((privateChannel -> privateChannel.sendMessageEmbeds(
+                new EmbedBuilder()
+                        .setTitle("You've been punished")
+                        .setTimestamp(Instant.now())
+                        .setAuthor("AuroraMC", "https://auroramc.net")
+                        .setDescription("You have been " + ((expire == -1)?"banned":"timed out") + " in the AuroraMC Discord Server.\n" +
+                                " \n" +
+                                "**Reason:** " + reason + "\n" +
+                                "**Length:** " + punishmentLength.getFormatted() + "\n" +
+                                "**Expires:** " + ((expire == -1)?"Never":"<t:" + expire / 1000L + ":f> (<t:" + expire / 1000L + ":R>)\n" +
+                                " \n" +
+                                "If you believe this was given in error, please submit an appeal at https://auroramc.net/appeals"))
+                        .build()
+        ).queue()));
+        if (expire == -1d) {
+            member.ban(7, reason).queue();
+        } else {
+            member.timeoutUntil(Instant.ofEpochMilli(expire)).queue();
+        }
+    }
+
     public static void getPunishmentHistory(Member user, Message message, long id) {
         List<Punishment> punishments;
         if (CommandManager.hasPermission(user, Permission.ADMIN)) {
