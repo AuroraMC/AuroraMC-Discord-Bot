@@ -62,11 +62,12 @@ public class SpamManager {
                 if (deque.size() >= 5) {
                     deque.removeFirst();
                 }
+                LinkedList<String> list = new LinkedList<>(deque);
                 double totalSimilarity = 0.0d;
                 int comparisons = 0;
-                for (int i = 0; i < deque.size()-1; i++) {
-                    for (int k = i+1; k < deque.size(); k++) {
-                        totalSimilarity += similarity(((LinkedList<String>)deque).get(i), ((LinkedList<String>)deque).get(k));
+                for (int i = 0; i < list.size()-1; i++) {
+                    for (int k = i+1; k < list.size(); k++) {
+                        totalSimilarity += similarity(list.get(i), list.get(k));
                         comparisons++;
                     }
                 }
