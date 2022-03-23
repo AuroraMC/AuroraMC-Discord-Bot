@@ -60,7 +60,7 @@ public class CommandManager {
         }
     }
 
-    private static boolean hasPermission(Member user, Permission permission) {
+    public static boolean hasPermission(Member user, Permission permission) {
         Map<Rank, Long> rankMappings = GuildManager.getRankMappings(user.getGuild().getIdLong());
         Map<SubRank, Long> subrankMappings = GuildManager.getSubrankMappings(user.getGuild().getIdLong());
         for (Role role : user.getRoles()) {

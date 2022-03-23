@@ -5,12 +5,10 @@
 package net.auroramc.discord.managers;
 
 import net.auroramc.discord.DiscordBot;
-import net.auroramc.discord.entities.BotSettings;
-import net.auroramc.discord.entities.Rank;
-import net.auroramc.discord.entities.RankUpdate;
-import net.auroramc.discord.entities.SubRank;
+import net.auroramc.discord.entities.*;
 import net.auroramc.discord.util.MySQLConnectionPool;
 import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.entities.User;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -437,6 +435,65 @@ public class DatabaseManager {
             } else {
                 return -1;
             }
+        }
+    }
+
+    public int getTotalValidPunishments(long id, int weight) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM dc_punishments WHERE punished = ? AND remover IS NULL AND removal_reason IS NULL AND visible = true AND weight = ?");
+            statement.setLong(1, id);
+            statement.setInt(2, weight);
+            ResultSet set = statement.executeQuery();
+
+            return set.getInt(1);
+        } catch (SQLException ignored) {
+            return 0;
+        }
+    }
+
+    public List<Punishment> getPunishmentsVisible(long id) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? AND remover IS NULL AND removal_reason IS NULL AND visible = true");
+            statement.setLong(1, id);
+            ResultSet set = statement.executeQuery();
+            List<Punishment> punishments = new ArrayList<>();
+            while (set.next()) {
+                punishments.add(new Punishment(set.getString(1), set.getLong(2), set.getBoolean(3), set.getString(4), set.getInt(5), set.getLong(6), set.getLong(7), set.getLong(8), set.getString(9), set.getString(10), set.getLong(11), set.getBoolean(12)));
+            }
+            return punishments;
+        } catch (SQLException ignored) {
+            return null;
+        }
+    }
+
+    public List<Punishment> getAllPunishments(long id) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? AND remover IS NULL AND removal_reason IS NULL");
+            statement.setLong(1, id);
+            ResultSet set = statement.executeQuery();
+            List<Punishment> punishments = new ArrayList<>();
+            while (set.next()) {
+                punishments.add(new Punishment(set.getString(1), set.getLong(2), set.getBoolean(3), set.getString(4), set.getInt(5), set.getLong(6), set.getLong(7), set.getLong(8), set.getString(9), set.getString(10), set.getLong(11), set.getBoolean(12)));
+            }
+            return punishments;
+        } catch (SQLException ignored) {
+            return null;
+        }
+    }
+
+    public void punishUser(String code, long punished, boolean ban, long issued, long expire, String reason, int weight, long punisher) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO dc_punishments(punishment_code, punished, is_ban, issued, expire, reason, weight, punisher) VALUES (?,?,?,?,?,?,?,?)");
+            statement.setString(1, code);
+            statement.setLong(2, punished);
+            statement.setBoolean(3, ban);
+            statement.setLong(4, issued);
+            statement.setLong(5, expire);
+            statement.setString(6, reason);
+            statement.setInt(7, weight);
+            statement.setLong(8, punisher);
+            statement.execute();
+        } catch (SQLException ignored) {
         }
     }
 
