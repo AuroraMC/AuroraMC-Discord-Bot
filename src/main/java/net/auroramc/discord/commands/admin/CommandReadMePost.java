@@ -7,9 +7,11 @@ package net.auroramc.discord.commands.admin;
 import net.auroramc.discord.entities.Command;
 import net.auroramc.discord.entities.Permission;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.util.Collections;
@@ -118,6 +120,7 @@ public class CommandReadMePost extends Command {
                         "~AuroraMC Leadership Team")
                 .setColor(new Color(85, 255,255))
                 .build();
-        message.getChannel().sendMessageEmbeds(welcome, light, medium, heavy, severe, extreme, linking, plus).queue();
+        message.getChannel().sendMessageEmbeds(welcome, light, medium, heavy, severe, extreme, linking, plus).setActionRow(Button.link("https://auroramc.net", "Website").withEmoji(Emoji.fromUnicode("U+1F5A5")), Button.link("https://store.auroramc.net", "Store").withEmoji(Emoji.fromUnicode("U+1F6D2")), Button.link("https://auroramc.net/terms", "Terms").withEmoji(Emoji.fromUnicode("U+1F4DD")), Button.link("https://auroramc.net/privacy", "Privacy Policy").withEmoji(Emoji.fromUnicode("U+1F512"))).queue();
+        message.delete().queue();
     }
 }

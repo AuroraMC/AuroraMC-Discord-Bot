@@ -46,7 +46,7 @@ public class PlusManager {
             Guild guild = DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord());
             assert guild != null;
             guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(955562965355085824L))).queue();
-            message.replyEmbeds(new EmbedBuilder()
+            member.getUser().openPrivateChannel().complete().sendMessageEmbeds(new EmbedBuilder()
                     .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                     .setTitle("Plus Subscriber!")
                     .setDescription("Because you are an AuroraMC Plus subscriber, you've been given a special role in the Discord!\n" +

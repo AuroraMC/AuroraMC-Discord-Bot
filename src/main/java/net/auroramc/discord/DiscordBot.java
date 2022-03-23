@@ -9,6 +9,7 @@ import net.auroramc.discord.commands.CommandPlus;
 import net.auroramc.discord.commands.admin.CommandGenerateLink;
 import net.auroramc.discord.commands.admin.CommandPanel;
 import net.auroramc.discord.commands.admin.CommandReadMePost;
+import net.auroramc.discord.commands.moderation.CommandPunish;
 import net.auroramc.discord.commands.setup.*;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.PlusCheckRunnable;
@@ -104,6 +105,7 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandPanel());
         CommandManager.registerCommand(new CommandReadMePost());
         CommandManager.registerCommand(new CommandPlus());
+        CommandManager.registerCommand(new CommandPunish());
 
 
         logger.info("Logging in...");
