@@ -16,7 +16,7 @@ import net.auroramc.discord.entities.PlusCheckRunnable;
 import net.auroramc.discord.entities.RankUpdateCheckRunnable;
 import net.auroramc.discord.listeners.InteractionListener;
 import net.auroramc.discord.listeners.ReadyEventListener;
-import net.auroramc.discord.listeners.member.JoinListener;
+import net.auroramc.discord.listeners.MemberListener;
 import net.auroramc.discord.listeners.MessageListener;
 import net.auroramc.discord.managers.CommandManager;
 import net.auroramc.discord.managers.DatabaseManager;
@@ -129,7 +129,7 @@ public class DiscordBot {
                 .build();
 
         jda.addEventListener(new MessageListener());
-        jda.addEventListener(new JoinListener());
+        jda.addEventListener(new MemberListener());
         jda.addEventListener(new InteractionListener());
         GuildManager.load();
         scheduler.scheduleAtFixedRate(new RankUpdateCheckRunnable(), 10, 10, TimeUnit.MINUTES);

@@ -2,7 +2,7 @@
  * Copyright (c) 2022 AuroraMC Ltd. All Rights Reserved.
  */
 
-package net.auroramc.discord.listeners.member;
+package net.auroramc.discord.listeners;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.LinkManager;
@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.UUID;
 
-public class JoinListener extends ListenerAdapter {
+public class MemberListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent e) {
