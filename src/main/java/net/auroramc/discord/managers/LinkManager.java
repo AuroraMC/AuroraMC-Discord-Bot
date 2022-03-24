@@ -151,7 +151,7 @@ public class LinkManager {
                 assert channel != null;
                 Invite invite = channel.createInvite()
                         .setMaxAge(0)
-                        .setMaxUses(0)
+                        .setMaxUses(1)
                         .setUnique(true)
                         .complete();
                 sb.append("**");
