@@ -10,7 +10,9 @@ import net.auroramc.discord.entities.Punishment;
 import net.auroramc.discord.entities.PunishmentLength;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -37,13 +39,17 @@ public class PunishmentManager {
     }
 
     public static void punishUser(Message message, long id, int weight, String reason) {
+        Member member = message.getGuild().retrieveMemberById(id).complete();
+        if (member.isTimedOut()) {
+            message.reply("That user is already punished.").queue();
+            return;
+        }
         PunishmentLength punishmentLength = generateLength(id, weight);
         long issued = System.currentTimeMillis();
         long expire = ((punishmentLength.getMsValue() == -1d)?-1:issued + Math.round(punishmentLength.getMsValue()));
         String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
         DiscordBot.getDatabaseManager().punishUser(code, id, expire == -1d, issued, expire, reason, weight, message.getAuthor().getIdLong());
 
-        Member member = message.getGuild().retrieveMemberById(id).complete();
         member.getUser().openPrivateChannel().queue((privateChannel -> privateChannel.sendMessageEmbeds(
                 new EmbedBuilder()
                         .setTitle("You've been punished")
@@ -58,6 +64,7 @@ public class PunishmentManager {
                                 "If you believe this was given in error, please submit an appeal at https://auroramc.net/appeals"))
                         .build()
         ).queue()));
+        message.reply("You have " + ((expire == -1)?"banned":"timed out") + " User " + member.getAsMention() + " for " + punishmentLength.getFormatted() + ".").queue();
         if (expire == -1d) {
             member.ban(7, reason).queue();
         } else {
@@ -66,13 +73,15 @@ public class PunishmentManager {
     }
 
     public static void punishUser(SelfUser user, Guild guild, long id, int weight, String reason) {
+        Member member = guild.retrieveMemberById(id).complete();
+        if (member.isTimedOut()) {
+            return;
+        }
         PunishmentLength punishmentLength = generateLength(id, weight);
         long issued = System.currentTimeMillis();
         long expire = ((punishmentLength.getMsValue() == -1d)?-1:issued + Math.round(punishmentLength.getMsValue()));
         String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
         DiscordBot.getDatabaseManager().punishUser(code, id, expire == -1d, issued, expire, reason, weight, user.getIdLong());
-
-        Member member = guild.retrieveMemberById(id).complete();
         member.getUser().openPrivateChannel().queue((privateChannel -> privateChannel.sendMessageEmbeds(
                 new EmbedBuilder()
                         .setTitle("You've been punished")
@@ -108,33 +117,34 @@ public class PunishmentManager {
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setColor(new Color(170, 0, 0));
-        builder.setTitle("Punishment History for User " + id);
+        builder.setTitle("Punishment History for User " + id + "");
         builder.setTimestamp(Instant.now());
 
-        for (int i = 0;i <= 5 && i <= punishments.size();i++) {
+        for (int i = 0;i <= 3 && i < punishments.size();i++) {
             Punishment punishment = punishments.get(i);
             String sb = "**Issued:** <t:" + punishment.getIssued() / 1000L + ":f> (<t:" + punishment.getIssued() / 1000L + ":R>)\n" +
-                    "**Weight:** " + WEIGHTS[punishment.getWeight() - 1] +
+                    "**Weight:** " + WEIGHTS[punishment.getWeight() - 1] + "\n" +
                     "**Reason:** " + punishment.getReason() + "\n" +
                     "**Length:** " + new PunishmentLength(punishment.getExpire() - punishment.getIssued()).getFormatted() + "\n" +
                     "**Expires:** " + ((punishment.getExpire() == -1)?"Never":"<t:" + punishment.getExpire() / 1000L + ":f> (<t:" + punishment.getExpire() / 1000L + ":R>)") + "\n" +
                     "**Punisher:** <@" + punishment.getPunisher() + ">\n" +
                     "**Evidence:** " + ((punishment.getEvidence() != null)?punishment.getEvidence():"None") + "\n" +
-                    ((punishment.getRemover() != -1)?"**Remover**: <@" + punishment.getRemover() + ">\n"  +
+                    ((punishment.getRemover() != 0 && punishment.getRemovalReason() != null)?"**Remover**: <@" + punishment.getRemover() + ">\n"  +
                             "**Removal Reason:** " + punishment.getRemovalReason():"");
             builder.addField("Punishment " + punishment.getPunishmentCode(), sb, false);
         }
+        builder.setFooter("Page 1/" + ((punishments.size() / 4) + 1));
         MessageEmbed embed = builder.build();
         Button button = Button.primary("ph-2-" + id + "-" + user.getIdLong(), "Next Page").withEmoji(Emoji.fromUnicode("U+27A1"));
 
-        if (punishments.size() > 6) {
+        if (punishments.size() > 4) {
             message.replyEmbeds(embed).setActionRow(button).delay(5, TimeUnit.MINUTES).flatMap(Message::delete).queue();
         } else {
             message.replyEmbeds(embed).delay(5, TimeUnit.MINUTES).flatMap(Message::delete).queue();
         }
     }
 
-    public static void onPageChange(Message message, int page, long id, long recipient) {
+    public static void onPageChange(ButtonInteractionEvent event, Message message, int page, long id, long recipient) {
         List<Punishment> punishments;
         if (CommandManager.hasPermission(Objects.requireNonNull(message.getGuild().getMemberById(recipient)), Permission.ADMIN)) {
             punishments = DiscordBot.getDatabaseManager().getAllPunishments(id);
@@ -151,31 +161,58 @@ public class PunishmentManager {
         builder.setTitle("Punishment History for User " + id);
         builder.setTimestamp(Instant.now());
 
-        for (int i = (6*page);i <= (6*page) + 5 && i <= punishments.size();i++) {
+        for (int i = (4*(page - 1));i <= (4*(page - 1)) + 3 && i < punishments.size();i++) {
             Punishment punishment = punishments.get(i);
             String sb = "**Issued:** <t:" + punishment.getIssued() / 1000L + ":f> (<t:" + punishment.getIssued() / 1000L + ":R>)\n" +
-                    "**Weight:** " + WEIGHTS[punishment.getWeight() - 1] +
+                    "**Weight:** " + WEIGHTS[punishment.getWeight() - 1] + "\n" +
                     "**Reason:** " + punishment.getReason() + "\n" +
                     "**Length:** " + new PunishmentLength(punishment.getExpire() - punishment.getIssued()).getFormatted() + "\n" +
                     "**Expires:** " + ((punishment.getExpire() == -1)?"Never":"<t:" + punishment.getExpire() / 1000L + ":f> (<t:" + punishment.getExpire() / 1000L + ":R>)") + "\n" +
                     "**Punisher:** <@" + punishment.getPunisher() + ">\n" +
                     "**Evidence:** " + ((punishment.getEvidence() != null)?punishment.getEvidence():"None") + "\n" +
-                    ((punishment.getRemover() != -1)?"**Remover**: <@" + punishment.getRemover() + ">\n"  +
+                    ((punishment.getRemover() != 0 && punishment.getRemovalReason() != null)?"**Remover**: <@" + punishment.getRemover() + ">\n"  +
                             "**Removal Reason:** " + punishment.getRemovalReason():"");
             builder.addField("Punishment " + punishment.getPunishmentCode(), sb, false);
         }
+        builder.setFooter("Page " + page + "/" + ((punishments.size() / 4) + 1));
         MessageEmbed embed = builder.build();
         Button next = Button.primary("ph-" + (page + 1) + "-" + id + "-" + recipient, "Next Page").withEmoji(Emoji.fromUnicode("U+27A1"));
         Button prev = Button.primary("ph-" + (page - 1) + "-" + id + "-" + recipient, "Previous Page").withEmoji(Emoji.fromUnicode("U+2B05"));
-        if (punishments.size() > 6) {
+        if (punishments.size() > (4*(page - 1)) + 3) {
             if (page == 1) {
-                message.editMessageEmbeds(embed).setActionRow(next).queue();
+                event.editMessageEmbeds(embed).setActionRow(next).queue();
             } else {
-                message.editMessageEmbeds(embed).setActionRow(prev, next).queue();
+                event.editMessageEmbeds(embed).setActionRow(prev, next).queue();
             }
         } else {
-            message.editMessageEmbeds(embed).queue();
+            event.editMessageEmbeds(embed).setActionRow(prev).queue();
         }
+    }
+
+    public static void removePunishment(Message message, String code, String reason) {
+        Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
+        if (punishment == null) {
+            message.reply("That is not a valid punishment code.").queue();
+            return;
+        }
+        Member member = message.getGuild().retrieveMemberById(punishment.getPunished()).complete();
+        if (member != null) {
+            if (!member.isTimedOut()) {
+                message.reply("That user is not currently punished.").queue();
+                return;
+            }
+            member.removeTimeout().queue();
+        } else {
+            Guild.Ban ban = message.getGuild().retrieveBanById(punishment.getPunished()).complete();
+            if (ban == null) {
+                message.reply("That user is not currently punished.").queue();
+                return;
+            }
+            message.getGuild().unban(ban.getUser()).queue();
+        }
+
+        DiscordBot.getDatabaseManager().removePunishment(punishment.getPunishmentCode(), message.getAuthor().getIdLong(), reason);
+        message.reply("User has been unpunished.").queue();
     }
 
 }

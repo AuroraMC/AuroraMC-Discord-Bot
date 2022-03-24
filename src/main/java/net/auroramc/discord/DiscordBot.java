@@ -8,7 +8,9 @@ import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandPlus;
 import net.auroramc.discord.commands.admin.*;
 import net.auroramc.discord.commands.moderation.CommandPunish;
+import net.auroramc.discord.commands.moderation.CommandPunishmentHistory;
 import net.auroramc.discord.commands.moderation.CommandSlowMode;
+import net.auroramc.discord.commands.moderation.CommandUnpunish;
 import net.auroramc.discord.commands.setup.*;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.ChatFilter;
@@ -110,6 +112,8 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandReadMePost());
         CommandManager.registerCommand(new CommandPlus());
         CommandManager.registerCommand(new CommandPunish());
+        CommandManager.registerCommand(new CommandUnpunish());
+        CommandManager.registerCommand(new CommandPunishmentHistory());
         CommandManager.registerCommand(new CommandPurge());
         CommandManager.registerCommand(new CommandSlowMode());
         CommandManager.registerCommand(new CommandReloadFilter());

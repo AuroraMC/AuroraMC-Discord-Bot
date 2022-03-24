@@ -455,7 +455,7 @@ public class DatabaseManager {
 
     public List<Punishment> getPunishmentsVisible(long id) {
         try (Connection connection = mysql.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? AND remover IS NULL AND removal_reason IS NULL AND visible = true");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? AND visible = true");
             statement.setLong(1, id);
             ResultSet set = statement.executeQuery();
             List<Punishment> punishments = new ArrayList<>();
@@ -470,7 +470,7 @@ public class DatabaseManager {
 
     public List<Punishment> getAllPunishments(long id) {
         try (Connection connection = mysql.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? AND remover IS NULL AND removal_reason IS NULL");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ?");
             statement.setLong(1, id);
             ResultSet set = statement.executeQuery();
             List<Punishment> punishments = new ArrayList<>();
@@ -495,7 +495,8 @@ public class DatabaseManager {
             statement.setInt(7, weight);
             statement.setLong(8, punisher);
             statement.execute();
-        } catch (SQLException ignored) {
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -506,6 +507,31 @@ public class DatabaseManager {
             List<String> blacklist = new ArrayList<>(connection.smembers("filter.blacklist"));
             List<String> phrases = new ArrayList<>(connection.smembers("filter.phrases"));
             return new ChatFilter(coreWords, blacklist, whitelist, phrases);
+        }
+    }
+
+    public Punishment getPunishment(String code)  {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punishment_code = ? AND visible = TRUE");
+            statement.setString(1, code);
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                return new Punishment(set.getString(1), set.getLong(2), set.getBoolean(3), set.getString(4), set.getInt(5), set.getLong(6), set.getLong(7), set.getLong(8), set.getString(9), set.getString(10), set.getLong(11), set.getBoolean(12));
+            }
+            return null;
+        } catch (SQLException ignored) {
+            return null;
+        }
+    }
+
+    public void removePunishment(String code, long id, String reason)  {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("UPDATE dc_punishments SET remover = ?, removal_reason = ? WHERE punishment_code = ?");
+            statement.setLong(1, id);
+            statement.setString(2, reason);
+            statement.setString(3, code);
+            statement.execute();
+        } catch (SQLException ignored) {
         }
     }
 
