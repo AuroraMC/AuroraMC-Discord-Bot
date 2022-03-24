@@ -19,7 +19,7 @@ public class InteractionListener extends ListenerAdapter {
                 int page = Integer.parseInt(ids[1]);
                 long id = Long.parseLong(ids[2]);
                 long recipient = Long.parseLong(ids[3]);
-                PunishmentManager.onPageChange(event.getMessage(), page, id, recipient);
+                PunishmentManager.onPageChange(event, event.getMessage(), page, id, recipient);
             }
         }
     }
