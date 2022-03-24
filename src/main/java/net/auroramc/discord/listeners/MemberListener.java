@@ -99,7 +99,7 @@ public class MemberListener extends ListenerAdapter {
                         break;
                     }
                 }
-                if (found) {
+                if (!found) {
                     //Was not found. This is the invite.
                     long userId = DiscordBot.getDatabaseManager().getRecipient(e.getGuild().getIdLong(), code);
                     if (userId == e.getUser().getIdLong()) {
