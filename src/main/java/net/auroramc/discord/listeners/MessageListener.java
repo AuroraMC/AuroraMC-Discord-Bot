@@ -36,13 +36,22 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent e) {
+        if (e.getAuthor().isBot()) {
+            return;
+        }
         if (e.isFromGuild()) {
             if (e.getMessage().getContentStripped().startsWith(DiscordBot.getSettings().getCommandPrefix() + "")) {
                 CommandManager.onCommand(e.getMessage(), e.getMember());
             } else {
                 //Spam manager
-                if (!SpamManager.onMessage(e.getMessage())) {
-                    MessageCache.onMessage(e.getMessage());
+                String unfiltered = e.getMessage().getContentStripped();
+                String filtered = DiscordBot.getFilter().filter(unfiltered);
+                if (unfiltered.equals(filtered)) {
+                    if (!SpamManager.onMessage(e.getMessage())) {
+                        MessageCache.onMessage(e.getMessage());
+                    }
+                } else {
+                    e.getMessage().delete().queue();
                 }
             }
         } else if (e.getMessage().getContentStripped().startsWith("!link")) {
@@ -62,6 +71,10 @@ public class MessageListener extends ListenerAdapter {
         if (event.isFromGuild() && event.isFromType(ChannelType.TEXT)) {
             Message message = MessageCache.getMessage(event.getMessageIdLong());
             if (message != null) {
+                MessageCache.removeMessage(event.getMessageIdLong());
+                if (message.getAuthor().isBot()) {
+                    return;
+                }
                 Objects.requireNonNull(event.getGuild().getTextChannelById(GuildManager.getServerLogId(event.getGuild().getIdLong()))).sendMessageEmbeds(
                     new EmbedBuilder()
                             .setTitle("Message Deleted")
@@ -77,8 +90,13 @@ public class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
         if (event.isFromGuild() && event.isFromType(ChannelType.TEXT)) {
+            if (event.getAuthor().isBot()) {
+                return;
+            }
             Message message = MessageCache.getMessage(event.getMessageIdLong());
             if (message != null) {
+                MessageCache.onMessage(event.getMessage());
+
                 Objects.requireNonNull(event.getGuild().getTextChannelById(GuildManager.getServerLogId(event.getGuild().getIdLong()))).sendMessageEmbeds(
                         new EmbedBuilder()
                                 .setTitle("Message Edited")
