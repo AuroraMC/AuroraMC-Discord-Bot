@@ -55,7 +55,7 @@ public class DiscordBot {
     static {
         shutdown = false;
         object = new Object();
-        scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = Executors.newScheduledThreadPool(2);
     }
 
 
@@ -138,8 +138,8 @@ public class DiscordBot {
         jda.addEventListener(new MemberListener());
         jda.addEventListener(new InteractionListener());
         GuildManager.load();
-        scheduler.scheduleAtFixedRate(new RankUpdateCheckRunnable(), 10, 10, TimeUnit.MINUTES);
-        scheduler.scheduleAtFixedRate(new PlusCheckRunnable(), 0, 12, TimeUnit.HOURS);
+        scheduler.scheduleAtFixedRate(new RankUpdateCheckRunnable(), 1, 10, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new PlusCheckRunnable(), 1, 12, TimeUnit.HOURS);
         done();
     }
 
