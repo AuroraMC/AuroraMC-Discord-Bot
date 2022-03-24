@@ -11,7 +11,6 @@ import net.auroramc.discord.entities.SubRank;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
-import org.omg.CORBA.LongHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
