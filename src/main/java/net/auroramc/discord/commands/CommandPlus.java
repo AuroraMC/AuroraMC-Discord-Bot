@@ -19,7 +19,7 @@ public class CommandPlus extends Command {
 
 
     public CommandPlus() {
-        super("plus", Collections.singletonList("checkplus"), Collections.singletonList(Permission.PLAYER));
+        super("plus", Collections.singletonList("checkplus"), Collections.singletonList(Permission.PLAYER), Collections.singletonList(955573865063514183L));
     }
 
     @Override

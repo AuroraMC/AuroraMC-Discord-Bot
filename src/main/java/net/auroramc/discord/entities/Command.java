@@ -18,12 +18,14 @@ public abstract class Command {
     private final List<String> aliases;
     protected final Map<String, Command> subcommands;
     private final List<Permission> permission;
+    private final List<Long> allowedChannels;
 
-    public Command(String mainCommand, List<String> alises, List<Permission> permission) {
+    public Command(String mainCommand, List<String> aliases, List<Permission> permission, List<Long> allowedChannels) {
         this.mainCommand = mainCommand.toLowerCase();
-        this.aliases = alises;
+        this.aliases = aliases;
         this.subcommands = new HashMap<>();
         this.permission = permission;
+        this.allowedChannels = allowedChannels;
     }
     public abstract void execute(Message message, Member member, String aliasUsed, List<String> args);
 
@@ -50,4 +52,8 @@ public abstract class Command {
         return permission;
     }
 
+    public List<Long> getAllowedChannels() {
+        return allowedChannels;
+    }
 }
+

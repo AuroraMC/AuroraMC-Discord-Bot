@@ -17,7 +17,7 @@ public class CommandPunishmentHistory extends Command {
 
 
     public CommandPunishmentHistory() {
-        super("punishmenthistory", Collections.singletonList("ph"), Collections.singletonList(Permission.MODERATION));
+        super("punishmenthistory", Collections.singletonList("ph"), Collections.singletonList(Permission.MODERATION), Collections.singletonList(956630044225187851L));
     }
 
     @Override

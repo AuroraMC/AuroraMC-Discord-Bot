@@ -22,7 +22,7 @@ public class CommandGenerateLink extends Command {
 
 
     public CommandGenerateLink() {
-        super("generatelink", Arrays.asList("genlink", "gencode"), Collections.singletonList(Permission.ADMIN));
+        super("generatelink", Arrays.asList("genlink", "gencode"), Collections.singletonList(Permission.ADMIN), null);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CommandForceUpdate extends Command {
     public CommandForceUpdate() {
-        super("forceupdate", Collections.singletonList("fu"), Collections.singletonList(Permission.ADMIN));
+        super("forceupdate", Collections.singletonList("fu"), Collections.singletonList(Permission.ADMIN), null);
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class CommandUnpunish extends Command {
     public CommandUnpunish() {
-        super("unpunish", Collections.singletonList("up"), Collections.singletonList(Permission.MODERATION));
+        super("unpunish", Collections.singletonList("up"), Collections.singletonList(Permission.MODERATION), Collections.singletonList(956630044225187851L));
     }
 
     @Override

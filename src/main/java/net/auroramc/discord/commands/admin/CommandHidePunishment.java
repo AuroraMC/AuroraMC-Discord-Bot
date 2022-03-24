@@ -17,7 +17,7 @@ import java.util.List;
 public class CommandHidePunishment extends Command {
 
     public CommandHidePunishment() {
-        super("hidepunishment", Arrays.asList("hp", "hide", "h"), Collections.singletonList(Permission.MODERATION));
+        super("hidepunishment", Arrays.asList("hp", "hide", "h"), Collections.singletonList(Permission.ADMIN), null);
     }
 
     @Override
