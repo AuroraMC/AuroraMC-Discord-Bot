@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CommandEvidence extends Command {
     public CommandEvidence() {
-        super("evidence", Collections.singletonList("e"), Collections.singletonList(Permission.MODERATION));
+        super("evidence", Collections.singletonList("e"), Collections.singletonList(Permission.MODERATION), Collections.singletonList(956630044225187851L));
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CommandReloadFilter extends Command {
     public CommandReloadFilter() {
-        super("reloadfilter", Collections.singletonList("filter"), Collections.singletonList(Permission.ADMIN));
+        super("reloadfilter", Collections.singletonList("filter"), Collections.singletonList(Permission.ADMIN), null);
     }
 
     @Override

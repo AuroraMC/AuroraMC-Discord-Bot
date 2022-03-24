@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class CommandRemoveRank extends Command {
     public CommandRemoveRank() {
-        super("removerank", Collections.emptyList(), null);
+        super("removerank", Collections.emptyList(), null, null);
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CommandPurge extends Command {
     public CommandPurge() {
-        super("purge", Collections.emptyList(), Collections.singletonList(Permission.ADMIN));
+        super("purge", Collections.emptyList(), Collections.singletonList(Permission.ADMIN), null);
     }
 
     @Override

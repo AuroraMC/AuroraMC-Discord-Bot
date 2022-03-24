@@ -17,7 +17,7 @@ public class CommandSetup extends Command {
 
 
     public CommandSetup() {
-        super("setup", Collections.emptyList(), null);
+        super("setup", Collections.emptyList(), null, null);
     }
 
     @Override

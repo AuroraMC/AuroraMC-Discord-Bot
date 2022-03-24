@@ -21,7 +21,7 @@ public class CommandReadMePost extends Command {
 
 
     public CommandReadMePost() {
-        super("readme", Collections.emptyList(), Collections.singletonList(Permission.ADMIN));
+        super("readme", Collections.emptyList(), Collections.singletonList(Permission.ADMIN), null);
     }
 
     @Override

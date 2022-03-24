@@ -18,7 +18,7 @@ public class CommandPanel extends Command {
 
 
     public CommandPanel() {
-        super("panel", Collections.emptyList(), Collections.singletonList(Permission.PANEL));
+        super("panel", Collections.emptyList(), Collections.singletonList(Permission.PANEL), null);
     }
 
     @Override

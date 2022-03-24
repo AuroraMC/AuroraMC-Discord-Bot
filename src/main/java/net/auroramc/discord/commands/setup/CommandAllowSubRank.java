@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CommandAllowSubRank extends Command {
     public CommandAllowSubRank() {
-        super("allowsubrank", Collections.emptyList(), null);
+        super("allowsubrank", Collections.emptyList(), null, null);
     }
 
     @Override

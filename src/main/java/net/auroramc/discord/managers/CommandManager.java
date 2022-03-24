@@ -46,17 +46,22 @@ public class CommandManager {
             if (GuildManager.getRankMappings(message.getGuild().getIdLong()) == null) {
                 return;
             }
-            for (Permission permission : command.getPermission()) {
-                if (hasPermission(user, permission)) {
-                    try {
-                        command.execute(message, user, commandLabel, args);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        message.reply("Something went wrong when trying to execute this command, please try again!").queue();
+
+                for (Permission permission : command.getPermission()) {
+                    if (hasPermission(user, permission)) {
+                        if (command.getAllowedChannels() == null || command.getAllowedChannels().contains(message.getTextChannel().getIdLong())) {
+                            try {
+                                command.execute(message, user, commandLabel, args);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                message.reply("Something went wrong when trying to execute this command, please try again!").queue();
+                            }
+                            return;
+                        } else {
+                            message.delete().queue();
+                        }
                     }
-                    return;
                 }
-            }
         }
     }
 

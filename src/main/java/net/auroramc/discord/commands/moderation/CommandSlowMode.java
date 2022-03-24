@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class CommandSlowMode extends Command {
     public CommandSlowMode() {
-        super("slowmode", Collections.singletonList("slow"), Collections.singletonList(Permission.MODERATION));
+        super("slowmode", Collections.singletonList("slow"), Collections.singletonList(Permission.MODERATION), Collections.singletonList(956630044225187851L));
     }
 
     @Override

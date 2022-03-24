@@ -17,7 +17,7 @@ import java.util.List;
 public class CommandShowPunishment extends Command {
 
     public CommandShowPunishment() {
-        super("showpunishment", Arrays.asList("sp", "show", "s"), Collections.singletonList(Permission.MODERATION));
+        super("showpunishment", Arrays.asList("sp", "show", "s"), Collections.singletonList(Permission.ADMIN), null);
     }
 
     @Override
