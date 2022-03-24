@@ -29,6 +29,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                             guild.removeRoleFromMember(user.getIdLong(), Objects.requireNonNull(guild.getRoleById(GuildManager.getRankMappings(guild.getIdLong()).get(update.getOldRank())))).queue();
                             Objects.requireNonNull(guild.getTextChannelById(GuildManager.getLinkLogId(guild.getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                                     .setTitle("User Rank Update")
+                                    .setAuthor(user.getAsTag())
                                     .setThumbnail(user.getAvatarUrl())
                                     .addField("Old Rank", update.getOldRank().getName(), false)
                                     .addField("New Rank", update.getNewRank().getName(), false)
@@ -43,6 +44,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                             guild.addRoleToMember(user.getIdLong(), Objects.requireNonNull(guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(update.getAddedSubrank())))).queue();
                             Objects.requireNonNull(guild.getTextChannelById(GuildManager.getLinkLogId(guild.getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                                     .setTitle("User SubRank Update")
+                                    .setAuthor(user.getAsTag())
                                     .setThumbnail(user.getAvatarUrl())
                                     .addField("SubRank Added", update.getAddedSubrank().getName(), false)
                                     .setTimestamp(Instant.now())
@@ -56,6 +58,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                             guild.removeRoleFromMember(user.getIdLong(), Objects.requireNonNull(guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(update.getAddedSubrank())))).queue();
                             Objects.requireNonNull(guild.getTextChannelById(GuildManager.getLinkLogId(guild.getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                                     .setTitle("User SubRank Update")
+                                    .setAuthor(user.getAsTag())
                                     .setThumbnail(user.getAvatarUrl())
                                     .addField("SubRank Removed", update.getRemovedSubrank().getName(), false)
                                     .setTimestamp(Instant.now())

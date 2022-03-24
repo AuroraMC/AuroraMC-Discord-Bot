@@ -382,10 +382,12 @@ public class DatabaseManager {
                 SubRank addedSubrank = null;
                 SubRank removedSubrank = null;
                 String subrank = set.getString(4);
-                if (subrank.startsWith("+")) {
-                    addedSubrank = SubRank.getByID(Integer.parseInt(subrank.substring(1)));
-                } else {
-                    removedSubrank = SubRank.getByID(Integer.parseInt(subrank.substring(1)));
+                if (subrank != null) {
+                    if (subrank.startsWith("+")) {
+                        addedSubrank = SubRank.getByID(Integer.parseInt(subrank.substring(1)));
+                    } else {
+                        removedSubrank = SubRank.getByID(Integer.parseInt(subrank.substring(1)));
+                    }
                 }
                 updates.add(new RankUpdate(id, oldRank, newRank, addedSubrank, removedSubrank));
             }
@@ -394,8 +396,7 @@ public class DatabaseManager {
             statement.execute();
             return updates;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 
