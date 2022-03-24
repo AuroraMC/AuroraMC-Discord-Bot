@@ -118,6 +118,7 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandHidePunishment());
         CommandManager.registerCommand(new CommandForceUpdate());
         CommandManager.registerCommand(new CommandEvidence());
+        CommandManager.registerCommand(new CommandRolesPost());
 
 
         logger.info("Logging in...");
