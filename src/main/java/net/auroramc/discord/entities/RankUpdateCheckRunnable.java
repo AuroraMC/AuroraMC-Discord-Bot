@@ -6,6 +6,7 @@ package net.auroramc.discord.entities;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.GuildManager;
+import net.auroramc.discord.managers.LinkManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
@@ -36,8 +37,14 @@ public class RankUpdateCheckRunnable implements Runnable {
                                     .setTimestamp(Instant.now())
                                     .setColor(new Color(0, 170,170))
                                     .build()).queue();
+                            if (guild.getIdLong() != DiscordBot.getSettings().getMasterDiscord()) {
+                                if (!GuildManager.getAllowedRanks(guild.getIdLong()).contains(update.getNewRank())) {
+                                    guild.kick(Objects.requireNonNull(guild.getMember(user)), "No longer allowed in Discord.").queue();
+                                }
+                            }
                         }
                     }
+                    LinkManager.processOtherInvites(user, user.openPrivateChannel().complete(), DiscordBot.getDatabaseManager().getDiscord(user.getIdLong()));
                 } else if (update.getAddedSubrank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {
                         if (guild.isMember(user)) {
@@ -52,6 +59,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                                     .build()).queue();
                         }
                     }
+                    LinkManager.processOtherInvites(user, user.openPrivateChannel().complete(), DiscordBot.getDatabaseManager().getDiscord(user.getIdLong()));
                 } else if (update.getRemovedSubrank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {
                         if (guild.isMember(user)) {
@@ -64,6 +72,19 @@ public class RankUpdateCheckRunnable implements Runnable {
                                     .setTimestamp(Instant.now())
                                     .setColor(new Color(255, 85,85))
                                     .build()).queue();
+                            if (guild.getIdLong() != DiscordBot.getSettings().getMasterDiscord()) {
+                                boolean allowed = false;
+                                List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(DiscordBot.getDatabaseManager().getDiscord(user.getIdLong()));
+                                for (SubRank subRank : subranks) {
+                                    if (GuildManager.getAllowedSubRanks(guild.getIdLong()).contains(subRank)) {
+                                        allowed = true;
+                                        break;
+                                    }
+                                }
+                                if (!allowed) {
+                                    guild.kick(Objects.requireNonNull(guild.getMember(user)), "No longer allowed in Discord.").queue();
+                                }
+                            }
                         }
                     }
                 }
