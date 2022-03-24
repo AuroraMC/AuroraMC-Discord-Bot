@@ -112,7 +112,7 @@ public class MessageListener extends ListenerAdapter {
                             new EmbedBuilder()
                                     .setTitle("Message Deleted")
                                     .setDescription("Message sent <t:" + event.getMessage().getTimeCreated().toEpochSecond() + ":R> by " + event.getMessage().getAuthor().getAsMention() + " was deleted in " + event.getMessage().getChannel().getAsMention() + " due to a filtered word.\n" +
-                                            "**Message: `" + event.getMessage().getContentStripped() + "`**")
+                                            "**Message:** `" + event.getMessage().getContentStripped() + "`**")
                                     .setColor(new Color(0, 170, 170))
                                     .build()
                     ).queue();
@@ -122,8 +122,8 @@ public class MessageListener extends ListenerAdapter {
                         new EmbedBuilder()
                                 .setTitle("Message Edited")
                                 .setDescription("Message sent <t:" + message.getTimeCreated().toEpochSecond() + ":R> by " + message.getAuthor().getAsMention() + " was edited in " + message.getChannel().getAsMention() + "\n" +
-                                        "**Old Message: `" + message.getContentStripped() + "`**\n" +
-                                        "**New Message: `" + event.getMessage().getContentStripped() + "`")
+                                        "**Old Message:** `" + message.getContentStripped() + "`\n" +
+                                        "**New Message:** `" + event.getMessage().getContentStripped() + "`")
                                 .setColor(new Color(0, 170, 170))
                                 .build()
                 ).queue();
