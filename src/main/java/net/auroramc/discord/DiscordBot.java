@@ -7,10 +7,7 @@ package net.auroramc.discord;
 import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandPlus;
 import net.auroramc.discord.commands.admin.*;
-import net.auroramc.discord.commands.moderation.CommandPunish;
-import net.auroramc.discord.commands.moderation.CommandPunishmentHistory;
-import net.auroramc.discord.commands.moderation.CommandSlowMode;
-import net.auroramc.discord.commands.moderation.CommandUnpunish;
+import net.auroramc.discord.commands.moderation.*;
 import net.auroramc.discord.commands.setup.*;
 import net.auroramc.discord.entities.BotSettings;
 import net.auroramc.discord.entities.ChatFilter;
@@ -117,6 +114,10 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandPurge());
         CommandManager.registerCommand(new CommandSlowMode());
         CommandManager.registerCommand(new CommandReloadFilter());
+        CommandManager.registerCommand(new CommandShowPunishment());
+        CommandManager.registerCommand(new CommandHidePunishment());
+        CommandManager.registerCommand(new CommandForceUpdate());
+        CommandManager.registerCommand(new CommandEvidence());
 
 
         logger.info("Logging in...");
@@ -197,5 +198,9 @@ public class DiscordBot {
 
     public static void updateFilter() {
         DiscordBot.filter = databaseManager.loadFilter();
+    }
+
+    public static void forceRankUpdate() {
+        scheduler.execute(new RankUpdateCheckRunnable());
     }
 }

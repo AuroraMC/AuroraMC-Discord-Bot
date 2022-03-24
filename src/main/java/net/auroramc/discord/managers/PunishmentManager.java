@@ -64,7 +64,7 @@ public class PunishmentManager {
                                 "If you believe this was given in error, please submit an appeal at https://auroramc.net/appeals"))
                         .build()
         ).queue()));
-        message.reply("You have " + ((expire == -1)?"banned":"timed out") + " User " + member.getAsMention() + " for " + punishmentLength.getFormatted() + ".").queue();
+        message.reply("You have " + ((expire == -1)?"banned":"timed out") + " User " + member.getAsMention() + " for " + punishmentLength.getFormatted() + ". Punishment ID: **" + code + "**").queue();
         if (expire == -1d) {
             member.ban(7, reason).queue();
         } else {
@@ -213,6 +213,36 @@ public class PunishmentManager {
 
         DiscordBot.getDatabaseManager().removePunishment(punishment.getPunishmentCode(), message.getAuthor().getIdLong(), reason);
         message.reply("User has been unpunished.").queue();
+    }
+
+    public static void attachEvidence(Message message, String code, String evidence) {
+        Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
+        if (punishment == null) {
+            message.reply("That is not a valid punishment code.").queue();
+            return;
+        }
+        DiscordBot.getDatabaseManager().attachEvidence(punishment.getPunishmentCode(), evidence);
+        message.reply("Evidence attached.").queue();
+    }
+
+    public static void hidePunishment(Message message, String code) {
+        Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
+        if (punishment == null) {
+            message.reply("That is not a valid punishment code.").queue();
+            return;
+        }
+        DiscordBot.getDatabaseManager().hidePunishment(punishment.getPunishmentCode());
+        message.reply("Punishment hidden.").queue();
+    }
+
+    public static void showPunishment(Message message, String code) {
+        Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
+        if (punishment == null) {
+            message.reply("That is not a valid punishment code.").queue();
+            return;
+        }
+        DiscordBot.getDatabaseManager().showPunishment(punishment.getPunishmentCode());
+        message.reply("Punishment now visible.").queue();
     }
 
 }
