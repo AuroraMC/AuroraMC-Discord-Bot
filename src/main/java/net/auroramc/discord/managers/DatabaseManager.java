@@ -455,7 +455,7 @@ public class DatabaseManager {
 
     public List<Punishment> getPunishmentsVisible(long id) {
         try (Connection connection = mysql.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? AND visible = true");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? AND visible = true ORDER BY issued DESC");
             statement.setLong(1, id);
             ResultSet set = statement.executeQuery();
             List<Punishment> punishments = new ArrayList<>();
@@ -470,7 +470,7 @@ public class DatabaseManager {
 
     public List<Punishment> getAllPunishments(long id) {
         try (Connection connection = mysql.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM dc_punishments WHERE punished = ? ORDER BY issued DESC");
             statement.setLong(1, id);
             ResultSet set = statement.executeQuery();
             List<Punishment> punishments = new ArrayList<>();
@@ -530,6 +530,36 @@ public class DatabaseManager {
             statement.setLong(1, id);
             statement.setString(2, reason);
             statement.setString(3, code);
+            statement.execute();
+        } catch (SQLException ignored) {
+        }
+
+    }
+
+    public void attachEvidence(String code, String evidence)  {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("UPDATE dc_punishments SET evidence = ? WHERE punishment_code = ?");
+            statement.setString(1, evidence);
+            statement.setString(2, code);
+            statement.execute();
+        } catch (SQLException ignored) {
+        }
+
+    }
+
+    public void hidePunishment(String code)  {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("UPDATE dc_punishments SET visible = FALSE WHERE punishment_code = ?");
+            statement.setString(1, code);
+            statement.execute();
+        } catch (SQLException ignored) {
+        }
+    }
+
+    public void showPunishment(String code)  {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("UPDATE dc_punishments SET visible = TRUE WHERE punishment_code = ?");
+            statement.setString(1, code);
             statement.execute();
         } catch (SQLException ignored) {
         }
