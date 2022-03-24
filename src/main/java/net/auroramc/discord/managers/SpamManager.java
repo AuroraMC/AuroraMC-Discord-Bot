@@ -33,7 +33,7 @@ public class SpamManager {
         latestMessages = new HashMap<>();
     }
 
-    public static void onMessage(Message message) {
+    public static boolean onMessage(Message message) {
         if (message.getMentionedUsers().size() > TAGS_THRESHOLD) {
             message.delete().queue();
             if (warnedSpamTagUsers.contains(message.getAuthor().getIdLong())) {
@@ -45,7 +45,7 @@ public class SpamManager {
                     warnedSpamTagUsers.remove(message.getAuthor().getIdLong());
                 }, 5, TimeUnit.MINUTES);
             }
-            return;
+            return true;
         }
 
         if (latestMessages.containsKey(message.getAuthor().getIdLong())) {
@@ -98,6 +98,7 @@ public class SpamManager {
                 }
             }, 5, TimeUnit.MINUTES);
         }
+        return false;
     }
 
     public static double similarity(String first, String second) {

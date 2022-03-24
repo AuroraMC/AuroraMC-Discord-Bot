@@ -5,6 +5,7 @@
 package net.auroramc.discord.listeners;
 
 import net.auroramc.discord.DiscordBot;
+import net.auroramc.discord.managers.GuildManager;
 import net.auroramc.discord.managers.LinkManager;
 import net.auroramc.discord.managers.PlusManager;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,11 +13,14 @@ import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class MemberListener extends ListenerAdapter {
@@ -24,6 +28,13 @@ public class MemberListener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent e) {
         UUID uuid = DiscordBot.getDatabaseManager().getDiscord(e.getMember().getIdLong());
+        Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
+                .setTitle("User Join")
+                .setDescription(e.getMember().getAsMention() + " has joined the server.")
+                .setThumbnail(e.getMember().getAvatarUrl())
+                        .setTimestamp(Instant.now())
+                .setColor(new Color(85, 255, 85))
+                .build()).queue();
         PrivateChannel channel = e.getUser().openPrivateChannel().complete();
         if (e.getGuild().getIdLong() == DiscordBot.getSettings().getMasterDiscord()) {
             if (uuid != null) {
@@ -73,6 +84,7 @@ public class MemberListener extends ListenerAdapter {
                                 "~AuroraMC Leadership Team")
                         .setColor(new Color(0, 170,170))
                         .build()).queue();
+
             }
 
         } else {
@@ -103,5 +115,16 @@ public class MemberListener extends ListenerAdapter {
                 }
             }
         }
+    }
+
+    @Override
+    public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent e) {
+        Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
+                .setTitle("User Leave")
+                .setDescription(e.getUser().getAsTag() + " has left the server.")
+                .setThumbnail(e.getUser().getAvatarUrl())
+                .setTimestamp(Instant.now())
+                .setColor(new Color(255, 85, 85))
+                .build()).queue();
     }
 }
