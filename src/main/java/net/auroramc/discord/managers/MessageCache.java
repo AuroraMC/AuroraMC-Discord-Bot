@@ -36,4 +36,8 @@ public class MessageCache {
         return messageCache.get(id);
     }
 
+    public static void removeMessage(long id) {
+        messageCache.remove(id);
+    }
+
 }

@@ -368,9 +368,6 @@ public class DatabaseManager {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM rank_changes");
             ResultSet set = statement.executeQuery();
 
-            statement = connection.prepareStatement("DELETE FROM rank_changes");
-            statement.execute();
-
             List<RankUpdate> updates = new ArrayList<>();
 
             while (set.next()) {
@@ -392,8 +389,12 @@ public class DatabaseManager {
                 }
                 updates.add(new RankUpdate(id, oldRank, newRank, addedSubrank, removedSubrank));
             }
+
+            statement = connection.prepareStatement("DELETE FROM rank_changes");
+            statement.execute();
             return updates;
-        } catch (SQLException ignored) {
+        } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -494,6 +495,16 @@ public class DatabaseManager {
             statement.setLong(8, punisher);
             statement.execute();
         } catch (SQLException ignored) {
+        }
+    }
+
+    public ChatFilter loadFilter() {
+        try (Jedis connection = jedis.getResource()) {
+            List<String> coreWords = new ArrayList<>(connection.smembers("filter.core"));
+            List<String> whitelist = new ArrayList<>(connection.smembers("filter.whitelist"));
+            List<String> blacklist = new ArrayList<>(connection.smembers("filter.blacklist"));
+            List<String> phrases = new ArrayList<>(connection.smembers("filter.phrases"));
+            return new ChatFilter(coreWords, blacklist, whitelist, phrases);
         }
     }
 

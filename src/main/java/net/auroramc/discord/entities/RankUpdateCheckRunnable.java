@@ -20,7 +20,7 @@ public class RankUpdateCheckRunnable implements Runnable {
     public void run() {
         List<RankUpdate> rankUpdates = DiscordBot.getDatabaseManager().getRankUpdates();
         for (RankUpdate update : rankUpdates) {
-            User user = DiscordBot.getJda().getUserById(update.getDiscordId());
+            User user = DiscordBot.getJda().retrieveUserById(update.getDiscordId()).complete();
             if (user != null) {
                 if (update.getNewRank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {

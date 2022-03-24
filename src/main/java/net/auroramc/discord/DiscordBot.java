@@ -8,10 +8,13 @@ import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandPlus;
 import net.auroramc.discord.commands.admin.CommandGenerateLink;
 import net.auroramc.discord.commands.admin.CommandPanel;
+import net.auroramc.discord.commands.admin.CommandPurge;
 import net.auroramc.discord.commands.admin.CommandReadMePost;
 import net.auroramc.discord.commands.moderation.CommandPunish;
+import net.auroramc.discord.commands.moderation.CommandSlowMode;
 import net.auroramc.discord.commands.setup.*;
 import net.auroramc.discord.entities.BotSettings;
+import net.auroramc.discord.entities.ChatFilter;
 import net.auroramc.discord.entities.PlusCheckRunnable;
 import net.auroramc.discord.entities.RankUpdateCheckRunnable;
 import net.auroramc.discord.listeners.InteractionListener;
@@ -48,6 +51,7 @@ public class DiscordBot {
     private static JDA jda;
     private static boolean shutdown;
     private static final Object object;
+    private static ChatFilter filter;
 
     private static final ScheduledExecutorService scheduler;
 
@@ -95,6 +99,8 @@ public class DiscordBot {
         logger.info("Loading Bot Settings...");
         settings = databaseManager.getSettings();
 
+        updateFilter();
+
         logger.info("Loading Commands...");
         //Register commands
         CommandManager.registerCommand(new CommandSetup());
@@ -107,6 +113,8 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandReadMePost());
         CommandManager.registerCommand(new CommandPlus());
         CommandManager.registerCommand(new CommandPunish());
+        CommandManager.registerCommand(new CommandPurge());
+        CommandManager.registerCommand(new CommandSlowMode());
 
 
         logger.info("Logging in...");
@@ -179,5 +187,13 @@ public class DiscordBot {
 
     public static JDA getJda() {
         return jda;
+    }
+
+    public static ChatFilter getFilter() {
+        return filter;
+    }
+
+    public static void updateFilter() {
+        DiscordBot.filter = databaseManager.loadFilter();
     }
 }
