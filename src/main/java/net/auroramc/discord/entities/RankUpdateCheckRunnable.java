@@ -39,6 +39,11 @@ public class RankUpdateCheckRunnable implements Runnable {
                                     .build()).queue();
                             if (guild.getIdLong() != DiscordBot.getSettings().getMasterDiscord()) {
                                 if (!GuildManager.getAllowedRanks(guild.getIdLong()).contains(update.getNewRank())) {
+                                    user.openPrivateChannel().complete().sendMessageEmbeds(new EmbedBuilder()
+                                            .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                                            .setTitle("Removed from Discord!")
+                                            .setDescription("Your Rank was updated and as a result, you are no longer allowed in the **" + guild.getName() + "** Discord so you were kicked.")
+                                            .build()).queue();
                                     guild.kick(Objects.requireNonNull(guild.getMember(user)), "No longer allowed in Discord.").queue();
                                 }
                             }
@@ -82,6 +87,11 @@ public class RankUpdateCheckRunnable implements Runnable {
                                     }
                                 }
                                 if (!allowed) {
+                                    user.openPrivateChannel().complete().sendMessageEmbeds(new EmbedBuilder()
+                                            .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                                            .setTitle("Removed from Discord!")
+                                            .setDescription("Your SubRanks were updated and as a result, you are no longer allowed in the **" + guild.getName() + "** Discord so you were kicked.")
+                                            .build()).queue();
                                     guild.kick(Objects.requireNonNull(guild.getMember(user)), "No longer allowed in Discord.").queue();
                                 }
                             }
