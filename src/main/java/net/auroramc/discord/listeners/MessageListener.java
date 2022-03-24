@@ -52,6 +52,14 @@ public class MessageListener extends ListenerAdapter {
                     }
                 } else {
                     e.getMessage().delete().queue();
+                    Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(
+                            new EmbedBuilder()
+                                    .setTitle("Message Deleted")
+                                    .setDescription("Message sent <t:" + e.getMessage().getTimeCreated().toEpochSecond() + ":R> by " + e.getMessage().getAuthor().getAsMention() + " was deleted in " + e.getMessage().getChannel().getAsMention() + " due to a filtered word.\n" +
+                                            "**Message: `" + e.getMessage().getContentStripped() + "`**")
+                                    .setColor(new Color(0, 170, 170))
+                                    .build()
+                    ).queue();
                 }
             }
         } else if (e.getMessage().getContentStripped().startsWith("!link")) {
@@ -96,6 +104,19 @@ public class MessageListener extends ListenerAdapter {
             Message message = MessageCache.getMessage(event.getMessageIdLong());
             if (message != null) {
                 MessageCache.onMessage(event.getMessage());
+                String unfiltered = event.getMessage().getContentStripped();
+                String filtered = DiscordBot.getFilter().filter(unfiltered);
+                if (!filtered.equals(unfiltered)) {
+                    event.getMessage().delete().queue();
+                    Objects.requireNonNull(event.getGuild().getTextChannelById(GuildManager.getServerLogId(event.getGuild().getIdLong()))).sendMessageEmbeds(
+                            new EmbedBuilder()
+                                    .setTitle("Message Deleted")
+                                    .setDescription("Message sent <t:" + event.getMessage().getTimeCreated().toEpochSecond() + ":R> by " + event.getMessage().getAuthor().getAsMention() + " was deleted in " + event.getMessage().getChannel().getAsMention() + " due to a filtered word.\n" +
+                                            "**Message: `" + event.getMessage().getContentStripped() + "`**")
+                                    .setColor(new Color(0, 170, 170))
+                                    .build()
+                    ).queue();
+                }
 
                 Objects.requireNonNull(event.getGuild().getTextChannelById(GuildManager.getServerLogId(event.getGuild().getIdLong()))).sendMessageEmbeds(
                         new EmbedBuilder()
