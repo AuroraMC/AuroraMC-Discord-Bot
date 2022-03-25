@@ -24,7 +24,7 @@ public class CommandPlus extends Command {
 
     @Override
     public void execute(Message message, Member member, String aliasUsed, List<String> args) {
-        UUID uuid = DiscordBot.getDatabaseManager().getDiscord(member.getIdLong());
+        UUID uuid = DiscordBot.getDatabaseManager().getUUID(member.getIdLong());
         PlusManager.onCommand(member, message, uuid);
     }
 }

@@ -41,7 +41,7 @@ public class CommandGenerateLink extends Command {
             if (user != null) {
                 if (guild.isMember(user)) {
                     if (!member.getGuild().isMember(user)) {
-                        UUID uuid = DiscordBot.getDatabaseManager().getDiscord(user.getIdLong());
+                        UUID uuid = DiscordBot.getDatabaseManager().getUUID(user.getIdLong());
                         if (uuid != null) {
                             Rank rank = DiscordBot.getDatabaseManager().getRank(uuid);
                             List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(uuid);

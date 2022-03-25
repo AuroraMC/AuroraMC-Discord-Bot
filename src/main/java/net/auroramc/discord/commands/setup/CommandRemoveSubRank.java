@@ -40,7 +40,7 @@ public class CommandRemoveSubRank extends Command {
                     message.getGuild().findMembersWithRoles(message.getGuild().getRoleById(GuildManager.getSubrankMappings(message.getGuild().getIdLong()).get(rank))).onSuccess((members) -> {
 
                         for (Member member1 : members) {
-                            UUID uuid = DiscordBot.getDatabaseManager().getDiscord(member1.getIdLong());
+                            UUID uuid = DiscordBot.getDatabaseManager().getUUID(member1.getIdLong());
                             Rank rank1 = DiscordBot.getDatabaseManager().getRank(uuid);
                             List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(uuid);
                             if (GuildManager.getAllowedRanks(message.getGuild().getIdLong()).contains(rank1)) {

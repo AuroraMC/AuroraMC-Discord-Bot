@@ -20,7 +20,7 @@ public final class PlusSubscription {
     public PlusSubscription(long discordId) {
         this.discordId = discordId;
 
-        UUID uuid = DiscordBot.getDatabaseManager().getDiscord(discordId);
+        UUID uuid = DiscordBot.getDatabaseManager().getUUID(discordId);
 
         this.endTimestamp = DiscordBot.getDatabaseManager().getExpire(uuid);
         this.daysSubscribed = DiscordBot.getDatabaseManager().getDaysSubscribed(uuid);
