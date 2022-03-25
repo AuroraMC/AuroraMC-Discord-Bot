@@ -5,7 +5,6 @@
 package net.auroramc.discord.managers;
 
 import net.auroramc.discord.DiscordBot;
-import net.auroramc.discord.entities.PlusSubscription;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -65,7 +64,7 @@ public class PlusManager {
     }
 
     public static void onCheck(Member member) {
-        UUID uuid = DiscordBot.getDatabaseManager().getDiscord(member.getIdLong());
+        UUID uuid = DiscordBot.getDatabaseManager().getUUID(member.getIdLong());
         long expire = DiscordBot.getDatabaseManager().getExpire(uuid);
         if (expire == -1) {
             Guild guild = DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord());

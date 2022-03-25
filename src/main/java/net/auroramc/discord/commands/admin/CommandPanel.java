@@ -24,7 +24,7 @@ public class CommandPanel extends Command {
     @Override
     public void execute(Message message, Member member, String aliasUsed, List<String> args) {
         if (args.size() == 0) {
-            UUID uuid = DiscordBot.getDatabaseManager().getDiscord(member.getIdLong());
+            UUID uuid = DiscordBot.getDatabaseManager().getUUID(member.getIdLong());
             if (uuid != null) {
                 String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
                 message.reply(code).queue();
@@ -40,7 +40,7 @@ public class CommandPanel extends Command {
                 return;
             }
 
-            UUID uuid = DiscordBot.getDatabaseManager().getDiscord(id);
+            UUID uuid = DiscordBot.getDatabaseManager().getUUID(id);
             if (uuid != null) {
                 Rank rank = DiscordBot.getDatabaseManager().getRank(uuid);
                 if (!rank.hasPermission("panel")) {

@@ -7,8 +7,6 @@ package net.auroramc.discord.managers;
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.entities.*;
 import net.auroramc.discord.util.MySQLConnectionPool;
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.User;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -340,7 +338,7 @@ public class DatabaseManager {
         }
     }
 
-    public UUID getDiscord(long id) {
+    public UUID getUUID(long id) {
         try (Connection connection = mysql.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("SELECT `uuid` FROM auroramc_players WHERE id = (SELECT amc_id FROM dc_links WHERE discord_id = ?)");
             statement.setLong(1, id);
@@ -353,6 +351,32 @@ public class DatabaseManager {
             return null;
         } catch (SQLException ignored) {
             return null;
+        }
+    }
+
+    public void deleteLink(long id) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM dc_links WHERE discord_id = ?");
+            statement.setLong(1, id);
+
+            statement.execute();
+        } catch (SQLException ignored) {
+        }
+    }
+
+    public long getDiscordID(String username) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT discord_id FROM dc_links WHERE amc_id = (SELECT id FROM auroramc_players WHERE name = ?)");
+            statement.setString(1, username);
+
+            ResultSet set = statement.executeQuery();
+
+            if (set.next()) {
+                return set.getLong(1);
+            }
+            return -1;
+        } catch (SQLException ignored) {
+            return -1;
         }
     }
 

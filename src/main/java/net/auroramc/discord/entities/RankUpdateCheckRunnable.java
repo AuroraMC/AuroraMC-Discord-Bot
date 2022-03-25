@@ -49,7 +49,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                             }
                         }
                     }
-                    LinkManager.processOtherInvites(user, user.openPrivateChannel().complete(), DiscordBot.getDatabaseManager().getDiscord(user.getIdLong()));
+                    LinkManager.processOtherInvites(user, user.openPrivateChannel().complete(), DiscordBot.getDatabaseManager().getUUID(user.getIdLong()));
                 } else if (update.getAddedSubrank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {
                         if (guild.isMember(user)) {
@@ -64,7 +64,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                                     .build()).queue();
                         }
                     }
-                    LinkManager.processOtherInvites(user, user.openPrivateChannel().complete(), DiscordBot.getDatabaseManager().getDiscord(user.getIdLong()));
+                    LinkManager.processOtherInvites(user, user.openPrivateChannel().complete(), DiscordBot.getDatabaseManager().getUUID(user.getIdLong()));
                 } else if (update.getRemovedSubrank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {
                         if (guild.isMember(user)) {
@@ -79,7 +79,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                                     .build()).queue();
                             if (guild.getIdLong() != DiscordBot.getSettings().getMasterDiscord()) {
                                 boolean allowed = false;
-                                List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(DiscordBot.getDatabaseManager().getDiscord(user.getIdLong()));
+                                List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(DiscordBot.getDatabaseManager().getUUID(user.getIdLong()));
                                 for (SubRank subRank : subranks) {
                                     if (GuildManager.getAllowedSubRanks(guild.getIdLong()).contains(subRank)) {
                                         allowed = true;

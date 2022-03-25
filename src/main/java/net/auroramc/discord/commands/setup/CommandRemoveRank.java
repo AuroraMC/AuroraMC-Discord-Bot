@@ -12,7 +12,6 @@ import net.auroramc.discord.managers.GuildManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +40,7 @@ public class CommandRemoveRank extends Command {
                     message.getGuild().findMembersWithRoles(message.getGuild().getRoleById(GuildManager.getRankMappings(message.getGuild().getIdLong()).get(rank))).onSuccess((members) -> {
 
                         for (Member member1 : members) {
-                            UUID uuid = DiscordBot.getDatabaseManager().getDiscord(member1.getIdLong());
+                            UUID uuid = DiscordBot.getDatabaseManager().getUUID(member1.getIdLong());
                             List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(uuid);
                             if (GuildManager.getAllowedRanks(message.getGuild().getIdLong()).contains(rank)) {
                                 continue;

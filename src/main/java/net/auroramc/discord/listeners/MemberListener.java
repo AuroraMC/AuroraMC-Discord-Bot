@@ -27,7 +27,7 @@ public class MemberListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent e) {
-        UUID uuid = DiscordBot.getDatabaseManager().getDiscord(e.getMember().getIdLong());
+        UUID uuid = DiscordBot.getDatabaseManager().getUUID(e.getMember().getIdLong());
         Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("User Join")
                 .setDescription(e.getMember().getAsMention() + " has joined the server.")

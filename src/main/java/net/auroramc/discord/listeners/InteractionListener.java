@@ -4,12 +4,18 @@
 
 package net.auroramc.discord.listeners;
 
+import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.PunishmentManager;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class InteractionListener extends ListenerAdapter {
@@ -35,6 +41,40 @@ public class InteractionListener extends ListenerAdapter {
                     }
                 } else {
                     event.reply("I couldn't find that role, please let an admin know!").setEphemeral(true).queue();
+                }
+            } else if (ids.length == 3 && ids[0].equals("unlink")) {
+                String confirmed = ids[1];
+                long id = Long.parseLong(ids[2]);
+
+                if (confirmed.equals("confirm")) {
+                    DiscordBot.getDatabaseManager().deleteLink(id);
+                    User user = event.getJDA().retrieveUserById(id).complete();
+                    user.openPrivateChannel().queue((channel) -> {
+                        channel.sendMessageEmbeds(new EmbedBuilder()
+                                .setTitle("You've been unlinked!")
+                                .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
+                                .setDescription("Your Discord account has been unlinked from your in-game account by a support member!\n" +
+                                        " \n" +
+                                        "All of your previous roles have been removed. You can now relink your account.\n" +
+                                        "~AuroraMC Leadership Team")
+                                .setColor(new Color(0, 170, 170))
+                                .build()).queue();
+                    });
+                    for (Guild guild : user.getMutualGuilds()) {
+                        Member member = guild.getMemberById(user.getIdLong());
+                        assert member != null;
+                        if (guild.getIdLong() == DiscordBot.getSettings().getMasterDiscord()) {
+                            for (Role role : member.getRoles()) {
+                                guild.removeRoleFromMember(member, role).queue();
+                            }
+                            guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(886329879002505217L))).queue();
+                        } else {
+                            member.kick("User unlinked").queue();
+                        }
+                    }
+                    event.editMessage("User unlinked!").setActionRow().queue();
+                } else {
+                    event.editMessage("Action cancelled.").setActionRow().queue();
                 }
             }
         }
