@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Collections;
 import java.util.Objects;
 
 public class InteractionListener extends ListenerAdapter {
@@ -72,9 +73,9 @@ public class InteractionListener extends ListenerAdapter {
                             member.kick("User unlinked").queue();
                         }
                     }
-                    event.editMessage("User unlinked!").setActionRow().queue();
+                    event.editMessage("User unlinked!").setEmbeds(Collections.emptyList()).setActionRows(Collections.emptyList()).queue();
                 } else {
-                    event.editMessage("Action cancelled.").setActionRow().queue();
+                    event.editMessage("Action cancelled.").setEmbeds(Collections.emptyList()).setActionRows(Collections.emptyList()).queue();
                 }
             }
         }
