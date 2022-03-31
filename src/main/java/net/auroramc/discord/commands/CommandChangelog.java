@@ -26,7 +26,7 @@ public class CommandChangelog extends Command {
     public void execute(Message message, Member member, String aliasUsed, List<String> args) {
         if (args.size() >= 4) {
             String gameKey = args.remove(0);
-            String version = args.remove(1);
+            String version = args.remove(0);
             String url = args.remove(0);
             String title = String.join(" ", args);
             DiscordBot.getDatabaseManager().newChangelog(gameKey, version, url, title);
