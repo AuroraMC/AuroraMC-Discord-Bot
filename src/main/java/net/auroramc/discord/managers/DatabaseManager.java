@@ -6,11 +6,13 @@ package net.auroramc.discord.managers;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.entities.*;
+import net.auroramc.discord.util.CommunityPoll;
 import net.auroramc.discord.util.MySQLConnectionPool;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -586,6 +588,94 @@ public class DatabaseManager {
             statement.setString(1, code);
             statement.execute();
         } catch (SQLException ignored) {
+        }
+    }
+
+    public CommunityPoll getPoll() {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM polls");
+            ResultSet set = statement.executeQuery();
+
+            while (set.next()) {
+                if (set.getLong(3) > System.currentTimeMillis()) {
+                    statement = connection.prepareStatement("SELECT * FROM poll_answers WHERE poll_id = ?");
+                    statement.setInt(1, set.getInt(1));
+
+                    ResultSet set1 = statement.executeQuery();
+
+                    Map<Integer, CommunityPoll.PollAnswer> answers = new HashMap<>();
+
+                    while (set1.next()) {
+                        answers.put(set1.getInt(1), new CommunityPoll.PollAnswer(set1.getInt(1), set1.getString(3)));
+                    }
+
+                    Map<Integer, Long> responses = new HashMap<>();
+                    try (Jedis jedis = this.jedis.getResource()) {
+                        Map<String, String> response = jedis.hgetAll("responses." + set.getString(1));
+                        for (Map.Entry<String, String> entry : response.entrySet()) {
+                            responses.put(Integer.parseInt(entry.getKey()), Long.parseLong(entry.getValue()));
+                        }
+                    }
+
+                    return new CommunityPoll(set.getInt(1), set.getString(2), answers, responses, set.getLong(3));
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void newPoll(String question, List<CommunityPoll.PollAnswer> answers, long expire) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO polls(question, end_timestamp) VALUES (?,?)");
+            statement.setString(1, question);
+            statement.setLong(2, expire);
+            statement.execute();
+
+            statement = connection.prepareStatement("SELECT id FROM polls WHERE question = ? AND end_timestamp = ?");
+            statement.setString(1, question);
+            statement.setLong(2, expire);
+            ResultSet set = statement.executeQuery();
+            set.next();
+            int id = set.getInt(1);
+            for (CommunityPoll.PollAnswer answer : answers) {
+                statement = connection.prepareStatement("INSERT INTO poll_answers(id, poll_id, answer) VALUES (?,?,?)");
+                statement.setInt(1, answer.getId());
+                statement.setInt(2, id);
+                statement.setString(3, answer.getAnswer());
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void newChangelog(String gameKey, String version, String url, String title) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO changelogs(game, version, timestamp, update_title, url) VALUES (?,?,?,?,?)");
+            statement.setString(1, gameKey);
+            statement.setString(2, version);
+            statement.setLong(3, System.currentTimeMillis());
+            statement.setString(4, title);
+            statement.setString(5, url);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean hasVoted(int pollId, int playerId) {
+        try (Jedis connection = jedis.getResource()) {
+            return connection.exists("poll." + pollId + "." + playerId);
+        }
+    }
+
+    public void setVote(int pollId, int playerId, int responseId) {
+        try (Jedis connection = jedis.getResource()) {
+            connection.exists("poll." + pollId + "." + playerId, responseId + "");
+            connection.hincrBy("responses." + pollId, responseId + "", 1);
         }
     }
 

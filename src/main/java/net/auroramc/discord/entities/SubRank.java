@@ -21,7 +21,7 @@ public enum SubRank {
     RECRUITMENT(6, "Recruitment", Arrays.asList(Permission.RECRUITMENT, Permission.DISGUISE, Permission.CUSTOM_DISGUISE), new Color(255, 170, 0)),
     SOCIAL_MEDIA(7, "Social Media", Collections.singletonList(Permission.SOCIAL_MEDIA), new Color(85, 85, 255)),
     EVENT_MANAGEMENT(8, "Event Management", Collections.singletonList(Permission.EVENT_MANAGEMENT), new Color(0, 170, 0)),
-    COMMUNITY_MANAGEMENT(9, "Community Management", Collections.emptyList(), new Color(0, 170, 0)),
+    COMMUNITY_MANAGEMENT(9, "Community Management", Collections.singletonList(Permission.COMMUNITY_MANAGEMENT), new Color(0, 170, 0)),
     RULES_COMMITTEE(10, "Rules Committee", Collections.singletonList(Permission.PANEL), new Color(255, 170, 0)),
     APPEALS(11, "Appeals Team", Collections.singletonList(Permission.PANEL), new Color(0, 170, 0)),
     TESTER(12, "Alpha Tester", Collections.emptyList(), new Color(0, 170, 0));
