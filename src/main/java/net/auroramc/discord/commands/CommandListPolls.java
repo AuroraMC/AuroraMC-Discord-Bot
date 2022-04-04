@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class CommandListPolls extends Command {
 
@@ -50,6 +51,6 @@ public class CommandListPolls extends Command {
 
         builder.setDescription(description);
         MessageEmbed messageEmbed = builder.build();
-        message.replyEmbeds(messageEmbed).setActionRow(buttons).queue();
+        message.replyEmbeds(messageEmbed).setActionRow(buttons).delay(5, TimeUnit.MINUTES).flatMap(Message::delete).queue();
     }
 }
