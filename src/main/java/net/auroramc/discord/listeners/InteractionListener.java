@@ -6,6 +6,7 @@ package net.auroramc.discord.listeners;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.PunishmentManager;
+import net.auroramc.discord.util.CommunityPoll;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -13,11 +14,13 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.stream.LongStream;
 
 public class InteractionListener extends ListenerAdapter {
 
@@ -76,6 +79,26 @@ public class InteractionListener extends ListenerAdapter {
                     event.editMessage("User unlinked!").setEmbeds(Collections.emptyList()).setActionRows(Collections.emptyList()).queue();
                 } else {
                     event.editMessage("Action cancelled.").setEmbeds(Collections.emptyList()).setActionRows(Collections.emptyList()).queue();
+                }
+            } else if (ids.length == 2 && ids[0].equals("poll")) {
+                int id = Integer.parseInt(ids[1]);
+                event.reply("Fetching poll results, one moment...").setEphemeral(true).queue();
+                CommunityPoll poll = DiscordBot.getDatabaseManager().getPoll(id);
+                if (poll != null) {
+                    long total = poll.getResponses().values().stream().mapToLong(Long::longValue).sum();
+                    EmbedBuilder builder = new EmbedBuilder()
+                            .setTitle("Results")
+                            .setColor(ChatColor.DARK_AQUA.getColor())
+                            .setDescription("Results for poll: **" + poll.getQuestion() + "**\n \n" +
+                                    "**Total Responses:** `" + total + "`");
+                    for (CommunityPoll.PollAnswer answer : poll.getAnswers().values()) {
+                        double value = ((poll.getResponses().get(answer.getId()) / (double) total)*10000);
+                        long finalValue = Math.round(value);
+                        builder.addField(answer.getId() + ") " + answer.getAnswer(),  (finalValue / 100f) + "% of people chose this answer.\n**Total Responses:** `" + poll.getResponses().get(answer.getId()) + "`", false);
+                    }
+                    event.getChannel().sendMessageEmbeds(builder.build()).queue();
+                } else {
+                    event.getChannel().sendMessage("Unable to fetch results.").queue();
                 }
             }
         }

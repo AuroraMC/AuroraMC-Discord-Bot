@@ -6,6 +6,7 @@ package net.auroramc.discord;
 
 import jline.console.ConsoleReader;
 import net.auroramc.discord.commands.CommandChangelog;
+import net.auroramc.discord.commands.CommandListPolls;
 import net.auroramc.discord.commands.CommandPlus;
 import net.auroramc.discord.commands.CommandPoll;
 import net.auroramc.discord.commands.admin.*;
@@ -121,6 +122,7 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandForceUpdate());
         CommandManager.registerCommand(new CommandEvidence());
         CommandManager.registerCommand(new CommandRolesPost());
+        CommandManager.registerCommand(new CommandListPolls());
         CommandManager.registerCommand(new CommandUnlink());
         CommandManager.registerCommand(new CommandPoll());
         CommandManager.registerCommand(new CommandChangelog());
