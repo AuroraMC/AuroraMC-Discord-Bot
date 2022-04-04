@@ -627,6 +627,77 @@ public class DatabaseManager {
         }
     }
 
+    public CommunityPoll getPoll(int id) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM polls WHERE id = ?");
+            statement.setInt(1, id);
+            ResultSet set = statement.executeQuery();
+
+            if (set.next()) {
+                statement = connection.prepareStatement("SELECT * FROM poll_answers WHERE poll_id = ?");
+                statement.setInt(1, set.getInt(1));
+
+                ResultSet set1 = statement.executeQuery();
+
+                Map<Integer, CommunityPoll.PollAnswer> answers = new HashMap<>();
+
+                while (set1.next()) {
+                    answers.put(set1.getInt(1), new CommunityPoll.PollAnswer(set1.getInt(1), set1.getString(3)));
+                }
+
+                Map<Integer, Long> responses = new HashMap<>();
+                try (Jedis jedis = this.jedis.getResource()) {
+                    Map<String, String> response = jedis.hgetAll("responses." + set.getString(1));
+                    for (Map.Entry<String, String> entry : response.entrySet()) {
+                        responses.put(Integer.parseInt(entry.getKey()), Long.parseLong(entry.getValue()));
+                    }
+                }
+
+                return new CommunityPoll(set.getInt(1), set.getString(2), answers, responses, set.getLong(3));
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<CommunityPoll> getPolls() {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM polls ORDER BY end_timestamp desc LIMIT 5");
+            ResultSet set = statement.executeQuery();
+
+            List<CommunityPoll> list = new ArrayList<>();
+
+            while (set.next()) {
+                statement = connection.prepareStatement("SELECT * FROM poll_answers WHERE poll_id = ?");
+                statement.setInt(1, set.getInt(1));
+
+                ResultSet set1 = statement.executeQuery();
+
+                Map<Integer, CommunityPoll.PollAnswer> answers = new HashMap<>();
+
+                while (set1.next()) {
+                    answers.put(set1.getInt(1), new CommunityPoll.PollAnswer(set1.getInt(1), set1.getString(3)));
+                }
+
+                Map<Integer, Long> responses = new HashMap<>();
+                try (Jedis jedis = this.jedis.getResource()) {
+                    Map<String, String> response = jedis.hgetAll("responses." + set.getString(1));
+                    for (Map.Entry<String, String> entry : response.entrySet()) {
+                        responses.put(Integer.parseInt(entry.getKey()), Long.parseLong(entry.getValue()));
+                    }
+                }
+
+                list.add(new CommunityPoll(set.getInt(1), set.getString(2), answers, responses, set.getLong(3)));
+            }
+            return list;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void newPoll(String question, List<CommunityPoll.PollAnswer> answers, long expire) {
         try (Connection connection = mysql.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO polls(question, end_timestamp) VALUES (?,?)");
