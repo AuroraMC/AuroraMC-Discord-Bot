@@ -18,12 +18,13 @@ import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CommandListPolls extends Command {
 
     public CommandListPolls() {
-        super("listpolls", Arrays.asList("polls", "getpolls"), Arrays.asList(Permission.ADMIN, Permission.DEBUG_INFO, Permission.COMMUNITY_MANAGEMENT), null);
+        super("listpolls", Arrays.asList("polls", "getpolls"), Arrays.asList(Permission.ADMIN, Permission.DEBUG_INFO, Permission.COMMUNITY_MANAGEMENT), Collections.singletonList(960543335821504542L));
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.List;
 public class CommandPoll extends Command {
 
     public CommandPoll() {
-        super("newpoll", Arrays.asList("poll", "addpoll"), Arrays.asList(Permission.ADMIN, Permission.DEBUG_INFO, Permission.COMMUNITY_MANAGEMENT), null);
+        super("newpoll", Arrays.asList("poll", "addpoll"), Arrays.asList(Permission.ADMIN, Permission.DEBUG_INFO, Permission.COMMUNITY_MANAGEMENT), Collections.singletonList(960543335821504542L));
     }
 
     @Override
