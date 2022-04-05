@@ -92,9 +92,9 @@ public class InteractionListener extends ListenerAdapter {
                             .setDescription("Results for poll: **" + poll.getQuestion() + "**\n \n" +
                                     "**Total Responses:** `" + total + "`");
                     for (CommunityPoll.PollAnswer answer : poll.getAnswers().values()) {
-                        double value = ((poll.getResponses().get(answer.getId()) / (double) total)*10000);
+                        double value = ((poll.getResponses().getOrDefault(answer.getId(), 0L) / (double) total) * 10000);
                         long finalValue = Math.round(value);
-                        builder.addField(answer.getId() + ") " + answer.getAnswer(),  (finalValue / 100f) + "% of people chose this answer.\n**Total Responses:** `" + poll.getResponses().get(answer.getId()) + "`", false);
+                        builder.addField(answer.getId() + ") " + answer.getAnswer(), (finalValue / 100f) + "% of people chose this answer.\n**Total Responses:** `" + poll.getResponses().get(answer.getId()) + "`", false);
                     }
                     event.getChannel().sendMessageEmbeds(builder.build()).queue();
                 } else {
