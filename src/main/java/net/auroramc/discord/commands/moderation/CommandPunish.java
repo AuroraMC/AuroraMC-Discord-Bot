@@ -35,9 +35,11 @@ public class CommandPunish extends Command {
 
             if (target == null) {
                 message.reply("That user is not in the Main Discord.").queue();
+                return;
             } else {
                 if (!member.canInteract(target)) {
                     message.reply("You cannot punish that user.").queue();
+                    return;
                 }
             }
 
