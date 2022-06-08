@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -40,7 +41,7 @@ public class MemberListener extends ListenerAdapter {
             if (uuid != null) {
                 Role role = e.getGuild().getRoleById(886329856873332768L);
                 assert role != null;
-                e.getGuild().addRoleToMember(e.getUser().getId(), role).queue();
+                e.getGuild().addRoleToMember(e.getUser(), role).queue();
                 LinkManager.onJoin(e.getGuild(), e.getUser(), uuid);
                 channel.sendMessageEmbeds(new EmbedBuilder()
                         .setAuthor("The AuroraMC Network Leadership Team", "auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
@@ -60,7 +61,7 @@ public class MemberListener extends ListenerAdapter {
             } else {
                 Role role = e.getGuild().getRoleById(886329879002505217L);
                 assert role != null;
-                e.getGuild().addRoleToMember(e.getUser().getId(), role).queue();
+                e.getGuild().addRoleToMember(UserSnowflake.fromId(e.getUser().getId()), role).queue();
                 channel.sendMessageEmbeds(new EmbedBuilder()
                         .setAuthor("The AuroraMC Network Leadership Team", "auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                         .setTitle("Welcome!")

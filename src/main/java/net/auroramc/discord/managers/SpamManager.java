@@ -34,7 +34,7 @@ public class SpamManager {
     }
 
     public static boolean onMessage(Message message) {
-        if (message.getMentionedUsers().size() > TAGS_THRESHOLD) {
+        if (message.getMentions().getMentions(Message.MentionType.USER).size() > TAGS_THRESHOLD) {
             message.delete().queue();
             if (warnedSpamTagUsers.contains(message.getAuthor().getIdLong())) {
                 PunishmentManager.punishUser(message.getJDA().getSelfUser(), message.getGuild(), message.getAuthor().getIdLong(), 1, "[AutoPunish] Spam Tagging");

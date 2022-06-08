@@ -26,8 +26,8 @@ public class RankUpdateCheckRunnable implements Runnable {
                 if (update.getNewRank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {
                         if (guild.isMember(user)) {
-                            guild.addRoleToMember(user.getIdLong(), Objects.requireNonNull(guild.getRoleById(GuildManager.getRankMappings(guild.getIdLong()).get(update.getNewRank())))).queue();
-                            guild.removeRoleFromMember(user.getIdLong(), Objects.requireNonNull(guild.getRoleById(GuildManager.getRankMappings(guild.getIdLong()).get(update.getOldRank())))).queue();
+                            guild.addRoleToMember(user, Objects.requireNonNull(guild.getRoleById(GuildManager.getRankMappings(guild.getIdLong()).get(update.getNewRank())))).queue();
+                            guild.removeRoleFromMember(user, Objects.requireNonNull(guild.getRoleById(GuildManager.getRankMappings(guild.getIdLong()).get(update.getOldRank())))).queue();
                             Objects.requireNonNull(guild.getTextChannelById(GuildManager.getLinkLogId(guild.getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                                     .setTitle("User Rank Update")
                                     .setAuthor(user.getAsTag())
@@ -53,7 +53,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                 } else if (update.getAddedSubrank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {
                         if (guild.isMember(user)) {
-                            guild.addRoleToMember(user.getIdLong(), Objects.requireNonNull(guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(update.getAddedSubrank())))).queue();
+                            guild.addRoleToMember(user, Objects.requireNonNull(guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(update.getAddedSubrank())))).queue();
                             Objects.requireNonNull(guild.getTextChannelById(GuildManager.getLinkLogId(guild.getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                                     .setTitle("User SubRank Update")
                                     .setAuthor(user.getAsTag())
@@ -68,7 +68,7 @@ public class RankUpdateCheckRunnable implements Runnable {
                 } else if (update.getRemovedSubrank() != null) {
                     for (Guild guild : user.getMutualGuilds()) {
                         if (guild.isMember(user)) {
-                            guild.removeRoleFromMember(user.getIdLong(), Objects.requireNonNull(guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(update.getAddedSubrank())))).queue();
+                            guild.removeRoleFromMember(user, Objects.requireNonNull(guild.getRoleById(GuildManager.getSubrankMappings(guild.getIdLong()).get(update.getAddedSubrank())))).queue();
                             Objects.requireNonNull(guild.getTextChannelById(GuildManager.getLinkLogId(guild.getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                                     .setTitle("User SubRank Update")
                                     .setAuthor(user.getAsTag())
