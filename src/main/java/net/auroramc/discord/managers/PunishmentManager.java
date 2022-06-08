@@ -195,7 +195,7 @@ public class PunishmentManager {
             message.reply("That is not a valid punishment code.").queue();
             return;
         }
-        Member member = message.getGuild().retrieveMemberById(punishment.getPunished()).complete();
+        Member member = message.getGuild().retrieveMember(punishment.getPunished()).complete();
         if (member != null) {
             if (!member.isTimedOut()) {
                 message.reply("That user is not currently punished.").queue();
@@ -203,7 +203,7 @@ public class PunishmentManager {
             }
             member.removeTimeout().queue();
         } else {
-            Guild.Ban ban = message.getGuild().retrieveBanById(punishment.getPunished()).complete();
+            Guild.Ban ban = message.getGuild().retrieveBan(punishment.getPunished()).complete();
             if (ban == null) {
                 message.reply("That user is not currently punished.").queue();
                 return;

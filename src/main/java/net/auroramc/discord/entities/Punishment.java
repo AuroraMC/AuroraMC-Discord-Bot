@@ -4,6 +4,8 @@
 
 package net.auroramc.discord.entities;
 
+import net.dv8tion.jda.api.entities.UserSnowflake;
+
 public class Punishment {
 
     private final String punishmentCode;
@@ -35,8 +37,8 @@ public class Punishment {
     }
 
 
-    public long getPunished() {
-        return punished;
+    public UserSnowflake getPunished() {
+        return UserSnowflake.fromId(punished);
     }
 
     public long getPunisher() {

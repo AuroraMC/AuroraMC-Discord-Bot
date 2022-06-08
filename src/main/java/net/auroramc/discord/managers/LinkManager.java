@@ -25,11 +25,11 @@ public class LinkManager {
         assert guild != null;
         Role role = guild.getRoleById(886329879002505217L);
         assert role != null;
-        guild.removeRoleFromMember(user.getId(), role).queue();
+        guild.removeRoleFromMember(user, role).queue();
 
         role = guild.getRoleById(886329856873332768L);
         assert role != null;
-        guild.addRoleToMember(user.getId(), role).queue();
+        guild.addRoleToMember(user, role).queue();
 
         Rank rank = DiscordBot.getDatabaseManager().getRank(uuid);
         List<SubRank> subranks = DiscordBot.getDatabaseManager().getSubRanks(uuid);
@@ -39,14 +39,14 @@ public class LinkManager {
 
         role = guild.getRoleById(rankMappings.get(rank));
         assert role != null;
-        guild.addRoleToMember(user.getId(), role).queue();
+        guild.addRoleToMember(user, role).queue();
 
         List<String> subranksAdded = new ArrayList<>();
 
         for (SubRank subRank : subranks) {
             role = guild.getRoleById(subrankMappings.get(subRank));
             assert role != null;
-            guild.addRoleToMember(user.getId(), role).queue();
+            guild.addRoleToMember(user, role).queue();
             subranksAdded.add(subRank.getName());
         }
 
@@ -72,14 +72,14 @@ public class LinkManager {
 
         Role role = guild.getRoleById(rankMappings.get(rank));
         assert role != null;
-        guild.addRoleToMember(user.getId(), role).queue();
+        guild.addRoleToMember(user, role).queue();
 
         List<String> subranksAdded = new ArrayList<>();
 
         for (SubRank subRank : subranks) {
             role = guild.getRoleById(subrankMappings.get(subRank));
             assert role != null;
-            guild.addRoleToMember(user.getId(), role).queue();
+            guild.addRoleToMember(user, role).queue();
             subranksAdded.add(subRank.getName());
         }
 
