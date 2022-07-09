@@ -131,7 +131,7 @@ public class DiscordBot {
         logger.info("Logging in...");
         jda = JDABuilder.create(botToken, GatewayIntent.GUILD_MEMBERS,
                         GatewayIntent.GUILD_BANS,
-                        GatewayIntent.GUILD_EMOJIS,
+                        GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                         GatewayIntent.GUILD_WEBHOOKS,
                         GatewayIntent.GUILD_INVITES,
                         GatewayIntent.GUILD_VOICE_STATES,
