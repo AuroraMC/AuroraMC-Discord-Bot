@@ -41,7 +41,7 @@ public class InteractionListener extends ListenerAdapter {
                         event.reply("The notification role `" + role.getName() + "` has been removed from you!").setEphemeral(true).queue();
                     } else {
                         event.getGuild().addRoleToMember(event.getMember(), role).queue();
-                        event.reply("The notification role `" + role.getName() + "` has been added from you!").setEphemeral(true).queue();
+                        event.reply("The notification role `" + role.getName() + "` has been added to you!").setEphemeral(true).queue();
                     }
                 } else {
                     event.reply("I couldn't find that role, please let an admin know!").setEphemeral(true).queue();
