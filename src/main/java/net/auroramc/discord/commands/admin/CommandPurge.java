@@ -5,40 +5,39 @@
 package net.auroramc.discord.commands.admin;
 
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class CommandPurge extends Command {
     public CommandPurge() {
-        super("purge", Collections.emptyList(), Collections.singletonList(Permission.ADMIN), null);
+        super("purge", "Purge messages from a channel.", Collections.singletonList(new OptionData(OptionType.NUMBER, "Amount", "The number of messages to delete.", true)));
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
-        if (args.size() == 1) {
-            int amount;
-            try {
-                amount = Integer.parseInt(args.get(0));
-            } catch (NumberFormatException e) {
-                message.reply("Invalid syntax. Correct syntax: **!purge [amount]**").queue();
-                return;
-            }
-
-            if (amount > 100) {
-                message.reply("Amount must be less than 100.").queue();
-                return;
-            }
-
-            message.getTextChannel().getHistory().retrievePast(amount).queue((messages) -> {
-                message.getTextChannel().purgeMessages(messages);
-            });
-        } else {
-            message.reply("Invalid syntax. Correct syntax: **!purge [amount]**").queue();
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
+        int amount;
+        try {
+            amount = Integer.parseInt(args.get("Amount"));
+        } catch (NumberFormatException e) {
+            message.reply("Invalid syntax. Correct syntax: **/purge [amount]**").queue();
+            return;
         }
+
+        if (amount > 100) {
+            message.reply("Amount must be less than 100.").queue();
+            return;
+        }
+
+        message.getGuildChannel().getHistory().retrievePast(amount).queue((messages) -> {
+            message.getGuildChannel().purgeMessages(messages);
+        });
+        message.reply("Purge complete.").setEphemeral(true).queue();
     }
 }

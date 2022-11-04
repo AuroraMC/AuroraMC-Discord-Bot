@@ -5,43 +5,42 @@
 package net.auroramc.discord.commands.setup;
 
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Rank;
 import net.auroramc.discord.entities.SubRank;
 import net.auroramc.discord.managers.GuildManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class CommandAllowSubRank extends Command {
     public CommandAllowSubRank() {
-        super("allowsubrank", Collections.emptyList(), null, null);
+        super("allowsubrank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "SubRank ID", "The ID of the Subrank you wsh to allow.", true)));
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
-        if (args.size() == 1) {
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
             int id;
             try {
-                id = Integer.parseInt(args.get(0));
+                id = Integer.parseInt(args.get("SubRank ID"));
             } catch (NumberFormatException ignored) {
-                message.reply("Invalid syntax. Correct syntax: **!allowsubrank [rank ID]**").queue();
+                message.reply("Invalid syntax. Correct syntax: **/allowsubrank [rank ID]**").queue();
                 return;
             }
             SubRank rank = SubRank.getByID(id);
             if (rank != null) {
                 if (!GuildManager.getAllowedSubRanks(member.getGuild().getIdLong()).contains(rank)) {
                     GuildManager.addAllowedSubRank(member.getGuild().getIdLong(), rank);
-                    message.reply("SubRank is now allowed. To allow them to join, you have to generate links for everyone you need to using !generatelink.").queue();
+                    message.reply("SubRank is now allowed. To allow them to join, you have to generate links for everyone you need to using /generatelink.").queue();
                 } else {
                     message.reply("That subrank is already allowed here!").queue();
                 }
             } else {
                 message.reply("That is not a valid subrank ID.").queue();
             }
-        } else {
-            message.reply("Invalid syntax. Correct syntax: **!allowsubrank [rank ID]**").queue();
-        }
     }
 }

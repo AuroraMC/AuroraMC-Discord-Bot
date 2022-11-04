@@ -5,45 +5,42 @@
 package net.auroramc.discord.commands.setup;
 
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Permission;
 import net.auroramc.discord.managers.GuildManager;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CommandSetup extends Command {
 
 
     public CommandSetup() {
-        super("setup", Collections.emptyList(), null, null);
+        super("setup", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Arrays.asList(new OptionData(OptionType.NUMBER, "Server Logging Channel ID", "The ID for the channel you wish for server log messages to be sent.", true), new OptionData(OptionType.NUMBER, "Link Logging Channel ID", "The ID for the channel you wish for link log messages to be send in.", true)));
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
-        if (args.size() == 2) {
-            long serverLog, linkLog, mainChannel = message.getChannel().getIdLong();
-            try {
-                serverLog = Long.parseLong(args.get(0));
-                linkLog = Long.parseLong(args.get(1));
-            } catch (NumberFormatException ignored) {
-                message.reply("Those are not valid channels.").queue();
-                return;
-            }
-            if (message.getGuild().getTextChannelById(serverLog) == null) {
-                message.reply("Those are not valid channels.").queue();
-                return;
-            }
-            if (message.getGuild().getTextChannelById(linkLog) == null) {
-                message.reply("Those are not valid channels.").queue();
-                return;
-            }
-
-            GuildManager.onGuildSetup(message.getGuild(), mainChannel, serverLog, linkLog);
-            message.reply("Discord successfully setup.").queue();
-        } else {
-            message.reply("Invalid syntax. Correct syntax: **!setup [server logging channel ID] [link logging channel ID]**").queue();
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
+        message.deferReply().queue();
+        long serverLog, linkLog, mainChannel = message.getChannel().getIdLong();
+        try {
+            serverLog = Long.parseLong(args.get("Server Logging Channel ID"));
+            linkLog = Long.parseLong(args.get("Link Logging Channel ID"));
+        } catch (NumberFormatException ignored) {
+            message.reply("Those are not valid channels.").queue();
+            return;
         }
+        if (message.getGuild().getTextChannelById(serverLog) == null) {
+            message.reply("Those are not valid channels.").queue();
+            return;
+        }
+        if (message.getGuild().getTextChannelById(linkLog) == null) {
+            message.reply("Those are not valid channels.").queue();
+            return;
+        }
+        GuildManager.onGuildSetup(message.getGuild(), mainChannel, serverLog, linkLog);
+        message.reply("Discord successfully setup.").queue();
     }
 }

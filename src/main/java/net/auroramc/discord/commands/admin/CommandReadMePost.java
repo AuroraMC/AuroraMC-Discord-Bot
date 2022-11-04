@@ -5,27 +5,28 @@
 package net.auroramc.discord.commands.admin;
 
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Permission;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class CommandReadMePost extends Command {
 
 
     public CommandReadMePost() {
-        super("readme", Collections.emptyList(), Collections.singletonList(Permission.ADMIN), null);
+        super("readme", "Post the Read-Me Announcement in your current channel.", Collections.emptyList());
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         MessageEmbed welcome = new EmbedBuilder()
                 .setTitle("Welcome!")
                 .setDescription("__**Welcome to the AuroraMC Discord! We hope you will enjoy your time here!**__\n" +
@@ -121,6 +122,6 @@ public class CommandReadMePost extends Command {
                 .setColor(new Color(85, 255,255))
                 .build();
         message.getChannel().sendMessageEmbeds(welcome, light, medium, heavy, severe, extreme, linking, plus).setActionRow(Button.link("https://auroramc.net", "Website").withEmoji(Emoji.fromUnicode("U+1F5A5")), Button.link("https://store.auroramc.net", "Store").withEmoji(Emoji.fromUnicode("U+1F6D2")), Button.link("https://auroramc.net/terms", "Terms").withEmoji(Emoji.fromUnicode("U+1F4DD")), Button.link("https://auroramc.net/privacy", "Privacy Policy").withEmoji(Emoji.fromUnicode("U+1F512"))).queue();
-        message.delete().queue();
+        message.reply("Post made.").setEphemeral(true).queue();
     }
 }

@@ -10,9 +10,9 @@ import net.auroramc.discord.managers.LinkManager;
 import net.auroramc.discord.managers.PlusManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Invite;
-import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MemberListener extends ListenerAdapter {
 
@@ -108,7 +109,7 @@ public class MemberListener extends ListenerAdapter {
                         LinkManager.onJoin(e.getGuild(), e.getUser(), uuid);
                     } else {
                         //This was used by someone it shouldn't have been.
-                        e.getGuild().ban(e.getUser(), 0, "Joined through illegal invite link.").queue();
+                        e.getGuild().ban(e.getUser(), 0, TimeUnit.MINUTES).reason("Joined through illegal invite link.").queue();
                         LinkManager.onInviteFail(userId, e.getUser(), code, e.getGuild());
                     }
                     DiscordBot.getDatabaseManager().removeInviteLink(e.getGuild().getIdLong(), code);
