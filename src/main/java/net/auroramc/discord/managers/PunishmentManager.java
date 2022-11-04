@@ -5,21 +5,20 @@
 package net.auroramc.discord.managers;
 
 import net.auroramc.discord.DiscordBot;
-import net.auroramc.discord.entities.Permission;
 import net.auroramc.discord.entities.Punishment;
 import net.auroramc.discord.entities.PunishmentLength;
+import net.auroramc.discord.entities.Rank;
+import net.auroramc.discord.entities.SubRank;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.text.WordUtils;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class PunishmentManager {
         return new PunishmentLength(base);
     }
 
-    public static void punishUser(Message message, long id, int weight, String reason) {
+    public static void punishUser(SlashCommandInteraction message, long id, int weight, String reason) {
         Member member = message.getGuild().retrieveMemberById(id).complete();
         if (member.isTimedOut()) {
             message.reply("That user is already punished.").queue();
@@ -49,7 +48,7 @@ public class PunishmentManager {
         long issued = System.currentTimeMillis();
         long expire = ((punishmentLength.getMsValue() == -1d)?-1:issued + Math.round(punishmentLength.getMsValue()));
         String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
-        DiscordBot.getDatabaseManager().punishUser(code, id, expire == -1d, issued, expire, reason, weight, message.getAuthor().getIdLong());
+        DiscordBot.getDatabaseManager().punishUser(code, id, expire == -1d, issued, expire, reason, weight, message.getUser().getIdLong());
 
         member.getUser().openPrivateChannel().queue((privateChannel -> privateChannel.sendMessageEmbeds(
                 new EmbedBuilder()
@@ -67,7 +66,7 @@ public class PunishmentManager {
         ).queue()));
         message.reply("You have " + ((expire == -1)?"banned":"timed out") + " User " + member.getAsMention() + " for " + punishmentLength.getFormatted() + ". Punishment ID: **" + code + "**").queue();
         if (expire == -1d) {
-            member.ban(7, reason).queue();
+            member.ban(7, TimeUnit.DAYS).reason(reason).queue();
         } else {
             member.timeoutUntil(Instant.ofEpochMilli(expire)).queue();
         }
@@ -98,17 +97,25 @@ public class PunishmentManager {
                         .build()
         ).queue()));
         if (expire == -1d) {
-            member.ban(7, reason).queue();
+            member.ban(7, TimeUnit.DAYS).reason(reason).queue();
         } else {
             member.timeoutUntil(Instant.ofEpochMilli(expire)).queue();
         }
     }
 
-    public static void getPunishmentHistory(Member user, Message message, long id) {
-        List<Punishment> punishments;
-        if (CommandManager.hasPermission(user, Permission.ADMIN)) {
-            punishments = DiscordBot.getDatabaseManager().getAllPunishments(id);
-        } else {
+    public static void getPunishmentHistory(Member user, SlashCommandInteraction message, long id) {
+        List<Punishment> punishments = null;
+        Map<Rank, Long> rankMappings = GuildManager.getRankMappings(user.getGuild().getIdLong());
+        for (Role role : user.getRoles()) {
+            for (Map.Entry<Rank, Long> entry : rankMappings.entrySet()) {
+                if (entry.getValue().equals(role.getIdLong())) {
+                    if (entry.getKey().getId() >= 11) {
+                        punishments = DiscordBot.getDatabaseManager().getAllPunishments(id);
+                    }
+                }
+            }
+        }
+        if (punishments == null) {
             punishments = DiscordBot.getDatabaseManager().getPunishmentsVisible(id);
         }
         if (punishments.isEmpty()) {
@@ -139,17 +146,25 @@ public class PunishmentManager {
         Button button = Button.primary("ph-2-" + id + "-" + user.getIdLong(), "Next Page").withEmoji(Emoji.fromUnicode("U+27A1"));
 
         if (punishments.size() > 4) {
-            message.replyEmbeds(embed).setActionRow(button).delay(5, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+            message.replyEmbeds(embed).setActionRow(button).queue(message2 -> message2.deleteOriginal().queueAfter(5, TimeUnit.MINUTES));
         } else {
-            message.replyEmbeds(embed).delay(5, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+            message.replyEmbeds(embed).queue(message2 -> message2.deleteOriginal().queueAfter(5, TimeUnit.MINUTES));
         }
     }
 
     public static void onPageChange(ButtonInteractionEvent event, Message message, int page, long id, long recipient) {
-        List<Punishment> punishments;
-        if (CommandManager.hasPermission(Objects.requireNonNull(message.getGuild().getMemberById(recipient)), Permission.ADMIN)) {
-            punishments = DiscordBot.getDatabaseManager().getAllPunishments(id);
-        } else {
+        List<Punishment> punishments = null;
+        Map<Rank, Long> rankMappings = GuildManager.getRankMappings(message.getGuild().getMemberById(recipient).getGuild().getIdLong());
+        for (Role role : message.getGuild().getMemberById(recipient).getRoles()) {
+            for (Map.Entry<Rank, Long> entry : rankMappings.entrySet()) {
+                if (entry.getValue().equals(role.getIdLong())) {
+                    if (entry.getKey().getId() >= 11) {
+                        punishments = DiscordBot.getDatabaseManager().getAllPunishments(id);
+                    }
+                }
+            }
+        }
+        if (punishments == null) {
             punishments = DiscordBot.getDatabaseManager().getPunishmentsVisible(id);
         }
         if (punishments.isEmpty()) {
@@ -190,7 +205,7 @@ public class PunishmentManager {
         }
     }
 
-    public static void removePunishment(Message message, String code, String reason) {
+    public static void removePunishment(SlashCommandInteraction message, String code, String reason) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
             message.reply("That is not a valid punishment code.").queue();
@@ -212,11 +227,11 @@ public class PunishmentManager {
             message.getGuild().unban(ban.getUser()).queue();
         }
 
-        DiscordBot.getDatabaseManager().removePunishment(punishment.getPunishmentCode(), message.getAuthor().getIdLong(), reason);
+        DiscordBot.getDatabaseManager().removePunishment(punishment.getPunishmentCode(), message.getUser().getIdLong(), reason);
         message.reply("User has been unpunished.").queue();
     }
 
-    public static void attachEvidence(Message message, String code, String evidence) {
+    public static void attachEvidence(SlashCommandInteraction message, String code, String evidence) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
             message.reply("That is not a valid punishment code.").queue();
@@ -226,7 +241,7 @@ public class PunishmentManager {
         message.reply("Evidence attached.").queue();
     }
 
-    public static void hidePunishment(Message message, String code) {
+    public static void hidePunishment(SlashCommandInteraction message, String code) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
             message.reply("That is not a valid punishment code.").queue();
@@ -236,7 +251,7 @@ public class PunishmentManager {
         message.reply("Punishment hidden.").queue();
     }
 
-    public static void showPunishment(Message message, String code) {
+    public static void showPunishment(SlashCommandInteraction message, String code) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
             message.reply("That is not a valid punishment code.").queue();

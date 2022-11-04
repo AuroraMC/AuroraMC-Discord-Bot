@@ -12,22 +12,25 @@ import net.auroramc.discord.managers.GuildManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class CommandRemoveRank extends Command {
     public CommandRemoveRank() {
-        super("removerank", Collections.emptyList(), null, null);
+        super("removerank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "Rank ID", "The ID of the rank you wsh to disallow.", true)));
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
-        if (args.size() == 1) {
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
             int id;
             try {
-                id = Integer.parseInt(args.get(0));
+                id = Integer.parseInt(args.get("Rank ID"));
             } catch (NumberFormatException ignored) {
                 message.reply("Invalid syntax. Correct syntax: **!removerank [rank ID]**").queue();
                 return;
@@ -63,8 +66,5 @@ public class CommandRemoveRank extends Command {
             } else {
                 message.reply("That is not a valid rank ID.").queue();
             }
-        } else {
-            message.reply("Invalid syntax. Correct syntax: **!removerank [rank ID]**").queue();
-        }
     }
 }
