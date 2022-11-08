@@ -8,11 +8,13 @@ import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.LinkManager;
 import net.auroramc.discord.managers.PlusManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 
 import java.awt.*;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
