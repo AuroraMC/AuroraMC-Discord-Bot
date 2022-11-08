@@ -22,6 +22,7 @@ import java.util.UUID;
 public class CommandLink {
 
     public void execute(SlashCommandInteraction message, User user, Map<String, String> args) {
+        message.deferReply().queue();
         if (user.getMutualGuilds().size() > 0) {
             for (Guild guild : user.getMutualGuilds()) {
                 if (guild.getIdLong() == DiscordBot.getSettings().getMasterDiscord()) {
@@ -54,7 +55,7 @@ public class CommandLink {
 
                                 //Now link is done, hand over to the link manager to deal with it.
                                 LinkManager.onLink(user, uuid);
-                                message.replyEmbeds(new EmbedBuilder()
+                                message.getHook().sendMessageEmbeds(new EmbedBuilder()
                                         .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                                         .setTitle("Account linked!")
                                         .setDescription("__**Your account has been successfully linked!**__\n" +
@@ -70,10 +71,10 @@ public class CommandLink {
                                 LinkManager.processOtherInvites(user, message, uuid);
                                 PlusManager.onJoin(user, uuid);
                             } else {
-                                message.reply("You provided an invalid code, please try again!").queue();
+                                message.getHook().sendMessage("You provided an invalid code, please try again!").queue();
                             }
                         } else {
-                            message.reply("Invalid arguments. Correct arguments: **/link [8 digit code]**").queue();
+                            message.getHook().sendMessage("Invalid arguments. Correct arguments: **/link [8 digit code]**").queue();
                         }
                     }
                 }
