@@ -33,12 +33,12 @@ public class CommandAllowRank extends Command {
         if (rank != null) {
             if (!GuildManager.getAllowedRanks(member.getGuild().getIdLong()).contains(rank)) {
                 GuildManager.addAllowedRank(member.getGuild().getIdLong(), rank);
-                message.reply("Rank is now allowed. To allow them to join, you have to generate links for everyone you need to using /generatelink.").queue();
+                message.reply("Rank is now allowed. To allow them to join, you have to generate links for everyone you need to using /generatelink.").setEphemeral(true).queue();
             } else {
-                message.reply("That rank is already allowed here!").queue();
+                message.reply("That rank is already allowed here!").setEphemeral(true).queue();
             }
         } else {
-            message.reply("That is not a valid rank ID.").queue();
+            message.reply("That is not a valid rank ID.").setEphemeral(true).queue();
         }
     }
 }

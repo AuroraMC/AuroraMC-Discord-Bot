@@ -25,15 +25,16 @@ public class CommandSlowMode extends Command {
         try {
             id = Integer.parseInt(args.get("seconds"));
         } catch (NumberFormatException e) {
-            message.reply("Invalid syntax. Correct syntax: **/slowmode [Seconds]**").queue();
+            message.reply("Invalid syntax. Correct syntax: **/slowmode [Seconds]**").setEphemeral(true).queue();
             return;
         }
 
         if (id > TextChannel.MAX_SLOWMODE) {
-            message.reply("Slowmode must be less than 21600.").queue();
+            message.reply("Slowmode must be less than 21600.").setEphemeral(true).queue();
             return;
         }
 
         message.getGuildChannel().asTextChannel().getManager().setSlowmode(id).queue();
+        message.reply("Slowmode activated.").setEphemeral(true).queue();
     }
 }

@@ -26,7 +26,7 @@ public class CommandPoll extends Command {
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         if (DiscordBot.getDatabaseManager().getPoll() != null) {
-            message.reply("There is already a poll in progress. Please wait for it to end before starting a new one.").queue();
+            message.reply("There is already a poll in progress. Please wait for it to end before starting a new one.").setEphemeral(true).queue();
             return;
         }
         long expire = System.currentTimeMillis() + (Long.parseLong(args.get("length")) * 86400000);

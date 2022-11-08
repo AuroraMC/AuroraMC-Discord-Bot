@@ -59,7 +59,7 @@ public class PlusManager {
                     .setColor(new Color(255, 170, 0))
                     .build()).queue();
         } else {
-            message.reply("You do not have an active Plus subscription. Please allow up to 24 hours for your store purchases to go through.").queue();
+            message.reply("You do not have an active Plus subscription. Please allow up to 24 hours for your store purchases to go through.").setEphemeral(true).queue();
         }
     }
 
