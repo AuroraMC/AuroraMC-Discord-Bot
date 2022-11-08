@@ -5,6 +5,7 @@
 package net.auroramc.discord.listeners;
 
 import net.auroramc.discord.DiscordBot;
+import net.auroramc.discord.managers.CommandManager;
 import net.auroramc.discord.managers.GuildManager;
 import net.auroramc.discord.managers.LinkManager;
 import net.auroramc.discord.managers.PlusManager;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -128,5 +130,10 @@ public class MemberListener extends ListenerAdapter {
                 .setTimestamp(Instant.now())
                 .setColor(new Color(255, 85, 85))
                 .build()).queue();
+    }
+
+    @Override
+    public void onGuildJoin(@NotNull GuildJoinEvent event) {
+        CommandManager.loadCommands(event.getGuild());
     }
 }
