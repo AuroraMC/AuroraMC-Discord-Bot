@@ -29,14 +29,14 @@ public class CommandGenerateLink extends Command {
 
 
     public CommandGenerateLink() {
-        super("generatelink", "Generate a link to join a Discord.", Collections.singletonList(new OptionData(OptionType.NUMBER, "User ID", "The numerical snowflake ID of the user.", true, false)));
+        super("generatelink", "Generate a link to join a Discord.", Collections.singletonList(new OptionData(OptionType.NUMBER, "user id", "The numerical snowflake ID of the user.", true, false)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         long id;
         try {
-            id = Long.parseLong(args.get("User ID"));
+            id = Long.parseLong(args.get("user id"));
         } catch (NumberFormatException e) {
             message.reply("Invalid syntax. Correct syntax: **/generatelink [user ID]**").queue();
             return;

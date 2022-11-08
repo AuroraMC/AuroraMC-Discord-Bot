@@ -15,14 +15,14 @@ import java.util.Map;
 
 public class CommandPurge extends Command {
     public CommandPurge() {
-        super("purge", "Purge messages from a channel.", Collections.singletonList(new OptionData(OptionType.NUMBER, "Amount", "The number of messages to delete.", true)));
+        super("purge", "Purge messages from a channel.", Collections.singletonList(new OptionData(OptionType.NUMBER, "amount", "The number of messages to delete.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         int amount;
         try {
-            amount = Integer.parseInt(args.get("Amount"));
+            amount = Integer.parseInt(args.get("amount"));
         } catch (NumberFormatException e) {
             message.reply("Invalid syntax. Correct syntax: **/purge [amount]**").queue();
             return;

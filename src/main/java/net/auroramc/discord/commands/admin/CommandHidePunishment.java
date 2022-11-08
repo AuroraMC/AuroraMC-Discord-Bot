@@ -17,13 +17,13 @@ import java.util.Map;
 public class CommandHidePunishment extends Command {
 
     public CommandHidePunishment() {
-        super("hidepunishment", "Hide a punishment from view in the punishment history.", Collections.singletonList(new OptionData(OptionType.STRING, "Code", "The Punishment code attached to the Punishment.", true)));
+        super("hidepunishment", "Hide a punishment from view in the punishment history.", Collections.singletonList(new OptionData(OptionType.STRING, "code", "The Punishment code attached to the Punishment.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         message.deferReply().queue();
-        String code = args.remove("Code");
+        String code = args.remove("code");
 
         PunishmentManager.hidePunishment(message, code);
     }

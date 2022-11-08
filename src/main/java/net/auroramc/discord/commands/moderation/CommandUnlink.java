@@ -19,12 +19,12 @@ import java.util.Map;
 
 public class CommandUnlink extends Command {
     public CommandUnlink() {
-        super("unlink", "Unlink a user's Minecraft account.", Collections.singletonList(new OptionData(OptionType.STRING, "Username", "The Minecraft username of the player you wish to unlink.", true)));
+        super("unlink", "Unlink a user's Minecraft account.", Collections.singletonList(new OptionData(OptionType.STRING, "username", "The Minecraft username of the player you wish to unlink.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
-            String username = args.remove("Username");
+            String username = args.remove("username");
             long id = DiscordBot.getDatabaseManager().getDiscordID(username);
             if (id != -1) {
                 message.replyEmbeds(

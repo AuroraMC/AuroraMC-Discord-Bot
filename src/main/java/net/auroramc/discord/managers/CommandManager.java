@@ -59,7 +59,7 @@ public class CommandManager {
             data.add(command.getAsSlashCommandData());
         }
         //This is a global command, so init first.
-        jda.updateCommands().addCommands(Commands.slash("link", "Link your Minecraft Account to your Discord account").setDefaultPermissions(DefaultMemberPermissions.ENABLED).addOptions(new OptionData(OptionType.STRING, "Code", "The 8-digit confirmation code produced by /link in-game.", true))).queue();
+        jda.updateCommands().addCommands(Commands.slash("link", "Link your Minecraft Account to your Discord account").setDefaultPermissions(DefaultMemberPermissions.ENABLED).addOptions(new OptionData(OptionType.STRING, "code", "The 8-digit confirmation code produced by /link in-game.", true))).queue();
         Objects.requireNonNull(jda.getGuildById(DiscordBot.getSettings().getMasterDiscord())).updateCommands().addCommands(data).queue();
     }
 }
