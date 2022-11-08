@@ -16,14 +16,14 @@ import java.util.Map;
 
 public class CommandUnpunish extends Command {
     public CommandUnpunish() {
-        super("unpunish", "Remove an active ban/timeout from a user.", Arrays.asList(new OptionData(OptionType.STRING, "Code", "The Punishment code attached to the Punishment.", true), new OptionData(OptionType.STRING, "Reason", "The reason you are removing the punishment.", true)));
+        super("unpunish", "Remove an active ban/timeout from a user.", Arrays.asList(new OptionData(OptionType.STRING, "code", "The Punishment code attached to the Punishment.", true), new OptionData(OptionType.STRING, "reason", "The reason you are removing the punishment.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         message.deferReply().queue();
-            String code = args.get("Code");
-            String reason = args.get("Reason");
+            String code = args.get("code");
+            String reason = args.get("reason");
 
             PunishmentManager.removePunishment(message, code, reason);
     }

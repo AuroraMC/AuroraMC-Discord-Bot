@@ -16,14 +16,14 @@ import java.util.Map;
 
 public class CommandSlowMode extends Command {
     public CommandSlowMode() {
-        super("slowmode", "Enable a slowmode in the channel you are in.", Collections.singletonList(new OptionData(OptionType.INTEGER, "Seconds", "The minumum number of seconds between user messages.")));
+        super("slowmode", "Enable a slowmode in the channel you are in.", Collections.singletonList(new OptionData(OptionType.INTEGER, "seconds", "The minumum number of seconds between user messages.")));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         int id;
         try {
-            id = Integer.parseInt(args.get("Seconds"));
+            id = Integer.parseInt(args.get("seconds"));
         } catch (NumberFormatException e) {
             message.reply("Invalid syntax. Correct syntax: **/slowmode [Seconds]**").queue();
             return;
