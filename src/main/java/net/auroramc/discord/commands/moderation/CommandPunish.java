@@ -48,7 +48,7 @@ public class CommandPunish extends Command {
         try {
             weight = Integer.parseInt(args.remove("weight"));
         } catch (NumberFormatException e) {
-            message.reply("Invalid syntax. Correct syntax: **!punish [user ID] [weight 1-5] [reason]**").queue();
+            message.reply("Invalid syntax. Correct syntax: **/punish [user ID] [weight] [reason]**").queue();
             return;
         }
 
