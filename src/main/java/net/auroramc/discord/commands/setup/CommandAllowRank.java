@@ -17,14 +17,14 @@ import java.util.Map;
 
 public class CommandAllowRank extends Command {
     public CommandAllowRank() {
-        super("allowrank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "rank id", "The ID of the rank you wsh to allow.", true)));
+        super("allowrank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "rank-id", "The ID of the rank you wsh to allow.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         int id;
         try {
-            id = Integer.parseInt(args.get("rank id"));
+            id = Integer.parseInt(args.get("rank-id"));
         } catch (NumberFormatException ignored) {
             message.reply("Invalid syntax. Correct syntax: **/allowrank [rank ID]**").queue();
             return;
