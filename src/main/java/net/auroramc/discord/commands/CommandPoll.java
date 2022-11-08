@@ -25,8 +25,9 @@ public class CommandPoll extends Command {
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
+        message.deferReply().queue();
         if (DiscordBot.getDatabaseManager().getPoll() != null) {
-            message.reply("There is already a poll in progress. Please wait for it to end before starting a new one.").setEphemeral(true).queue();
+            message.getHook().sendMessage("There is already a poll in progress. Please wait for it to end before starting a new one.").setEphemeral(true).queue();
             return;
         }
         long expire = System.currentTimeMillis() + (Long.parseLong(args.get("length")) * 86400000);
@@ -40,6 +41,6 @@ public class CommandPoll extends Command {
         }
         message.deferReply().queue();
         DiscordBot.getDatabaseManager().newPoll(question, answers, expire);
-        message.reply("New poll asking **" + question + "** has been published! Please allow up to 60 minutes for the change to be reflected in-game!").queue();
+        message.getHook().sendMessage("New poll asking **" + question + "** has been published! Please allow up to 60 minutes for the change to be reflected in-game!").queue();
     }
 }
