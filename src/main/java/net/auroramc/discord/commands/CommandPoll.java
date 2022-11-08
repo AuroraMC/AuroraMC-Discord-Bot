@@ -20,7 +20,7 @@ import java.util.Map;
 public class CommandPoll extends Command {
 
     public CommandPoll() {
-        super("newpoll", "Start a new poll. Answers will be output in order 1-4. If Answer 3 is not specified, Answer 4 will be ignored.", Arrays.asList(new OptionData(OptionType.INTEGER, "length", "The length, in days, the poll should run for.", true), new OptionData(OptionType.STRING, "question", "The question you would like to ask.", true), new OptionData(OptionType.STRING, "answer 1", "The first option", true), new OptionData(OptionType.STRING, "answer 2", "The second option", true), new OptionData(OptionType.STRING, "answer 3", "The third option", false), new OptionData(OptionType.STRING, "answer 4", "The fourth option", false)));
+        super("newpoll", "Start a new poll. Answers will be output in order 1-4. If Answer 3 is not specified, Answer 4 will be ignored.", Arrays.asList(new OptionData(OptionType.INTEGER, "length", "The length, in days, the poll should run for.", true), new OptionData(OptionType.STRING, "question", "The question you would like to ask.", true), new OptionData(OptionType.STRING, "answer-1", "The first option", true), new OptionData(OptionType.STRING, "answer-2", "The second option", true), new OptionData(OptionType.STRING, "answer-3", "The third option", false), new OptionData(OptionType.STRING, "answer-4", "The fourth option", false)));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CommandPoll extends Command {
             if (!args.containsKey("answer " + i)) {
                 break;
             }
-            answers.add(new CommunityPoll.PollAnswer(i, args.get("answer " + i)));
+            answers.add(new CommunityPoll.PollAnswer(i, args.get("answer-" + i)));
         }
         message.deferReply().queue();
         DiscordBot.getDatabaseManager().newPoll(question, answers, expire);

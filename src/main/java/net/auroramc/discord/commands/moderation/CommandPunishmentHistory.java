@@ -18,7 +18,7 @@ public class CommandPunishmentHistory extends Command {
 
 
     public CommandPunishmentHistory() {
-        super("punishmenthistory", "View the punishment history of a player.", Collections.singletonList(new OptionData(OptionType.NUMBER, "user id", "The numerical snowflake ID of the user.", true)));
+        super("punishmenthistory", "View the punishment history of a player.", Collections.singletonList(new OptionData(OptionType.NUMBER, "user-id", "The numerical snowflake ID of the user.", true)));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class CommandPunishmentHistory extends Command {
         message.deferReply().queue();
         long id;
         try {
-            id = Long.parseLong(args.get("user id"));
+            id = Long.parseLong(args.get("user-id"));
         } catch (NumberFormatException e) {
             message.reply("Invalid syntax. Correct syntax: **/ph [user ID]**").queue();
             return;
