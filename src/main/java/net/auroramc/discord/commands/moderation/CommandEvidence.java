@@ -16,14 +16,14 @@ import java.util.Map;
 
 public class CommandEvidence extends Command {
     public CommandEvidence() {
-        super("evidence", "Attach evidence to a punishment.", Arrays.asList(new OptionData(OptionType.STRING, "Code", "The Punishment code attached to the Punishment.", true), new OptionData(OptionType.STRING, "Evidence", "Any evidence you have to attach to the punishment", true)));
+        super("evidence", "Attach evidence to a punishment.", Arrays.asList(new OptionData(OptionType.STRING, "code", "The Punishment code attached to the Punishment.", true), new OptionData(OptionType.STRING, "evidence", "Any evidence you have to attach to the punishment", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         message.deferReply().queue();
-        String code = args.get("Code");
-        String evidence = args.get("Evidence");
+        String code = args.get("code");
+        String evidence = args.get("evidence");
 
         PunishmentManager.attachEvidence(message, code, evidence);
     }

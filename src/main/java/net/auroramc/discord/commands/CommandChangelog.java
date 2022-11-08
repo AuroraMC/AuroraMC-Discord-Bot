@@ -17,15 +17,15 @@ import java.util.Map;
 public class CommandChangelog extends Command {
 
     public CommandChangelog() {
-        super("changelog", "Publish a changelog in-game.", Arrays.asList(new OptionData(OptionType.STRING, "Game Key", "The database key for the game.", true),new OptionData(OptionType.STRING, "Version", "The game version of this update.", true),new OptionData(OptionType.STRING, "URL", "The Link to the update thread on the forums.", true),new OptionData(OptionType.STRING, "Title", "The title of the update.", true)));
+        super("changelog", "Publish a changelog in-game.", Arrays.asList(new OptionData(OptionType.STRING, "game key", "The database key for the game.", true),new OptionData(OptionType.STRING, "version", "The game version of this update.", true),new OptionData(OptionType.STRING, "url", "The Link to the update thread on the forums.", true),new OptionData(OptionType.STRING, "title", "The title of the update.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
-        String gameKey = args.get("Game Key");
-        String version = args.get("Version");
-        String url = args.get("URL");
-        String title = args.get("Title");
+        String gameKey = args.get("game key");
+        String version = args.get("version");
+        String url = args.get("url");
+        String title = args.get("title");
         DiscordBot.getDatabaseManager().newChangelog(gameKey, version, url, title);
         message.reply("Changelog for game **" + gameKey + "** has been published. Please allow up to 60 minutes for the changelog to be reflected in-game!").queue();
     }
