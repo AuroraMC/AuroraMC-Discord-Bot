@@ -47,7 +47,7 @@ public class CommandRolesPost extends Command {
                         "Get notified when events are happening and join in with all of the fun!\n" +
                         " \n" +
                         "__Ideas Discussion__\n" +
-                        "Ideas Discussion is a channel that will allow players to discuss and give their opinion on many different ideas, whether\n" +
+                        "Ideas Discussion is a channel that will allow players to discuss and give their opinion on many different ideas, whether " +
                         "that be community ideas or ideas directly suggested by a member of our Leadership Team.\n" +
                         " \n" +
                         "**To get/remove any of the roles, simply click on the buttons below!**")
