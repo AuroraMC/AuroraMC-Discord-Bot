@@ -39,7 +39,7 @@ public class PunishmentManager {
     public static void punishUser(SlashCommandInteraction message, long id, int weight, String reason) {
         Member member = message.getGuild().retrieveMemberById(id).complete();
         if (member.isTimedOut()) {
-            message.reply("That user is already punished.").queue();
+            message.reply("That user is already punished.").setEphemeral(true).queue();
             return;
         }
         PunishmentLength punishmentLength = generateLength(id, weight);
@@ -117,7 +117,7 @@ public class PunishmentManager {
             punishments = DiscordBot.getDatabaseManager().getPunishmentsVisible(id);
         }
         if (punishments.isEmpty()) {
-            message.reply("No punishment history found.").queue();
+            message.reply("No punishment history found.").setEphemeral(true).queue();
             return;
         }
 
@@ -206,20 +206,20 @@ public class PunishmentManager {
     public static void removePunishment(SlashCommandInteraction message, String code, String reason) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").queue();
+            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         Member member = message.getGuild().retrieveMember(punishment.getPunished()).complete();
         if (member != null) {
             if (!member.isTimedOut()) {
-                message.reply("That user is not currently punished.").queue();
+                message.reply("That user is not currently punished.").setEphemeral(true).queue();
                 return;
             }
             member.removeTimeout().queue();
         } else {
             Guild.Ban ban = message.getGuild().retrieveBan(punishment.getPunished()).complete();
             if (ban == null) {
-                message.reply("That user is not currently punished.").queue();
+                message.reply("That user is not currently punished.").setEphemeral(true).queue();
                 return;
             }
             message.getGuild().unban(ban.getUser()).queue();
@@ -232,7 +232,7 @@ public class PunishmentManager {
     public static void attachEvidence(SlashCommandInteraction message, String code, String evidence) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").queue();
+            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         DiscordBot.getDatabaseManager().attachEvidence(punishment.getPunishmentCode(), evidence);
@@ -242,7 +242,7 @@ public class PunishmentManager {
     public static void hidePunishment(SlashCommandInteraction message, String code) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").queue();
+            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         DiscordBot.getDatabaseManager().hidePunishment(punishment.getPunishmentCode());
@@ -252,7 +252,7 @@ public class PunishmentManager {
     public static void showPunishment(SlashCommandInteraction message, String code) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").queue();
+            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         DiscordBot.getDatabaseManager().showPunishment(punishment.getPunishmentCode());

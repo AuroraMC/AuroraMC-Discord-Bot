@@ -28,7 +28,7 @@ public class CommandPunishmentHistory extends Command {
         try {
             id = Long.parseLong(args.get("user"));
         } catch (NumberFormatException e) {
-            message.reply("Invalid syntax. Correct syntax: **/ph [user ID]**").queue();
+            message.reply("Invalid syntax. Correct syntax: **/ph [user ID]**").setEphemeral(true).queue();
             return;
         }
         PunishmentManager.getPunishmentHistory(member, message, id);

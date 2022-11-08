@@ -28,18 +28,18 @@ public class CommandPunish extends Command {
         try {
             id = Long.parseLong(args.get("user"));
         } catch (NumberFormatException e) {
-            message.reply("Invalid syntax. Correct syntax: **/punish [user ID] [weight] [reason]**").queue();
+            message.reply("Invalid syntax. Correct syntax: **/punish [user ID] [weight] [reason]**").setEphemeral(true).queue();
             return;
         }
 
         Member target = Objects.requireNonNull(DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord())).retrieveMemberById(id).complete();
 
         if (target == null) {
-            message.reply("That user is not in the Main Discord.").queue();
+            message.reply("That user is not in the Main Discord.").setEphemeral(true).queue();
             return;
         } else {
             if (!member.canInteract(target)) {
-                message.reply("You cannot punish that user.").queue();
+                message.reply("You cannot punish that user.").setEphemeral(true).queue();
                 return;
             }
         }
@@ -48,7 +48,7 @@ public class CommandPunish extends Command {
         try {
             weight = Integer.parseInt(args.remove("weight"));
         } catch (NumberFormatException e) {
-            message.reply("Invalid syntax. Correct syntax: **/punish [user ID] [weight] [reason]**").queue();
+            message.reply("Invalid syntax. Correct syntax: **/punish [user ID] [weight] [reason]**").setEphemeral(true).queue();
             return;
         }
 

@@ -29,18 +29,18 @@ public class CommandSetup extends Command {
             serverLog = Long.parseLong(args.get("server-logging-channel-id"));
             linkLog = Long.parseLong(args.get("link-logging-channel-id"));
         } catch (NumberFormatException ignored) {
-            message.reply("Those are not valid channels.").queue();
+            message.reply("Those are not valid channels.").setEphemeral(true).queue();
             return;
         }
         if (message.getGuild().getTextChannelById(serverLog) == null) {
-            message.reply("Those are not valid channels.").queue();
+            message.reply("Those are not valid channels.").setEphemeral(true).queue();
             return;
         }
         if (message.getGuild().getTextChannelById(linkLog) == null) {
-            message.reply("Those are not valid channels.").queue();
+            message.reply("Those are not valid channels.").setEphemeral(true).queue();
             return;
         }
         GuildManager.onGuildSetup(message.getGuild(), mainChannel, serverLog, linkLog);
-        message.reply("Discord successfully setup.").queue();
+        message.reply("Discord successfully setup.").setEphemeral(true).queue();
     }
 }

@@ -35,7 +35,7 @@ public class CommandUnlink extends Command {
                                 .build()
                 ).setActionRow(Button.success("unlink-confirm-" + id, "Confirm"), Button.danger("unlink-cancel-" + id, "Cancel")).queue();
             } else {
-                message.reply("User not found.").queue();
+                message.reply("User not found.").setEphemeral(true).queue();
             }
     }
 }

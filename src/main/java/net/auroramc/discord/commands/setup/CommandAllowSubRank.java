@@ -33,12 +33,12 @@ public class CommandAllowSubRank extends Command {
             if (rank != null) {
                 if (!GuildManager.getAllowedSubRanks(member.getGuild().getIdLong()).contains(rank)) {
                     GuildManager.addAllowedSubRank(member.getGuild().getIdLong(), rank);
-                    message.reply("SubRank is now allowed. To allow them to join, you have to generate links for everyone you need to using /generatelink.").queue();
+                    message.reply("SubRank is now allowed. To allow them to join, you have to generate links for everyone you need to using /generatelink.").setEphemeral(true).queue();
                 } else {
-                    message.reply("That subrank is already allowed here!").queue();
+                    message.reply("That subrank is already allowed here!").setEphemeral(true).queue();
                 }
             } else {
-                message.reply("That is not a valid subrank ID.").queue();
+                message.reply("That is not a valid subrank ID.").setEphemeral(true).queue();
             }
     }
 }
