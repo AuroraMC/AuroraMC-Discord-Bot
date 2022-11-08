@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public class CommandRemoveSubRank extends Command {
     public CommandRemoveSubRank() {
-        super("removesubrank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "subrank-id", "The ID of the Subrank you wsh to disallow.", true)));
+        super("removesubrank", "Do not fuck with this command. This command is for use by Block2Block Only. I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "subrank-id", "The ID of the Subrank you wsh to disallow.", true)));
     }
 
     @Override
