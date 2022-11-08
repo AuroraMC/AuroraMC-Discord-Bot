@@ -61,7 +61,7 @@ public class CommandLink {
                                         .setDescription("__**Your account has been successfully linked!**__\n" +
                                                 "Your rank has been automatically applied to your account!\n" +
                                                 " \n" +
-                                                "For security reasons, you cannot unlink your own account.x" +
+                                                "For security reasons, you cannot unlink your own account." +
                                                 "If you wish to unlink your account, please contact support.\n" +
                                                 " \n" +
                                                 "We hope you enjoy your time in the AuroraMC Discord, and have fun!\n" +
@@ -70,15 +70,24 @@ public class CommandLink {
                                         .build()).queue();
                                 LinkManager.processOtherInvites(user, message, uuid);
                                 PlusManager.onJoin(user, uuid);
+                                return;
                             } else {
                                 message.getHook().sendMessage("You provided an invalid code, please try again!").queue();
+                                return;
                             }
                         } else {
                             message.getHook().sendMessage("Invalid arguments. Correct arguments: **/link [8 digit code]**").queue();
+                            return;
                         }
+                    } else {
+                        message.getHook().sendMessage("You are already linked to an account. Please contact support at https://auroramc.net/support-tickets if you wish to unlink your account.").queue();
+                        return;
                     }
                 }
             }
+            message.getHook().sendMessage("You are not in the Official AuroraMC Discord Server. Join the Official AuroraMC Discord at https://discord.auroramc.net!").queue();
+        } else {
+            message.getHook().sendMessage("We do not share any guilds. Join the Official AuroraMC Discord at https://discord.auroramc.net!").queue();
         }
     }
 }
