@@ -47,7 +47,7 @@ public class CommandLink {
                     if (unverified) {
                         //They have unlinked, now go through the linking process.
                         if (args.size() == 1) {
-                            String uuidstr = DiscordBot.getDatabaseManager().getUserFromCode(args.get("Code"));
+                            String uuidstr = DiscordBot.getDatabaseManager().getUserFromCode(args.get("code"));
                             if (uuidstr != null) {
                                 UUID uuid = UUID.fromString(uuidstr);
                                 DiscordBot.getDatabaseManager().addLink(uuid, user.getIdLong());

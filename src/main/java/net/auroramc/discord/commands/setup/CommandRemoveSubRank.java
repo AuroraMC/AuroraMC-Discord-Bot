@@ -22,14 +22,14 @@ import java.util.UUID;
 
 public class CommandRemoveSubRank extends Command {
     public CommandRemoveSubRank() {
-        super("removesubrank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "SubRank ID", "The ID of the Subrank you wsh to disallow.", true)));
+        super("removesubrank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "subrank id", "The ID of the Subrank you wsh to disallow.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
             int id;
             try {
-                id = Integer.parseInt(args.get("SubRank ID"));
+                id = Integer.parseInt(args.get("subrank id"));
             } catch (NumberFormatException ignored) {
                 message.reply("Invalid syntax. Correct syntax: **/removesubrank [rank ID]**").queue();
                 return;
