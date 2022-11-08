@@ -64,7 +64,7 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        CommandManager.onCommand(event.getInteraction(), event.getUser());
+        CommandManager.onCommand(event, event.getUser());
     }
 
     @Override
