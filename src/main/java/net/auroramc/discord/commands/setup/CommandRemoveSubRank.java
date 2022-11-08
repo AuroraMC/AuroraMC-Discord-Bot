@@ -38,7 +38,7 @@ public class CommandRemoveSubRank extends Command {
             if (rank != null) {
                 if (GuildManager.getAllowedSubRanks(member.getGuild().getIdLong()).contains(rank)) {
                     GuildManager.removeAllowedSubRank(member.getGuild().getIdLong(), rank);
-                    message.reply("SubRank is no longer allowed.").queue();
+                    message.reply("SubRank is no longer allowed.").setEphemeral(true).queue();
                     message.getGuild().findMembersWithRoles(message.getGuild().getRoleById(GuildManager.getSubrankMappings(message.getGuild().getIdLong()).get(rank))).onSuccess((members) -> {
 
                         for (Member member1 : members) {
@@ -61,10 +61,10 @@ public class CommandRemoveSubRank extends Command {
                         }
                     });
                 } else {
-                    message.reply("That subrank is already disallaowed here!").queue();
+                    message.reply("That subrank is already disallaowed here!").setEphemeral(true).queue();
                 }
             } else {
-                message.reply("That is not a valid subrank ID.").queue();
+                message.reply("That is not a valid subrank ID.").setEphemeral(true).queue();
             }
     }
 }

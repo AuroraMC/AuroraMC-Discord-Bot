@@ -73,7 +73,7 @@ public class CommandLink {
                                 message.reply("You provided an invalid code, please try again!").queue();
                             }
                         } else {
-                            message.reply("Invalid arguments. Correct arguments: **!link [8 digit code]**").queue();
+                            message.reply("Invalid arguments. Correct arguments: **/link [8 digit code]**").queue();
                         }
                     }
                 }

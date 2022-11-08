@@ -38,7 +38,7 @@ public class CommandRemoveRank extends Command {
             if (rank != null) {
                 if (GuildManager.getAllowedRanks(member.getGuild().getIdLong()).contains(rank)) {
                     GuildManager.removeAllowedRank(member.getGuild().getIdLong(), rank);
-                    message.reply("Rank is no longer allowed.").queue();
+                    message.reply("Rank is no longer allowed.").setEphemeral(true).queue();
                     message.getGuild().findMembersWithRoles(message.getGuild().getRoleById(GuildManager.getRankMappings(message.getGuild().getIdLong()).get(rank))).onSuccess((members) -> {
 
                         for (Member member1 : members) {
@@ -60,10 +60,10 @@ public class CommandRemoveRank extends Command {
                         }
                     });
                 } else {
-                    message.reply("That rank is already disallowed here!").queue();
+                    message.reply("That rank is already disallowed here!").setEphemeral(true).queue();
                 }
             } else {
-                message.reply("That is not a valid rank ID.").queue();
+                message.reply("That is not a valid rank ID.").setEphemeral(true).queue();
             }
     }
 }

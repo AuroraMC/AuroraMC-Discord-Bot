@@ -65,10 +65,10 @@ public class CommandPanel extends Command {
                 }
 
                 String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
-                message.reply(code).queue();
+                message.reply(code).setEphemeral(true).queue();
                 DiscordBot.getDatabaseManager().setPanelCode(uuid, code);
             } else {
-                message.reply("That user does not exist.").queue();
+                message.reply("That user does not exist.").setEphemeral(true).queue();
             }
         }
     }

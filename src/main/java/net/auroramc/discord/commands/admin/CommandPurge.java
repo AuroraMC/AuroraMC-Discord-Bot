@@ -24,12 +24,12 @@ public class CommandPurge extends Command {
         try {
             amount = Integer.parseInt(args.get("amount"));
         } catch (NumberFormatException e) {
-            message.reply("Invalid syntax. Correct syntax: **/purge [amount]**").queue();
+            message.reply("Invalid syntax. Correct syntax: **/purge [amount]**").setEphemeral(true).queue();
             return;
         }
 
         if (amount > 100) {
-            message.reply("Amount must be less than 100.").queue();
+            message.reply("Amount must be less than 100.").setEphemeral(true).queue();
             return;
         }
 
