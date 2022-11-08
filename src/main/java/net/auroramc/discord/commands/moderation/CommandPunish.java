@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class CommandPunish extends Command {
     public CommandPunish() {
-        super("punish", "Punish a user.", Arrays.asList(new OptionData(OptionType.NUMBER, "user id", "The numerical snowflake ID of the user.", true, false), new OptionData(OptionType.INTEGER, "weight", "The weight of the punishment.", true).addChoice("Light", 1).addChoice("Medium", 2).addChoice("Heavy", 3).addChoice("Severe", 4).addChoice("Extreme", 5), new OptionData(OptionType.STRING, "reason", "The reason for the punishment", true)));
+        super("punish", "Punish a user.", Arrays.asList(new OptionData(OptionType.NUMBER, "user-id", "The numerical snowflake ID of the user.", true, false), new OptionData(OptionType.INTEGER, "weight", "The weight of the punishment.", true).addChoice("Light", 1).addChoice("Medium", 2).addChoice("Heavy", 3).addChoice("Severe", 4).addChoice("Extreme", 5), new OptionData(OptionType.STRING, "reason", "The reason for the punishment", true)));
     }
 
     @Override
@@ -26,7 +26,7 @@ public class CommandPunish extends Command {
         message.deferReply().queue();
         long id;
         try {
-            id = Long.parseLong(args.get("user id"));
+            id = Long.parseLong(args.get("user-id"));
         } catch (NumberFormatException e) {
             message.reply("Invalid syntax. Correct syntax: **/punish [user ID] [weight] [reason]**").queue();
             return;
@@ -48,7 +48,7 @@ public class CommandPunish extends Command {
         try {
             weight = Integer.parseInt(args.remove("weight"));
         } catch (NumberFormatException e) {
-            message.reply("Invalid syntax. Correct syntax: **!punish [user ID] [weight 1-5] [reason]**").queue();
+            message.reply("Invalid syntax. Correct syntax: **/punish [user ID] [weight] [reason]**").queue();
             return;
         }
 
