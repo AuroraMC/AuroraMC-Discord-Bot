@@ -81,22 +81,22 @@ public class CommandGenerateLink extends Command {
                                             "banned from that server and _you_ receive an automatic reprimand.\n" +
                                             "**~AuroraMC Leadership Team**")
                                     .build()).queue();
-                            message.reply("Invite link generated!").queue();
+                            message.getHook().sendMessage("Invite link generated!").queue();
                         } else {
-                            message.reply("That user does not have the required permissions to join this Discord.").setEphemeral(true).queue();
+                            message.getHook().sendMessage("That user does not have the required permissions to join this Discord.").setEphemeral(true).queue();
                         }
 
                     } else {
-                        message.reply("That user does not have an active link, so I cannot create an invite for them!").setEphemeral(true).queue();
+                        message.getHook().sendMessage("That user does not have an active link, so I cannot create an invite for them!").setEphemeral(true).queue();
                     }
                 } else {
-                    message.reply("That user is already in this Discord, so I cannot create an invite for them!").setEphemeral(true).queue();
+                    message.getHook().sendMessage("That user is already in this Discord, so I cannot create an invite for them!").setEphemeral(true).queue();
                 }
             } else {
-                message.reply("That user is not in the main Discord, so I cannot create an invite for them!").setEphemeral(true).queue();
+                message.getHook().sendMessage("That user is not in the main Discord, so I cannot create an invite for them!").setEphemeral(true).queue();
             }
         } else {
-            message.reply("I don't know who that user is, so I cannot create an invite for them!").setEphemeral(true).queue();
+            message.getHook().sendMessage("I don't know who that user is, so I cannot create an invite for them!").setEphemeral(true).queue();
         }
     }
 }

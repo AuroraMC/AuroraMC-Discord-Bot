@@ -45,7 +45,7 @@ public class PlusManager {
             Guild guild = DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord());
             assert guild != null;
             guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(955562965355085824L))).queue();
-            message.replyEmbeds(new EmbedBuilder()
+            message.getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setAuthor("The AuroraMC Network Leadership Team", "https://auroramc.net", "https://auroramc.net/styles/pie/img/AuroraMCLogoStaffPadded.png")
                     .setTitle("Plus Subscriber!")
                     .setDescription("Because you are an AuroraMC Plus subscriber, you've been given a special role in the Discord!\n" +
@@ -59,7 +59,7 @@ public class PlusManager {
                     .setColor(new Color(255, 170, 0))
                     .build()).queue();
         } else {
-            message.reply("You do not have an active Plus subscription. Please allow up to 24 hours for your store purchases to go through.").setEphemeral(true).queue();
+            message.getHook().sendMessage("You do not have an active Plus subscription. Please allow up to 24 hours for your store purchases to go through.").setEphemeral(true).queue();
         }
     }
 

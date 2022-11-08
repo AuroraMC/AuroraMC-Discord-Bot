@@ -33,7 +33,7 @@ public class CommandPanel extends Command {
             UUID uuid = DiscordBot.getDatabaseManager().getUUID(member.getIdLong());
             if (uuid != null) {
                 String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
-                message.reply(code).queue();
+                message.getHook().sendMessage(code).queue();
                 DiscordBot.getDatabaseManager().setPanelCode(uuid, code);
             }
         } else {
@@ -42,7 +42,7 @@ public class CommandPanel extends Command {
             try {
                 id = Long.parseLong(args.get("user"));
             } catch (NumberFormatException e) {
-                message.reply("That is not a valid ID.").queue();
+                message.getHook().sendMessage("That is not a valid ID.").queue();
                 return;
             }
 
@@ -59,16 +59,16 @@ public class CommandPanel extends Command {
                         }
                     }
                     if (!panel) {
-                        message.reply("That user does not have permission to access the panel, so a code was not generated.").queue();
+                        message.getHook().sendMessage("That user does not have permission to access the panel, so a code was not generated.").queue();
                         return;
                     }
                 }
 
                 String code = RandomStringUtils.randomAlphanumeric(8).toUpperCase();
-                message.reply(code).setEphemeral(true).queue();
+                message.getHook().sendMessage(code).setEphemeral(true).queue();
                 DiscordBot.getDatabaseManager().setPanelCode(uuid, code);
             } else {
-                message.reply("That user does not exist.").setEphemeral(true).queue();
+                message.getHook().sendMessage("That user does not exist.").setEphemeral(true).queue();
             }
         }
     }
