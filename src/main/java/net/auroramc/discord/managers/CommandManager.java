@@ -8,7 +8,9 @@ import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.commands.CommandLink;
 import net.auroramc.discord.entities.Command;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -42,6 +44,10 @@ public class CommandManager {
         if (command != null && GuildManager.getRankMappings(message.getGuild().getIdLong()) != null) {
             Map<String, String> args = new HashMap<>();
             for (OptionMapping mapping : message.getOptions()) {
+                if (mapping.getType() == OptionType.USER) {
+                    args.put(mapping.getName(), mapping.getAsUser().getIdLong() + "");
+                    continue;
+                }
                 args.put(mapping.getName(), mapping.getAsString());
             }
             command.execute(message, message.getGuild().getMember(user), args);
@@ -65,6 +71,15 @@ public class CommandManager {
         }
 
         Objects.requireNonNull(jda.getGuildById(DiscordBot.getSettings().getMasterDiscord())).updateCommands().addCommands(data).queue();
+
+    }
+
+    public static void loadCommands(Guild guild) {
+        List<SlashCommandData> data = new ArrayList<>();
+        for (Command command : commands.values()) {
+            data.add(command.getAsSlashCommandData());
+        }
+        guild.updateCommands().addCommands(data).queue();
 
     }
 }
