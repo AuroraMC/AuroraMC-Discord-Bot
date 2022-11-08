@@ -29,6 +29,7 @@ public class CommandListPolls extends Command {
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
+        message.deferReply().queue();
         List<CommunityPoll> polls = DiscordBot.getDatabaseManager().getPolls();
 
         StringBuilder description = new StringBuilder("The " + polls.size() + " most recent polls are:\n \n");
@@ -50,8 +51,8 @@ public class CommandListPolls extends Command {
 
         builder.setDescription(description);
         MessageEmbed messageEmbed = builder.build();
-        message.replyEmbeds(messageEmbed).setActionRow(buttons).queue(message2 -> {
-            message2.deleteOriginal().queueAfter(5, TimeUnit.MINUTES);
+        message.getHook().sendMessageEmbeds(messageEmbed).setActionRow(buttons).queue(message2 -> {
+            message2.delete().queueAfter(5, TimeUnit.MINUTES);
         });
     }
 }

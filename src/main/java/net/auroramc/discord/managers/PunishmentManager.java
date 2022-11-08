@@ -39,7 +39,7 @@ public class PunishmentManager {
     public static void punishUser(SlashCommandInteraction message, long id, int weight, String reason) {
         Member member = message.getGuild().retrieveMemberById(id).complete();
         if (member.isTimedOut()) {
-            message.reply("That user is already punished.").setEphemeral(true).queue();
+            message.getHook().sendMessage("That user is already punished.").setEphemeral(true).queue();
             return;
         }
         PunishmentLength punishmentLength = generateLength(id, weight);
@@ -62,7 +62,7 @@ public class PunishmentManager {
                                 "If you believe this was given in error, please submit an appeal at https://auroramc.net/appeals"))
                         .build()
         ).queue()));
-        message.reply("You have " + ((expire == -1)?"banned":"timed out") + " User " + member.getAsMention() + " for " + punishmentLength.getFormatted() + ". Punishment ID: **" + code + "**").queue();
+        message.getHook().sendMessage("You have " + ((expire == -1)?"banned":"timed out") + " User " + member.getAsMention() + " for " + punishmentLength.getFormatted() + ". Punishment ID: **" + code + "**").queue();
         if (expire == -1d) {
             member.ban(7, TimeUnit.DAYS).reason(reason).queue();
         } else {
@@ -117,7 +117,7 @@ public class PunishmentManager {
             punishments = DiscordBot.getDatabaseManager().getPunishmentsVisible(id);
         }
         if (punishments.isEmpty()) {
-            message.reply("No punishment history found.").setEphemeral(true).queue();
+            message.getHook().sendMessage("No punishment history found.").setEphemeral(true).queue();
             return;
         }
 
@@ -144,9 +144,9 @@ public class PunishmentManager {
         Button button = Button.primary("ph-2-" + id + "-" + user.getIdLong(), "Next Page").withEmoji(Emoji.fromUnicode("U+27A1"));
 
         if (punishments.size() > 4) {
-            message.replyEmbeds(embed).setActionRow(button).queue(message2 -> message2.deleteOriginal().queueAfter(5, TimeUnit.MINUTES));
+            message.getHook().sendMessageEmbeds(embed).setActionRow(button).queue(message2 -> message2.delete().queueAfter(5, TimeUnit.MINUTES));
         } else {
-            message.replyEmbeds(embed).queue(message2 -> message2.deleteOriginal().queueAfter(5, TimeUnit.MINUTES));
+            message.getHook().sendMessageEmbeds(embed).queue(message2 -> message2.delete().queueAfter(5, TimeUnit.MINUTES));
         }
     }
 
@@ -206,57 +206,57 @@ public class PunishmentManager {
     public static void removePunishment(SlashCommandInteraction message, String code, String reason) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
+            message.getHook().sendMessage("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         Member member = message.getGuild().retrieveMember(punishment.getPunished()).complete();
         if (member != null) {
             if (!member.isTimedOut()) {
-                message.reply("That user is not currently punished.").setEphemeral(true).queue();
+                message.getHook().sendMessage("That user is not currently punished.").setEphemeral(true).queue();
                 return;
             }
             member.removeTimeout().queue();
         } else {
             Guild.Ban ban = message.getGuild().retrieveBan(punishment.getPunished()).complete();
             if (ban == null) {
-                message.reply("That user is not currently punished.").setEphemeral(true).queue();
+                message.getHook().sendMessage("That user is not currently punished.").setEphemeral(true).queue();
                 return;
             }
             message.getGuild().unban(ban.getUser()).queue();
         }
 
         DiscordBot.getDatabaseManager().removePunishment(punishment.getPunishmentCode(), message.getUser().getIdLong(), reason);
-        message.reply("User has been unpunished.").queue();
+        message.getHook().sendMessage("User has been unpunished.").queue();
     }
 
     public static void attachEvidence(SlashCommandInteraction message, String code, String evidence) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
+            message.getHook().sendMessage("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         DiscordBot.getDatabaseManager().attachEvidence(punishment.getPunishmentCode(), evidence);
-        message.reply("Evidence attached.").queue();
+        message.getHook().sendMessage("Evidence attached.").queue();
     }
 
     public static void hidePunishment(SlashCommandInteraction message, String code) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
+            message.getHook().sendMessage("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         DiscordBot.getDatabaseManager().hidePunishment(punishment.getPunishmentCode());
-        message.reply("Punishment hidden.").queue();
+        message.getHook().sendMessage("Punishment hidden.").queue();
     }
 
     public static void showPunishment(SlashCommandInteraction message, String code) {
         Punishment punishment = DiscordBot.getDatabaseManager().getPunishment(code);
         if (punishment == null) {
-            message.reply("That is not a valid punishment code.").setEphemeral(true).queue();
+            message.getHook().sendMessage("That is not a valid punishment code.").setEphemeral(true).queue();
             return;
         }
         DiscordBot.getDatabaseManager().showPunishment(punishment.getPunishmentCode());
-        message.reply("Punishment now visible.").queue();
+        message.getHook().sendMessage("Punishment now visible.").queue();
     }
 
 }
