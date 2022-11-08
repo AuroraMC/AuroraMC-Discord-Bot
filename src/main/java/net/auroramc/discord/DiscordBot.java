@@ -141,7 +141,9 @@ public class DiscordBot {
                         GatewayIntent.GUILD_MESSAGE_TYPING,
                         GatewayIntent.DIRECT_MESSAGES,
                         GatewayIntent.DIRECT_MESSAGE_REACTIONS,
-                        GatewayIntent.DIRECT_MESSAGE_TYPING)
+                        GatewayIntent.DIRECT_MESSAGE_TYPING,
+                        GatewayIntent.SCHEDULED_EVENTS,
+                        GatewayIntent.MESSAGE_CONTENT)
                 .setActivity(Activity.playing("auroramc.net"))
                 .setStatus(OnlineStatus.ONLINE)
                 .addEventListeners(new ReadyEventListener())
@@ -150,6 +152,7 @@ public class DiscordBot {
         jda.addEventListener(new MessageListener());
         jda.addEventListener(new MemberListener());
         jda.addEventListener(new InteractionListener());
+        CommandManager.loadCommands(jda);
         GuildManager.load();
         scheduler.scheduleAtFixedRate(new RankUpdateCheckRunnable(), 1, 10, TimeUnit.MINUTES);
         scheduler.scheduleAtFixedRate(new PlusCheckRunnable(), 1, 12, TimeUnit.HOURS);
