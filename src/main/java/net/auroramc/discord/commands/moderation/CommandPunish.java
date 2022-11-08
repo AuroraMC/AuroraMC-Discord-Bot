@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class CommandPunish extends Command {
     public CommandPunish() {
-        super("punish", "Punish a user.", Arrays.asList(new OptionData(OptionType.USER, "user-id", "The user to punish.", true, false), new OptionData(OptionType.INTEGER, "weight", "The weight of the punishment.", true).addChoice("Light", 1).addChoice("Medium", 2).addChoice("Heavy", 3).addChoice("Severe", 4).addChoice("Extreme", 5), new OptionData(OptionType.STRING, "reason", "The reason for the punishment", true)));
+        super("punish", "Punish a user.", Arrays.asList(new OptionData(OptionType.USER, "user", "The user to punish.", true, false), new OptionData(OptionType.INTEGER, "weight", "The weight of the punishment.", true).addChoice("Light", 1).addChoice("Medium", 2).addChoice("Heavy", 3).addChoice("Severe", 4).addChoice("Extreme", 5), new OptionData(OptionType.STRING, "reason", "The reason for the punishment", true)));
     }
 
     @Override

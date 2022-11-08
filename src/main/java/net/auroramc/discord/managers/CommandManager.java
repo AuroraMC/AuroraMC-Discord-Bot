@@ -31,6 +31,7 @@ public class CommandManager {
     }
 
     public static void onCommand(SlashCommandInteraction message, User user) {
+        DiscordBot.getLogger().fine("Command \"" + message.getName() + "\" was executed.");
         String commandLabel = message.getName().split(" ")[0].toLowerCase().substring(1);
         if (commandLabel.equals("link")) {
             Map<String, String> args = new HashMap<>();
