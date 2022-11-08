@@ -4,31 +4,27 @@
 
 package net.auroramc.discord.commands.moderation;
 
-import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Permission;
 import net.auroramc.discord.managers.PunishmentManager;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.Map;
 
 public class CommandUnpunish extends Command {
     public CommandUnpunish() {
-        super("unpunish", Collections.singletonList("up"), Collections.singletonList(Permission.MODERATION), Collections.singletonList(956630044225187851L));
+        super("unpunish", "Remove an active ban/timeout from a user.", Arrays.asList(new OptionData(OptionType.STRING, "Code", "The Punishment code attached to the Punishment.", true), new OptionData(OptionType.STRING, "Reason", "The reason you are removing the punishment.", true)));
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
-        if (args.size() >= 2) {
-            String code = args.remove(0);
-            String reason = String.join(" ", args);
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
+        message.deferReply().queue();
+            String code = args.get("Code");
+            String reason = args.get("Reason");
 
             PunishmentManager.removePunishment(message, code, reason);
-        } else {
-            message.reply("Invalid syntax. Correct syntax: **!unpunish [code] [reason]**").queue();
-        }
     }
 }

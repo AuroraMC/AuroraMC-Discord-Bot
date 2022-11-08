@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.stream.LongStream;
 
 public class InteractionListener extends ListenerAdapter {
 
@@ -76,9 +75,9 @@ public class InteractionListener extends ListenerAdapter {
                             member.kick("User unlinked").queue();
                         }
                     }
-                    event.editMessage("User unlinked!").setEmbeds(Collections.emptyList()).setActionRows(Collections.emptyList()).queue();
+                    event.editMessage("User unlinked!").setEmbeds(Collections.emptyList()).setActionRow(Collections.emptyList()).queue();
                 } else {
-                    event.editMessage("Action cancelled.").setEmbeds(Collections.emptyList()).setActionRows(Collections.emptyList()).queue();
+                    event.editMessage("Action cancelled.").setEmbeds(Collections.emptyList()).setActionRow(Collections.emptyList()).queue();
                 }
             } else if (ids.length == 2 && ids[0].equals("poll")) {
                 int id = Integer.parseInt(ids[1]);

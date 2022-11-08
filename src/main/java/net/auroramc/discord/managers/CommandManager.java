@@ -4,94 +4,62 @@
 
 package net.auroramc.discord.managers;
 
+import net.auroramc.discord.DiscordBot;
+import net.auroramc.discord.commands.CommandLink;
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Permission;
-import net.auroramc.discord.entities.Rank;
-import net.auroramc.discord.entities.SubRank;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CommandManager {
 
     private static final Map<String, Command> commands;
+    private static final CommandLink link = new CommandLink();
 
     static {
         commands = new HashMap<>();
     }
 
-    public static void onCommand(Message message, Member user) {
-        ArrayList<String> args = new ArrayList<>(Arrays.asList(message.getContentStripped().split(" ")));
-        String commandLabel = args.remove(0).substring(1);
-        Command command = commands.get(commandLabel.toLowerCase());
-        if (command != null) {
-            if (command.getPermission() == null) {
-                //This is the setup command, check whether it is me.
-                if (user.getIdLong() == 105235320714326016L) {
-                    try {
-                        command.execute(message, user, commandLabel, args);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        message.reply("Something went wrong when trying to execute this command, please try again!").queue();
-                    }
-                }
-                return;
+    public static void onCommand(SlashCommandInteraction message, User user) {
+        String commandLabel = message.getName().split(" ")[0].toLowerCase().substring(1);
+        if (commandLabel.equals("link")) {
+            Map<String, String> args = new HashMap<>();
+            for (OptionMapping mapping : message.getOptions()) {
+                args.put(mapping.getName(), mapping.getAsString());
             }
-            if (GuildManager.getRankMappings(message.getGuild().getIdLong()) == null) {
-                return;
-            }
-
-                for (Permission permission : command.getPermission()) {
-                    if (hasPermission(user, permission)) {
-                        if (command.getAllowedChannels() == null || command.getAllowedChannels().contains(message.getTextChannel().getIdLong())) {
-                            try {
-                                command.execute(message, user, commandLabel, args);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                message.reply("Something went wrong when trying to execute this command, please try again!").queue();
-                            }
-                            return;
-                        } else {
-                            message.delete().queue();
-                        }
-                    }
-                }
+            link.execute(message, user, args);
+            return;
         }
-    }
-
-    public static boolean hasPermission(Member user, Permission permission) {
-        Map<Rank, Long> rankMappings = GuildManager.getRankMappings(user.getGuild().getIdLong());
-        Map<SubRank, Long> subrankMappings = GuildManager.getSubrankMappings(user.getGuild().getIdLong());
-        for (Role role : user.getRoles()) {
-            for (Map.Entry<Rank, Long> entry : rankMappings.entrySet()) {
-                if (entry.getValue().equals(role.getIdLong())) {
-                    if (entry.getKey().hasPermission(permission.getId())) {
-                        return true;
-                    }
-                }
+        Command command = commands.get(commandLabel);
+        if (command != null && GuildManager.getRankMappings(message.getGuild().getIdLong()) != null) {
+            Map<String, String> args = new HashMap<>();
+            for (OptionMapping mapping : message.getOptions()) {
+                args.put(mapping.getName(), mapping.getAsString());
             }
-            for (Map.Entry<SubRank, Long> entry : subrankMappings.entrySet()) {
-                if (entry.getValue().equals(role.getIdLong())) {
-                    if (entry.getKey().hasPermission(permission.getId())) {
-                        return true;
-                    }
-                }
-            }
+            command.execute(message, message.getGuild().getMember(user), args);
         }
-
-        return false;
     }
 
 
     public static void registerCommand(Command command) {
         commands.put(command.getMainCommand().toLowerCase(), command);
-        for (String alias : command.getAliases()) {
-            commands.put(alias.toLowerCase(), command);
+    }
+
+    public static void loadCommands(JDA jda) {
+        List<SlashCommandData> data = new ArrayList<>();
+        for (Command command : commands.values()) {
+            data.add(command.getAsSlashCommandData());
         }
+        //This is a global command, so init first.
+        jda.updateCommands().addCommands(Commands.slash("link", "Link your Minecraft Account to your Discord account").setDefaultPermissions(DefaultMemberPermissions.ENABLED).addOptions(new OptionData(OptionType.STRING, "Code", "The 8-digit confirmation code produced by /link in-game.", true))).queue();
+        Objects.requireNonNull(jda.getGuildById(DiscordBot.getSettings().getMasterDiscord())).updateCommands().addCommands(data).queue();
     }
 }

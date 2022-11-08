@@ -6,15 +6,14 @@ package net.auroramc.discord.listeners;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.commands.CommandLink;
-import net.auroramc.discord.entities.Permission;
 import net.auroramc.discord.managers.CommandManager;
 import net.auroramc.discord.managers.GuildManager;
 import net.auroramc.discord.managers.MessageCache;
 import net.auroramc.discord.managers.SpamManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
@@ -22,9 +21,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class MessageListener extends ListenerAdapter {
@@ -41,45 +37,34 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
         if (e.isFromGuild()) {
-            if (e.getMessage().getContentStripped().startsWith(DiscordBot.getSettings().getCommandPrefix() + "")) {
-                CommandManager.onCommand(e.getMessage(), e.getMember());
-            } else {
-                if (!CommandManager.hasPermission(Objects.requireNonNull(e.getMember()), Permission.MODERATION)) {
-                    //Spam manager
-                    String unfiltered = e.getMessage().getContentStripped();
-                    String filtered = DiscordBot.getFilter().filter(unfiltered);
-                    if (unfiltered.equals(filtered)) {
-                        if (!SpamManager.onMessage(e.getMessage())) {
-                            MessageCache.onMessage(e.getMessage());
-                        }
-                    } else {
-                        e.getMessage().delete().queue();
-                        Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(
-                                new EmbedBuilder()
-                                        .setTitle("Message Deleted")
-                                        .setDescription("Message sent <t:" + e.getMessage().getTimeCreated().toEpochSecond() + ":R> by " + e.getMessage().getAuthor().getAsMention() + " was deleted in " + e.getMessage().getChannel().getAsMention() + " due to a filtered word.\n" +
-                                                "**Message: `" + e.getMessage().getContentStripped() + "`**")
-                                        .setColor(new Color(0, 170, 170))
-                                        .build()
-                        ).queue();
-                    }
-                } else {
+            //Spam manager
+            String unfiltered = e.getMessage().getContentStripped();
+            String filtered = DiscordBot.getFilter().filter(unfiltered);
+            if (unfiltered.equals(filtered)) {
+                if (!SpamManager.onMessage(e.getMessage())) {
                     MessageCache.onMessage(e.getMessage());
-                    if (e.getChannelType() == ChannelType.NEWS) {
-                        e.getMessage().crosspost().queue();
-                    }
                 }
+            } else {
+                e.getMessage().delete().queue();
+                Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(
+                        new EmbedBuilder()
+                                .setTitle("Message Deleted")
+                                .setDescription("Message sent <t:" + e.getMessage().getTimeCreated().toEpochSecond() + ":R> by " + e.getMessage().getAuthor().getAsMention() + " was deleted in " + e.getMessage().getChannel().getAsMention() + " due to a filtered word.\n" +
+                                        "**Message: `" + e.getMessage().getContentStripped() + "`**")
+                                .setColor(new Color(0, 170, 170))
+                                .build()
+                ).queue();
             }
-        } else if (e.getMessage().getContentStripped().startsWith("!link")) {
-            List<String> args = new ArrayList<>(Arrays.asList(e.getMessage().getContentStripped().split(" ")));
-            args.remove(0);
-            try {
-                link.execute(e.getMessage(), e.getAuthor(), args);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                e.getMessage().reply("Something went wrong when trying to execute this command, please try again!").queue();
+            if (e.getChannelType() == ChannelType.NEWS) {
+                e.getMessage().crosspost().queue();
             }
+
         }
+    }
+
+    @Override
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        CommandManager.onCommand(event.getInteraction(), event.getUser());
     }
 
     @Override

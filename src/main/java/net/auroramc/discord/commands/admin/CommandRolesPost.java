@@ -5,27 +5,26 @@
 package net.auroramc.discord.commands.admin;
 
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Permission;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
 public class CommandRolesPost extends Command {
 
 
     public CommandRolesPost() {
-        super("roles", Collections.emptyList(), Collections.singletonList(Permission.ADMIN), null);
+        super("roles", "Post the roles announcement post.", Collections.emptyList());
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         MessageEmbed welcome = new EmbedBuilder()
                 .setTitle("Notification Roles")
                 .setDescription("__**Get notifications for the updates you want!**__\n" +
@@ -46,10 +45,14 @@ public class CommandRolesPost extends Command {
                         "__Event Announcements__\n" +
                         "Get notified when events are happening and join in with all of the fun!\n" +
                         " \n" +
+                        "__Ideas Discussion__\n" +
+                        "Ideas Discussion is a channel that will allow players to discuss and give their opinion on many different ideas, whether\n" +
+                        "that be community ideas or ideas directly suggested by a member of our Leadership Team.\n" +
+                        " \n" +
                         "**To get/remove any of the roles, simply click on the buttons below!**")
                 .setColor(new Color(0, 170,170))
                 .build();
-        message.getChannel().sendMessageEmbeds(welcome).setActionRow(Button.primary("roles-956641192433578045", "General Announcements").withEmoji(Emoji.fromFormatted("<:AMCLogo:764501157405130762>")), Button.primary("roles-956641156941369345", "Staff Updates").withEmoji(Emoji.fromFormatted("<:Aurora_Logo_Staff:764501176200331274>")), Button.primary("roles-956641046345953350", "Discord Changelogs").withEmoji(Emoji.fromFormatted("<:discord:956643739474993172>")), Button.primary("roles-956640990410723438", "Server Changelogs").withEmoji(Emoji.fromUnicode("U+1F195")), Button.primary("roles-956642314158235759", "Event Announcements").withEmoji(Emoji.fromUnicode("U+1F389"))).queue((msg) -> {}, Throwable::printStackTrace);
-        message.delete().queue();
+        message.getChannel().sendMessageEmbeds(welcome).setActionRow(Button.primary("roles-956641192433578045", "General Announcements").withEmoji(Emoji.fromFormatted("<:AMCLogo:764501157405130762>")), Button.primary("roles-956641156941369345", "Staff Updates").withEmoji(Emoji.fromFormatted("<:Aurora_Logo_Staff:764501176200331274>")), Button.primary("roles-956641046345953350", "Discord Changelogs").withEmoji(Emoji.fromFormatted("<:discord:956643739474993172>")), Button.primary("roles-956640990410723438", "Server Changelogs").withEmoji(Emoji.fromUnicode("U+1F195")), Button.primary("roles-956642314158235759", "Event Announcements").withEmoji(Emoji.fromUnicode("U+1F389")), Button.primary("roles-1039546744909864980", "Idea Discussion").withEmoji(Emoji.fromUnicode("U+1F4F0"))).queue((msg) -> {}, Throwable::printStackTrace);
+        message.reply("Post made.").queue();
     }
 }

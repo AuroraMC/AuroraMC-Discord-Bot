@@ -8,16 +8,20 @@ import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.managers.LinkManager;
 import net.auroramc.discord.managers.PlusManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 
 import java.awt.*;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
 public class CommandLink {
 
-    public void execute(Message message, User user, List<String> args) {
+    public void execute(SlashCommandInteraction message, User user, Map<String, String> args) {
         if (user.getMutualGuilds().size() > 0) {
             for (Guild guild : user.getMutualGuilds()) {
                 if (guild.getIdLong() == DiscordBot.getSettings().getMasterDiscord()) {
@@ -43,7 +47,7 @@ public class CommandLink {
                     if (unverified) {
                         //They have unlinked, now go through the linking process.
                         if (args.size() == 1) {
-                            String uuidstr = DiscordBot.getDatabaseManager().getUserFromCode(args.get(0));
+                            String uuidstr = DiscordBot.getDatabaseManager().getUserFromCode(args.get("Code"));
                             if (uuidstr != null) {
                                 UUID uuid = UUID.fromString(uuidstr);
                                 DiscordBot.getDatabaseManager().addLink(uuid, user.getIdLong());
