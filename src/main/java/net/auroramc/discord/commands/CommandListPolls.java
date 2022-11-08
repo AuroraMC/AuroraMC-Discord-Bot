@@ -51,8 +51,13 @@ public class CommandListPolls extends Command {
 
         builder.setDescription(description);
         MessageEmbed messageEmbed = builder.build();
-        message.getHook().sendMessageEmbeds(messageEmbed).setActionRow(buttons).queue(message2 -> {
-            message2.delete().queueAfter(5, TimeUnit.MINUTES);
-        });
+        if (polls.size() > 0) {
+            message.getHook().sendMessageEmbeds(messageEmbed).setActionRow(buttons).queue(message2 -> {
+                message2.delete().queueAfter(5, TimeUnit.MINUTES);
+            });
+        } else {
+            message.getHook().sendMessage("There are no recent polls.").queue();
+        }
+
     }
 }
