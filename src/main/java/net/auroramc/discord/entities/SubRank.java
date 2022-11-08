@@ -7,10 +7,6 @@ package net.auroramc.discord.entities;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public enum SubRank {
 

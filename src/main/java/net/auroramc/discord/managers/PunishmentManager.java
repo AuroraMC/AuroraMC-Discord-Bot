@@ -8,7 +8,6 @@ import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.entities.Punishment;
 import net.auroramc.discord.entities.PunishmentLength;
 import net.auroramc.discord.entities.Rank;
-import net.auroramc.discord.entities.SubRank;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -21,7 +20,6 @@ import java.awt.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class PunishmentManager {

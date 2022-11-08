@@ -5,9 +5,10 @@
 package net.auroramc.discord.commands.admin;
 
 import net.auroramc.discord.DiscordBot;
-import net.auroramc.discord.entities.*;
+import net.auroramc.discord.entities.Command;
+import net.auroramc.discord.entities.Rank;
+import net.auroramc.discord.entities.SubRank;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;

@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.stream.LongStream;
 
 public class InteractionListener extends ListenerAdapter {
 

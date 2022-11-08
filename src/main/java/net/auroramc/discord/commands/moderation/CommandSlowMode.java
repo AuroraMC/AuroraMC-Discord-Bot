@@ -6,14 +6,12 @@ package net.auroramc.discord.commands.moderation;
 
 import net.auroramc.discord.entities.Command;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class CommandSlowMode extends Command {
