@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class CommandSlowMode extends Command {
     public CommandSlowMode() {
-        super("slowmode", "Enable a slowmode in the channel you are in.", Collections.singletonList(new OptionData(OptionType.INTEGER, "seconds", "The minumum number of seconds between user messages.")));
+        super("slowmode", "Enable a slowmode in the channel you are in.", Collections.singletonList(new OptionData(OptionType.INTEGER, "seconds", "The minumum number of seconds between user messages.", true)));
     }
 
     @Override
