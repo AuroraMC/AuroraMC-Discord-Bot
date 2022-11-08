@@ -22,14 +22,14 @@ import java.util.UUID;
 
 public class CommandRemoveRank extends Command {
     public CommandRemoveRank() {
-        super("removerank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "rank id", "The ID of the rank you wsh to disallow.", true)));
+        super("removerank", "Do not use this command. This command is for use by Block2Block Only. If you fuck with the setup commands I will scream at you.", Collections.singletonList(new OptionData(OptionType.INTEGER, "rank-id", "The ID of the rank you wsh to disallow.", true)));
     }
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
             int id;
             try {
-                id = Integer.parseInt(args.get("rank id"));
+                id = Integer.parseInt(args.get("rank-id"));
             } catch (NumberFormatException ignored) {
                 message.reply("Invalid syntax. Correct syntax: **!removerank [rank ID]**").queue();
                 return;

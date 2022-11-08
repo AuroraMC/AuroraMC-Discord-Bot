@@ -23,7 +23,7 @@ public class CommandPanel extends Command {
 
 
     public CommandPanel() {
-        super("panel", "Generate a panel 2FA code.", Collections.singletonList(new OptionData(OptionType.NUMBER, "user id", "The numerical snowflake ID of the user.", false, false)));
+        super("panel", "Generate a panel 2FA code.", Collections.singletonList(new OptionData(OptionType.NUMBER, "user-id", "The numerical snowflake ID of the user.", false, false)));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CommandPanel extends Command {
             long id;
 
             try {
-                id = Long.parseLong(args.get("user id"));
+                id = Long.parseLong(args.get("user-id"));
             } catch (NumberFormatException e) {
                 message.reply("That is not a valid ID.").queue();
                 return;
