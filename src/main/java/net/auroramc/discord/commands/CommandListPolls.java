@@ -6,30 +6,29 @@ package net.auroramc.discord.commands;
 
 import net.auroramc.discord.DiscordBot;
 import net.auroramc.discord.entities.Command;
-import net.auroramc.discord.entities.Permission;
 import net.auroramc.discord.util.CommunityPoll;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CommandListPolls extends Command {
 
     public CommandListPolls() {
-        super("listpolls", Arrays.asList("polls", "getpolls"), Arrays.asList(Permission.ADMIN, Permission.DEBUG_INFO, Permission.COMMUNITY_MANAGEMENT), Collections.singletonList(960543335821504542L));
+        super("listpolls", "List the 5 most recent polls ran.", Collections.emptyList());
     }
 
     @Override
-    public void execute(Message message, Member member, String aliasUsed, List<String> args) {
+    public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         List<CommunityPoll> polls = DiscordBot.getDatabaseManager().getPolls();
 
         StringBuilder description = new StringBuilder("The " + polls.size() + " most recent polls are:\n \n");
@@ -51,6 +50,8 @@ public class CommandListPolls extends Command {
 
         builder.setDescription(description);
         MessageEmbed messageEmbed = builder.build();
-        message.replyEmbeds(messageEmbed).setActionRow(buttons).delay(5, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+        message.replyEmbeds(messageEmbed).setActionRow(buttons).queue(message2 -> {
+            message2.deleteOriginal().queueAfter(5, TimeUnit.MINUTES);
+        });
     }
 }

@@ -5,13 +5,14 @@
 package net.md_5.bungee.log;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import jline.console.ConsoleReader;
+import net.auroramc.discord.util.DiscordWebhook;
+
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import jline.console.ConsoleReader;
-import net.auroramc.discord.util.DiscordWebhook;
 
 public class DiscordBotLogger extends Logger
 {

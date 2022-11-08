@@ -9,6 +9,9 @@ import net.auroramc.discord.entities.Rank;
 import net.auroramc.discord.entities.SubRank;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 
 import java.awt.*;
 import java.time.Instant;
@@ -107,7 +110,7 @@ public class LinkManager {
                 .build()).queue();
     }
 
-    public static void processOtherInvites(User user, Message message, UUID uuid) {
+    public static void processOtherInvites(User user, SlashCommandInteraction message, UUID uuid) {
         List<Long> allowedGuilds = new ArrayList<>();
 
 

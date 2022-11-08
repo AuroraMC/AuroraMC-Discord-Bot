@@ -15,7 +15,6 @@ public final class PlusSubscription {
     private final int daysSubscribed;
     private final int subscriptionStreak;
     private final long streakStartTimestamp;
-    private final Permission permission = Permission.PLUS;
 
     public PlusSubscription(long discordId) {
         this.discordId = discordId;
@@ -42,10 +41,6 @@ public final class PlusSubscription {
 
     public int getSubscriptionStreak() {
         return subscriptionStreak;
-    }
-
-    public Permission getPermission() {
-        return permission;
     }
 
     public long getStreakStartTimestamp() {

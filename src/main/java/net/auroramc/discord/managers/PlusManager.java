@@ -8,8 +8,8 @@ import net.auroramc.discord.DiscordBot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 
 import java.awt.*;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class PlusManager {
         }
     }
 
-    public static void onCommand(Member member, Message message, UUID uuid) {
+    public static void onCommand(Member member, SlashCommandInteraction message, UUID uuid) {
         long expire = DiscordBot.getDatabaseManager().getExpire(uuid);
         if (expire != -1) {
             Guild guild = DiscordBot.getJda().getGuildById(DiscordBot.getSettings().getMasterDiscord());
