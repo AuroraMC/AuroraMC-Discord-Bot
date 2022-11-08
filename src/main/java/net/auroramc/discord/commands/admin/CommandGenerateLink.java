@@ -83,20 +83,20 @@ public class CommandGenerateLink extends Command {
                                     .build()).queue();
                             message.reply("Invite link generated!").queue();
                         } else {
-                            message.reply("That user does not have the required permissions to join this Discord.").queue();
+                            message.reply("That user does not have the required permissions to join this Discord.").setEphemeral(true).queue();
                         }
 
                     } else {
-                        message.reply("That user does not have an active link, so I cannot create an invite for them!").queue();
+                        message.reply("That user does not have an active link, so I cannot create an invite for them!").setEphemeral(true).queue();
                     }
                 } else {
-                    message.reply("That user is already in this Discord, so I cannot create an invite for them!").queue();
+                    message.reply("That user is already in this Discord, so I cannot create an invite for them!").setEphemeral(true).queue();
                 }
             } else {
-                message.reply("That user is not in the main Discord, so I cannot create an invite for them!").queue();
+                message.reply("That user is not in the main Discord, so I cannot create an invite for them!").setEphemeral(true).queue();
             }
         } else {
-            message.reply("I don't know who that user is, so I cannot create an invite for them!").queue();
+            message.reply("I don't know who that user is, so I cannot create an invite for them!").setEphemeral(true).queue();
         }
     }
 }
