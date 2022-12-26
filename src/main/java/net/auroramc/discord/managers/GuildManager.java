@@ -10,6 +10,7 @@ import net.auroramc.discord.entities.SubRank;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.requests.restaction.order.RoleOrderAction;
 
 import java.util.*;
 
@@ -99,6 +100,8 @@ public class GuildManager {
         Map<Rank, Long> rankMappings = new HashMap<>();
         Map<SubRank, Long> subrankMappings = new HashMap<>();
 
+        RoleOrderAction action = guild.modifyRolePositions(true);
+
         for (Rank rank : ranks) {
             if (!GuildManager.rankMappings.get(guild.getIdLong()).containsKey(rank)) {
                 Role role = guild.createRole()
@@ -109,14 +112,14 @@ public class GuildManager {
                         .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
                         .complete();
                 rankMappings.put(rank, role.getIdLong());
-                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.indexOf(rank) + 1).queue();
+                action.selectPosition(role).moveTo(ranks.indexOf(rank) + 1);
             } else {
                 Role role = guild.getRoleById(GuildManager.rankMappings.get(guild.getIdLong()).get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getRankAppearance())
                         .queue();
-                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.indexOf(rank) + 1).queue();
+                action.selectPosition(role).moveTo(ranks.indexOf(rank) + 1);
             }
         }
 
@@ -130,16 +133,17 @@ public class GuildManager {
                         .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
                         .complete();
                 subrankMappings.put(rank, role.getIdLong());
-                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1).queue();
+                action.selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1);
             } else {
                 Role role = guild.getRoleById(GuildManager.subrankMappings.get(guild.getIdLong()).get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getName())
                         .queue();
-                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1).queue();
+                action.selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1);
             }
         }
+        action.queue();
 
         addMappings(guild, rankMappings, subrankMappings);
     }
