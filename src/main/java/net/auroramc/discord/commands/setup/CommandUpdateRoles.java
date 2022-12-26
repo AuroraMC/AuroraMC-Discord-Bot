@@ -23,7 +23,7 @@ public class CommandUpdateRoles extends Command {
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
         if (GuildManager.getSetupServers().contains(member.getGuild().getIdLong())) {
-            GuildManager.updateRoles(member.getGuild());
+            GuildManager.updateRoles(message.getGuild());
             message.reply("Roles for this discord have been updated.").setEphemeral(true).queue();
         } else {
             message.reply("This discord is not setup yet!").setEphemeral(true).queue();

@@ -95,7 +95,7 @@ public class GuildManager {
 
     public static void updateRoles(Guild guild) {
         List<Rank> ranks = new ArrayList<>(Arrays.asList(Rank.values()));
-        List<Rank> subranks = new ArrayList<>(Arrays.asList(Rank.values()));
+        List<SubRank> subranks = new ArrayList<>(Arrays.asList(SubRank.values()));
         Map<Rank, Long> rankMappings = new HashMap<>();
         Map<SubRank, Long> subrankMappings = new HashMap<>();
 
@@ -111,7 +111,7 @@ public class GuildManager {
                 rankMappings.put(rank, role.getIdLong());
                 guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.indexOf(rank) + 1).queue();
             } else {
-                Role role = guild.getRoleById(rankMappings.get(rank));
+                Role role = guild.getRoleById(GuildManager.rankMappings.get(guild.getIdLong()).get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getRankAppearance())
@@ -132,7 +132,7 @@ public class GuildManager {
                 subrankMappings.put(rank, role.getIdLong());
                 guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1).queue();
             } else {
-                Role role = guild.getRoleById(subrankMappings.get(rank));
+                Role role = guild.getRoleById(GuildManager.subrankMappings.get(guild.getIdLong()).get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getName())
