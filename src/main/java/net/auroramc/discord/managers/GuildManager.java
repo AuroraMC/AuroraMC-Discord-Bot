@@ -96,11 +96,15 @@ public class GuildManager {
 
     public static void updateRoles(Guild guild) {
         List<Rank> ranks = new ArrayList<>(Arrays.asList(Rank.values()));
+        Collections.reverse(ranks);
         List<SubRank> subranks = new ArrayList<>(Arrays.asList(SubRank.values()));
+        Collections.reverse(subranks);
         Map<Rank, Long> rankMappings = new HashMap<>();
         Map<SubRank, Long> subrankMappings = new HashMap<>();
 
-        RoleOrderAction action = guild.modifyRolePositions(true);
+        RoleOrderAction action = guild.modifyRolePositions();
+
+        int i = 1;
 
         for (Rank rank : ranks) {
             if (!GuildManager.rankMappings.get(guild.getIdLong()).containsKey(rank)) {
@@ -112,14 +116,14 @@ public class GuildManager {
                         .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
                         .complete();
                 rankMappings.put(rank, role.getIdLong());
-                action.selectPosition(role).moveTo(ranks.indexOf(rank) + 1);
+                action.selectPosition(role).moveTo(i++);
             } else {
                 Role role = guild.getRoleById(GuildManager.rankMappings.get(guild.getIdLong()).get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getRankAppearance())
                         .queue();
-                action.selectPosition(role).moveTo(ranks.indexOf(rank) + 1);
+                action.selectPosition(role).moveTo(i++);
             }
         }
 
@@ -133,14 +137,14 @@ public class GuildManager {
                         .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
                         .complete();
                 subrankMappings.put(rank, role.getIdLong());
-                action.selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1);
+                action.selectPosition(role).moveTo(i++);
             } else {
                 Role role = guild.getRoleById(GuildManager.subrankMappings.get(guild.getIdLong()).get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getName())
                         .queue();
-                action.selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1);
+                action.selectPosition(role).moveTo(i++);
             }
         }
         action.queue();
