@@ -21,10 +21,11 @@ public enum Rank {
     JUNIOR_MODERATOR(9, "Junior Moderator", "Jr.Mod", new Color(85, 85, 255)),
     MODERATOR(10, "Moderator", "Mod", new Color(85, 85, 255)),
     ROBOT(8001, "Robot", "Robot", new Color(85, 85, 255)),
-    ADMIN(11, "Administrator", "Admin", new Color(255, 85, 85)),
+    ADMIN(11, "Administrator", "Admin", new Color(170, 0, 0)),
     DEVELOPER(12, "Developer", "Dev", new Color(85, 255, 85)),
-    SENIOR_DEVELOPER(13, "Senior Developer", "Sr.Dev", new Color(255, 85, 85)),
-    OWNER(9001, "Owner", "Owner", new Color(255, 85, 85));
+    SENIOR_DEVELOPER(13, "Senior Developer", "Sr.Dev", new Color(170, 0, 0)),
+    PARTNER(14, "Partner", "Partner", new Color(255, 85, 85)),
+    OWNER(9001, "Owner", "Owner", new Color(170, 0, 0));
 
     private final int id;
     private final String name;
