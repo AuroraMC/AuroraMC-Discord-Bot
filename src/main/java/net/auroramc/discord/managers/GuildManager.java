@@ -109,14 +109,14 @@ public class GuildManager {
                         .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
                         .complete();
                 rankMappings.put(rank, role.getIdLong());
-                guild.modifyRolePositions().selectPosition(role).moveTo(ranks.indexOf(rank) + 1).queue();
+                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.indexOf(rank) + 1).queue();
             } else {
                 Role role = guild.getRoleById(rankMappings.get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getRankAppearance())
                         .queue();
-                guild.modifyRolePositions().selectPosition(role).moveTo(ranks.indexOf(rank) + 1).queue();
+                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.indexOf(rank) + 1).queue();
             }
         }
 
@@ -130,14 +130,14 @@ public class GuildManager {
                         .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
                         .complete();
                 subrankMappings.put(rank, role.getIdLong());
-                guild.modifyRolePositions().selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1).queue();
+                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1).queue();
             } else {
                 Role role = guild.getRoleById(subrankMappings.get(rank));
                 assert role != null;
                 role.getManager().setColor(rank.getColor())
                         .setName(rank.getName())
                         .queue();
-                guild.modifyRolePositions().selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1).queue();
+                guild.modifyRolePositions(true).selectPosition(role).moveTo(ranks.size()+subranks.indexOf(rank) + 1).queue();
             }
         }
 
