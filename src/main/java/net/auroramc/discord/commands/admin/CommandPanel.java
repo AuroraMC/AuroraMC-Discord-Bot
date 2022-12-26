@@ -28,7 +28,7 @@ public class CommandPanel extends Command {
 
     @Override
     public void execute(SlashCommandInteraction message, Member member, Map<String, String> args) {
-        message.deferReply().queue();
+        message.deferReply(true).queue();
         if (args.size() == 0) {
             UUID uuid = DiscordBot.getDatabaseManager().getUUID(member.getIdLong());
             if (uuid != null) {
@@ -68,7 +68,7 @@ public class CommandPanel extends Command {
                 message.getHook().sendMessage(code).setEphemeral(true).queue();
                 DiscordBot.getDatabaseManager().setPanelCode(uuid, code);
             } else {
-                message.getHook().sendMessage("That user does not exist.").setEphemeral(true).queue();
+                message.getHook().sendMessage("That user does not exist.").queue();
             }
         }
     }
