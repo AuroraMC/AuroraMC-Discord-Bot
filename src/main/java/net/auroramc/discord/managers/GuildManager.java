@@ -169,8 +169,18 @@ public class GuildManager {
     }
 
     public static void addMappings(Guild guild, Map<Rank, Long> ranks, Map<SubRank, Long> subranks) {
-        rankMappings.put(guild.getIdLong(), ranks);
-        subrankMappings.put(guild.getIdLong(), subranks);
+        if (rankMappings.containsKey(guild.getIdLong())) {
+            rankMappings.get(guild.getIdLong()).putAll(ranks);
+        } else {
+            rankMappings.put(guild.getIdLong(), ranks);
+        }
+
+        if (subrankMappings.containsKey(guild.getIdLong())) {
+            subrankMappings.get(guild.getIdLong()).putAll(subranks);
+        } else {
+            subrankMappings.put(guild.getIdLong(), subranks);
+        }
+
         DiscordBot.getDatabaseManager().addRankMappings(guild.getIdLong(), ranks, subranks);
     }
 
