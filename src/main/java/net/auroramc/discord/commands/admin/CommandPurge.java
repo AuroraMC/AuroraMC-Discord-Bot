@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class CommandPurge extends Command {
     public CommandPurge() {
-        super("purge", "Purge messages from a channel.", Collections.singletonList(new OptionData(OptionType.NUMBER, "amount", "The number of messages to delete.", true)));
+        super("purge", "Purge messages from a channel.", Collections.singletonList(new OptionData(OptionType.INTEGER, "amount", "The number of messages to delete.", true)));
     }
 
     @Override
