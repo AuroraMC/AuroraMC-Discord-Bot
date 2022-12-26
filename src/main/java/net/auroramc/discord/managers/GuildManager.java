@@ -142,6 +142,8 @@ public class GuildManager {
             }
         }
 
+        addMappings(guild, rankMappings, subrankMappings);
+
         RoleOrderAction action = guild.modifyRolePositions();
 
         for (Rank rank : ranks) {
@@ -156,8 +158,6 @@ public class GuildManager {
                 action.selectPosition(role).moveTo(i++);
         }
         action.queue();
-
-        addMappings(guild, rankMappings, subrankMappings);
     }
 
     public static long getServerLogId(long guildId) {
