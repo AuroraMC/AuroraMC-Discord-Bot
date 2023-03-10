@@ -10,8 +10,8 @@ import java.awt.*;
 
 public enum SubRank {
 
-    JUNIOR_QUALITY_ASSURANCE(2, "Junior Quality Assurance", new Color(85, 255, 85)),
-    SENIOR_QUALITY_ASSURANCE(3, "Senior Quality Assurance", new Color(85, 255, 85)),
+    QUALITY_ASSURANCE(2, "Quality Assurance", new Color(85, 255, 85)),
+    QUALITY_ASSURANCE_MANAGEMENT(3, "Quality Assurance Management", new Color(85, 255, 85)),
     STAFF_MANAGEMENT(4, "Staff Management", new Color(255, 170, 0)),
     SUPPORT(5, "Support", new Color(85, 85, 255)),
     RECRUITMENT(6, "Recruitment", new Color(255, 170, 0)),
