@@ -10,6 +10,7 @@ import net.auroramc.discord.entities.SubRank;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.requests.restaction.order.RoleOrderAction;
 
 import java.util.*;
 
@@ -93,6 +94,72 @@ public class GuildManager {
         }
     }
 
+    public static void updateRoles(Guild guild) {
+        List<Rank> ranks = new ArrayList<>(Arrays.asList(Rank.values()));
+        Collections.reverse(ranks);
+        List<SubRank> subranks = new ArrayList<>(Arrays.asList(SubRank.values()));
+        Collections.reverse(subranks);
+        Map<Rank, Long> rankMappings = new HashMap<>();
+        Map<SubRank, Long> subrankMappings = new HashMap<>();
+
+        int i = 1;
+
+        for (Rank rank : ranks) {
+            if (!GuildManager.rankMappings.get(guild.getIdLong()).containsKey(rank)) {
+                Role role = guild.createRole()
+                        .setColor(rank.getColor())
+                        .setName(rank.getRankAppearance())
+                        .setHoisted(true)
+                        .setMentionable(false)
+                        .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
+                        .complete();
+                rankMappings.put(rank, role.getIdLong());
+            } else {
+                Role role = guild.getRoleById(GuildManager.rankMappings.get(guild.getIdLong()).get(rank));
+                assert role != null;
+                role.getManager().setColor(rank.getColor())
+                        .setName(rank.getRankAppearance())
+                        .queue();
+            }
+        }
+
+        for (SubRank rank : SubRank.values()) {
+            if (!GuildManager.subrankMappings.get(guild.getIdLong()).containsKey(rank)) {
+                Role role = guild.createRole()
+                        .setColor(rank.getColor())
+                        .setName(rank.getName())
+                        .setHoisted(true)
+                        .setMentionable(false)
+                        .setPermissions(Permission.MESSAGE_HISTORY, Permission.VOICE_CONNECT, Permission.MESSAGE_SEND, Permission.VOICE_SPEAK)
+                        .complete();
+                subrankMappings.put(rank, role.getIdLong());
+            } else {
+                Role role = guild.getRoleById(GuildManager.subrankMappings.get(guild.getIdLong()).get(rank));
+                assert role != null;
+                role.getManager().setColor(rank.getColor())
+                        .setName(rank.getName())
+                        .queue();
+            }
+        }
+
+        addMappings(guild, rankMappings, subrankMappings);
+
+        RoleOrderAction action = guild.modifyRolePositions();
+
+        for (Rank rank : ranks) {
+                Role role = guild.getRoleById(GuildManager.rankMappings.get(guild.getIdLong()).get(rank));
+                assert role != null;
+                action.selectPosition(role).moveTo(i++);
+        }
+
+        for (SubRank rank : SubRank.values()) {
+                Role role = guild.getRoleById(GuildManager.subrankMappings.get(guild.getIdLong()).get(rank));
+                assert role != null;
+                action.selectPosition(role).moveTo(i++);
+        }
+        action.queue();
+    }
+
     public static long getServerLogId(long guildId) {
         return serverLogMappings.get(guildId);
     }
@@ -102,8 +169,18 @@ public class GuildManager {
     }
 
     public static void addMappings(Guild guild, Map<Rank, Long> ranks, Map<SubRank, Long> subranks) {
-        rankMappings.put(guild.getIdLong(), ranks);
-        subrankMappings.put(guild.getIdLong(), subranks);
+        if (rankMappings.containsKey(guild.getIdLong())) {
+            rankMappings.get(guild.getIdLong()).putAll(ranks);
+        } else {
+            rankMappings.put(guild.getIdLong(), ranks);
+        }
+
+        if (subrankMappings.containsKey(guild.getIdLong())) {
+            subrankMappings.get(guild.getIdLong()).putAll(subranks);
+        } else {
+            subrankMappings.put(guild.getIdLong(), subranks);
+        }
+
         DiscordBot.getDatabaseManager().addRankMappings(guild.getIdLong(), ranks, subranks);
     }
 
