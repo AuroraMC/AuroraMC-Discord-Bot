@@ -5,10 +5,7 @@
 package net.auroramc.discord;
 
 import jline.console.ConsoleReader;
-import net.auroramc.discord.commands.CommandChangelog;
-import net.auroramc.discord.commands.CommandListPolls;
-import net.auroramc.discord.commands.CommandPlus;
-import net.auroramc.discord.commands.CommandPoll;
+import net.auroramc.discord.commands.*;
 import net.auroramc.discord.commands.admin.*;
 import net.auroramc.discord.commands.moderation.*;
 import net.auroramc.discord.commands.setup.*;
@@ -110,6 +107,7 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandRemoveSubRank());
         CommandManager.registerCommand(new CommandPanel());
         CommandManager.registerCommand(new CommandReadMePost());
+        CommandManager.registerCommand(new CommandLinkPost());
         CommandManager.registerCommand(new CommandPlus());
         CommandManager.registerCommand(new CommandPunish());
         CommandManager.registerCommand(new CommandUnpunish());
@@ -128,6 +126,7 @@ public class DiscordBot {
         CommandManager.registerCommand(new CommandChangelog());
         CommandManager.registerCommand(new CommandIdeasPost());
         CommandManager.registerCommand(new CommandUpdateRoles());
+        CommandManager.registerCommand(new CommandName());
 
 
         logger.info("Logging in...");
@@ -217,3 +216,5 @@ public class DiscordBot {
         scheduler.execute(new RankUpdateCheckRunnable());
     }
 }
+
+
