@@ -34,7 +34,7 @@ public class MemberListener extends ListenerAdapter {
         UUID uuid = DiscordBot.getDatabaseManager().getUUID(e.getMember().getIdLong());
         Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("User Join")
-                .setDescription(e.getMember().getAsMention() + " has joined the server.")
+                .setDescription(e.getMember().getAsMention() + " (" + e.getUser().getAsTag() + ") has joined the server.")
                 .setThumbnail(e.getMember().getAvatarUrl())
                         .setTimestamp(Instant.now())
                 .setColor(new Color(85, 255, 85))
@@ -125,7 +125,7 @@ public class MemberListener extends ListenerAdapter {
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent e) {
         Objects.requireNonNull(e.getGuild().getTextChannelById(GuildManager.getServerLogId(e.getGuild().getIdLong()))).sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("User Leave")
-                .setDescription(e.getUser().getAsTag() + " has left the server.")
+                .setDescription(e.getUser().getAsTag() + "(" + e.getUser().getId() + ") has left the server.")
                 .setThumbnail(e.getUser().getAvatarUrl())
                 .setTimestamp(Instant.now())
                 .setColor(new Color(255, 85, 85))
