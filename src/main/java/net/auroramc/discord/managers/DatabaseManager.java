@@ -355,6 +355,22 @@ public class DatabaseManager {
         }
     }
 
+    public String getName(long id) {
+        try (Connection connection = mysql.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT `name` FROM auroramc_players WHERE id = (SELECT amc_id FROM dc_links WHERE discord_id = ?)");
+            statement.setLong(1, id);
+
+            ResultSet set = statement.executeQuery();
+
+            if (set.next()) {
+                return set.getString(1);
+            }
+            return null;
+        } catch (SQLException ignored) {
+            return null;
+        }
+    }
+
     public void deleteLink(long id) {
         try (Connection connection = mysql.getConnection()) {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM dc_links WHERE discord_id = ?");

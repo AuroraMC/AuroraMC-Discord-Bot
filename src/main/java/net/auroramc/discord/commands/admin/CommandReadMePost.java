@@ -20,7 +20,7 @@ public class CommandReadMePost extends Command {
 
 
     public CommandReadMePost() {
-        super("readme", "Post the Read-Me Announcement in your current channel.", Collections.emptyList());
+        super("rules", "Post the Rules Announcement in your current channel.", Collections.emptyList());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CommandReadMePost extends Command {
                         "you to let you know about punishments, warnings, and other information that may be relevant to you.\n" +
                         " \n" +
                         "Linking your account will be taken as confirmation that you agree to comply with our Terms of Service and Privacy Policy. These can be " +
-                        "found at https://auroramc.net/terms and https://auroramc.net/privacy respectively.")
+                        "found at the links below. You can find out how to link your account in <#1100855189944156261>")
                 .setColor(new Color(0, 170,170))
                 .build();
         MessageEmbed light = new EmbedBuilder()
@@ -86,40 +86,7 @@ public class CommandReadMePost extends Command {
                         "will be given for this rule before a ban is issued_.", false)
                 .setColor(new Color(170, 0,0))
                 .build();
-        MessageEmbed linking = new EmbedBuilder()
-                .setTitle("Linking your account!")
-                .setDescription("__**Linking your In-Game Account**__\n" +
-                        "In order to get into the Discord fully, we must link your Discord account with your In-Game account!\n" +
-                        "\n" +
-                        "**NOTE:** You can only link your in-game account with ONE Discord account and vice versa. " +
-                        "In order to prevent abuse, the only way for your account to be unlinked from your in-game account is to contact customer support.\n" +
-                        " \n" +
-                        "Please only link your account when you have read through this entire channel. Linking your account will be taken as confirmation that " +
-                        "you will abide by these rules and punishments will be applied accordingly.\n" +
-                        " \n" +
-                        "To link your in-game account with your discord account, follow these steps:\n" +
-                        "**1)** Log into the network with the Minecraft account you wish to link with.\n" +
-                        "**2)** Type /link. This will give you an 8 digit code. This code only lasts 60 seconds.\n" +
-                        "**3)** In your DM's with this bot, type !link [8 Digit Code].\n" +
-                        "**4)** Your account will be synced!\n" +
-                        " \n" +
-                        "Once your account is linked, your rank will automatically be applied.")
-                .setColor(new Color(0, 170,170))
-                .build();
-        MessageEmbed plus = new EmbedBuilder()
-                .setTitle("A Note About Plus")
-                .setDescription("__**Plus Subscriptions**__\n" +
-                        "Once your account is linked, you are then able to sync your Plus subscription to your Discord!\n" +
-                        " \n" +
-                        "In order to do so, all you need to do is run `!plus` and the bot will sync your Plus subscription automatically! " +
-                        "You will need to do this every time your plus expires before it is renewed. If you renew before the subscription expires, " +
-                        "the bot will automatically take into account the new remaining time of your subscription.\n" +
-                        " \n" +
-                        "We hope you enjoy your time in the AuroraMC Discord, and have fun!\n" +
-                        "~AuroraMC Leadership Team")
-                .setColor(new Color(85, 255,255))
-                .build();
-        message.getChannel().sendMessageEmbeds(welcome, light, medium, heavy, severe, extreme, linking, plus).setActionRow(Button.link("https://auroramc.net", "Website").withEmoji(Emoji.fromUnicode("U+1F5A5")), Button.link("https://store.auroramc.net", "Store").withEmoji(Emoji.fromUnicode("U+1F6D2")), Button.link("https://auroramc.net/terms", "Terms").withEmoji(Emoji.fromUnicode("U+1F4DD")), Button.link("https://auroramc.net/privacy", "Privacy Policy").withEmoji(Emoji.fromUnicode("U+1F512"))).queue();
+        message.getChannel().sendMessageEmbeds(welcome, light, medium, heavy, severe, extreme).setActionRow(Button.link("https://auroramc.net", "Website").withEmoji(Emoji.fromUnicode("U+1F5A5")), Button.link("https://store.auroramc.net", "Store").withEmoji(Emoji.fromUnicode("U+1F6D2")), Button.link("https://auroramc.net/terms", "Terms").withEmoji(Emoji.fromUnicode("U+1F4DD")), Button.link("https://auroramc.net/privacy", "Privacy Policy").withEmoji(Emoji.fromUnicode("U+1F512"))).queue();
         message.reply("Post made.").setEphemeral(true).queue();
     }
 }
