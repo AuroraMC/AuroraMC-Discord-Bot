@@ -20,7 +20,7 @@ public class CommandLinkPost extends Command {
 
 
     public CommandLinkPost() {
-        super("link", "Post the Link Announcement in your current channel.", Collections.emptyList());
+        super("linkpost", "Post the Link Announcement in your current channel.", Collections.emptyList());
     }
 
     @Override
