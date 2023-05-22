@@ -34,7 +34,7 @@ public class CommandPoll extends Command {
         String question = args.get("question");
         List<CommunityPoll.PollAnswer> answers = new ArrayList<>();
         for (int i = 1;i < 5;i++) {
-            if (!args.containsKey("answer " + i)) {
+            if (!args.containsKey("answer-" + i)) {
                 break;
             }
             answers.add(new CommunityPoll.PollAnswer(i, args.get("answer-" + i)));
